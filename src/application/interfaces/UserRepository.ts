@@ -1,7 +1,9 @@
-// src/application/interfaces/UserRepository.ts
+// // src/application/interfaces/UserRepository.ts
 
-import { User } from "../../domain/entities/User";
+// import { User } from "../../domain/entities/User";
 
-export interface UserRepository {
-  findByEmail(email: string): Promise<User | null>;
-}
+// export interface UserRepository {
+//   findByEmail(email: string): Promise<User | null>;
+//   // save(user: User): Promise<void>;
+
+// }

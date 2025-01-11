@@ -1,9 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
-import router from "./presentation/routes/authRoutes";
+import {routers} from "./presentation/routes/authRoutes";
 import { connectDB } from "./infrastructure/database/dbConnection";
 import cors,{ CorsOptions } from "cors";
 import cookieParser from "cookie-parser"
+import { dependencies } from "./_boot/dependency/authDependencies";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ const corsOptions: CorsOptions = {
 
 // Use CORS middleware with the options
 app.use(cors(corsOptions));
-app.use('/auth', router);
+app.use('/auth', routers(dependencies));
 
 (async () => {
   try {

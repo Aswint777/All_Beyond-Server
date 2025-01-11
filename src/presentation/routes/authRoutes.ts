@@ -1,16 +1,20 @@
 import { Router } from "express";
-import { login, signUp } from "../controllers/authController";
+import { login } from "../controllers/authController";
+import { dependencies } from "../../_boot/dependency/authDependencies";
+import { IDependencies } from "../../application/interfaces/IDependencies";
+import { controller } from "../controllers";
 
-const router = Router()
+export const routers = (dependencies:IDependencies) => {
+    const { signUp } = controller(dependencies)
+    const router = Router()
 
-
-// router.post("/login", AuthController.login);
-router.post("/login", login);
+// router.post("/login", AuthController.login); 
+    // router.post("/login", login);
 
 
 // router.post("/signup",AuthController.SignUp)
-router.post("/signup", signUp);
+    router.route("/signup").post(signUp);
 
+    return router;
+}
 
-
-export default router;

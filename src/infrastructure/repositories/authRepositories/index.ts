@@ -1,2 +1,6 @@
 export * from "./checkByName"
 export * from "./checkByEmail"
+export * from "./createUser"
+export * from "./verifyOtp"
+export * from "./otpMatchChecking"
+export * from "./verifyOtpTrue"

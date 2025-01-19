@@ -7,17 +7,18 @@ export const verifyOtpController = (dependencies : IDependencies) =>{
    const { checkByEmailUseCase,otpMatchCheckingUseCase,verifyOtpTrueUseCase } = useCases;
 
    return async (req: Request, res: Response) => {
-     
-   console.log('data is in the verifyOtpController');
-     console.log(req.body);
-     const {email,otp} = req.body
-     const data = {
+     try {
+      
+        console.log('data is in the verifyOtpController');
+        console.log(req.body);
+        const {email,otp} = req.body
+        const data = {
       email,
       otp
-     }
+   }
    //   const emailResult = await checkByEmailUseCase(dependencies).execute(email)
-     const emailResult = await otpMatchCheckingUseCase(dependencies).execute(data)
-     console.log(emailResult,'emailResult');
+   const emailResult = await otpMatchCheckingUseCase(dependencies).execute(data)
+   console.log(emailResult,'emailResult');
      if(!emailResult){
         res.status(httpStatusCode.CONFLICT).json({
            success : false,
@@ -27,6 +28,16 @@ export const verifyOtpController = (dependencies : IDependencies) =>{
       }
       const verifyOtpComplete = await verifyOtpTrueUseCase(dependencies).execute(email)
       console.log(verifyOtpComplete, "verifyOtp Complete");
-   
+      res.status(201).json({
+         success: true,
+         message: "User completed registration successfully!",
+         // user: email,
+       });
+       console.log(res.status(201).json);  
+       return
+   } catch (error: any) {
+      console.error("Error during signup:", error.message);
+      res.status(500).json({ error: "Internal server error. Please try again later." });
+   }
    }
 }

@@ -12,6 +12,7 @@ export const otpMatchChecking =async(data:verifyOtpEntity) : Promise <boolean|nu
     
     
     const checkUser = await otpVerify.findOne({email:data.email})
+    
     if(!checkUser){
         return false
     }else if(checkUser.otp === data.otp){

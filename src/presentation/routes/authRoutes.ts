@@ -6,17 +6,16 @@ import { controller } from "../controllers";
 import { otpVerify } from "../../infrastructure/database/model";
 
 export const routers = (dependencies:IDependencies) => {
-    const { signUp,otpVerify } = controller(dependencies)
+    const { signUp,otpVerify,login } = controller(dependencies)
     const router = Router()
 
 // router.post("/login", AuthController.login); 
     // router.post("/login", login);
 
-
-// router.post("/signup",AuthController.SignUp)
     router.route("/signup").post(signUp);
 
     router.route("/OtpVerify").post(otpVerify)
+    router.route("/login").post(login)
 
     return router;
 

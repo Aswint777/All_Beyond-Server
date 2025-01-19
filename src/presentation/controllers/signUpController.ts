@@ -47,7 +47,6 @@ export const signUpController = (dependencies : IDependencies) =>{
         return
         
       }
-      console.log(typeof name, typeof email, typeof password)
       const nameResult = await checkByNameUseCase(dependencies).execute(name)
       console.log(nameResult,'nameResult');
       
@@ -68,7 +67,9 @@ export const signUpController = (dependencies : IDependencies) =>{
         })
         return
       }
+      
       // Hash the password (use bcrypt or similar library)
+
       const hashedPassword = await bcrypt.hash(password, 10); 
 
         const data = {

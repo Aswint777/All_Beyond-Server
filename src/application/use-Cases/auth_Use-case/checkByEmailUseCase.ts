@@ -9,7 +9,12 @@ export const checkByEmailUseCase = (dependencies : IDependencies) => {
     return {
         execute : async(email:string) =>{
             try {
-                return await checkByEmail(email)
+                const result = await checkByEmail(email)
+                if(result){
+                    return true
+                }else{
+                    return false
+                }
             } catch (error:constant) {
                 console.log('Error in checking with email');
                 

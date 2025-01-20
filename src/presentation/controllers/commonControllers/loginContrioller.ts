@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { IDependencies } from "../../application/interfaces/IDependencies";
-import { httpStatusCode } from "../../_lib/common/HttpStatusCode";
-import { generateAccessToken, generateRefreshToken } from "../../_lib/jwt";
+import { IDependencies } from "../../../application/interfaces/IDependencies";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+import { generateAccessToken, generateRefreshToken } from "../../../_lib/jwt";
 
 export const loginController = (dependencies:IDependencies)=>{
     const {useCases} = dependencies

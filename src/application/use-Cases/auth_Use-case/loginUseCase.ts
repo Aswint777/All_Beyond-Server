@@ -11,16 +11,16 @@ export const loginUseCase = (dependencies : IDependencies) => {
         execute : async(email:string,password:string) =>{
             try {
                 const user = await checkByEmail(email)
-                if(!user || user===true ){
-                  return false
+                if(!user ){
+                  return null
                 }
-                if(!user.password) return false
+                if(!user.password) return null
                 console.log(user,"user in the login use case");
                 const isMatch = await bcrypt.compare(password, user.password);
                 if(isMatch){
                     return user
                 }
-                return false
+                return null
                 // const ePassword = user.password
                 // const isMatch = await bcrypt.compare(password,user.password)
 

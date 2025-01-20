@@ -1,7 +1,7 @@
 import { UserEntity } from "../../../domain/entities/User";
 import { User } from "../../database/model/userModel"
 
-export const checkByEmail =async(email:string) : Promise <UserEntity|boolean|null> =>{
+export const checkByEmail =async(email:string) : Promise <UserEntity|null> =>{
    try {
     console.log('console on the check by email repository');
     
@@ -10,7 +10,7 @@ export const checkByEmail =async(email:string) : Promise <UserEntity|boolean|nul
     if(emailExist){
         return emailExist
     }
-    return false
+    return null
    } catch (error : unknown) {
     if(error instanceof Error){
         throw error

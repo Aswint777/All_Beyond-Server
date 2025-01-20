@@ -19,6 +19,7 @@ const dbConnection_1 = require("./infrastructure/database/dbConnection");
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const authDependencies_1 = require("./_boot/dependency/authDependencies");
+const adminRoutes_1 = require("./presentation/routes/adminRoutes");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // Middleware to parse JSON requests
@@ -36,6 +37,7 @@ const corsOptions = {
 // Use CORS middleware with the options
 app.use((0, cors_1.default)(corsOptions));
 app.use('/auth', (0, authRoutes_1.routers)(authDependencies_1.dependencies));
+app.use('/admin', (0, adminRoutes_1.adminRouters)(authDependencies_1.dependencies));
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Connect to MongoDB

@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { IDependencies } from "../../application/interfaces/IDependencies";
-import { httpStatusCode } from "../../_lib/common/HttpStatusCode";
+import { IDependencies } from "../../../application/interfaces/IDependencies";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+// import { IDependencies } from "../../application/interfaces/IDependencies";
+// import { httpStatusCode } from "../../_lib/common/HttpStatusCode";
 
 export const verifyOtpController = (dependencies : IDependencies) =>{
    const {useCases} = dependencies;

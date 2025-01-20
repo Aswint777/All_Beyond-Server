@@ -5,6 +5,7 @@ import { connectDB } from "./infrastructure/database/dbConnection";
 import cors,{ CorsOptions } from "cors";
 import cookieParser from "cookie-parser"
 import { dependencies } from "./_boot/dependency/authDependencies";
+import { adminRouters } from "./presentation/routes/adminRoutes";
 
 dotenv.config();
 
@@ -29,6 +30,9 @@ const corsOptions: CorsOptions = {
 // Use CORS middleware with the options
 app.use(cors(corsOptions));
 app.use('/auth', routers(dependencies));
+
+app.use('/admin', adminRouters(dependencies));
+
 
 (async () => {
   try {

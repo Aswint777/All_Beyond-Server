@@ -1,11 +1,14 @@
 import { Request,Response } from "express";
 import bcrypt from 'bcrypt';
-import { IDependencies } from "../../application/interfaces/IDependencies";
-import { checkByNameUseCase } from "../../application/use-Cases/auth_Use-case";
-import { httpStatusCode } from "../../_lib/common/HttpStatusCode";
-import { User } from "../../infrastructure/database/model/userModel";
+// import { IDependencies } from "../../application/interfaces/IDependencies";
+// import { checkByNameUseCase } from "../../application/use-Cases/auth_Use-case";
+// import { httpStatusCode } from "../../_lib/common/HttpStatusCode";
+// import { User } from "../../infrastructure/database/model/userModel";
 import nodemailer from 'nodemailer';
-import { sendEmail } from "../../infrastructure/utils/nodeMailerConfig";
+import { IDependencies } from "../../../application/interfaces/IDependencies";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+import { sendEmail } from "../../../infrastructure/utils/nodeMailerConfig";
+// import { sendEmail } from "../../infrastructure/utils/nodeMailerConfig";
 
 
 

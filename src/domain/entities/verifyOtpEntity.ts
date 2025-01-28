@@ -2,7 +2,7 @@ import { ObjectId } from "mongoose";
 
 export interface verifyOtpEntity{
     _id? : ObjectId
-    userName?:string
+    // userName?:string
     email?:string
     otp?:string | number
     createdAT?:Date

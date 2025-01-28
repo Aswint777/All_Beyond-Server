@@ -2,6 +2,7 @@ import { IGetStudentsListUseCase } from "../../domain/IUseCases/IAdminuseCases/I
 import { ICheckByEmailUseCase } from "../../domain/IUseCases/IAuthUseCases/IcheckByEmailUseCase";
 import { ICheckByNameUseCase } from "../../domain/IUseCases/IAuthUseCases/ICheckByNameUseCase";
 import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/ICreateuserUseCase";
+import { IGetUserDetailsUseCase } from "../../domain/IUseCases/IAuthUseCases/IGetUserDetailsUseCase";
 import { ILoginUseCase } from "../../domain/IUseCases/IAuthUseCases/ILoginUseCase";
 import { IOtpMatchCheckingUseCase } from "../../domain/IUseCases/IAuthUseCases/IOtpMatchCheckingUseCase";
 import { IVerifyOtpUseCase } from "../../domain/IUseCases/IAuthUseCases/IVarifyOtpUseCase";
@@ -17,6 +18,7 @@ export interface IUseCases {
     otpMatchCheckingUseCase:(dependencies:IDependencies)=>IOtpMatchCheckingUseCase
     verifyOtpTrueUseCase :(dependencies:IDependencies)=>IVerifyOtpTrueUseCase
     loginUseCase :(dependencies:IDependencies)=>ILoginUseCase
+    getUserDetailsUseCase :(dependencies:IDependencies)=>IGetUserDetailsUseCase
 
     //admin
     getStudentsListUseCase :(dependencies:IDependencies)=>IGetStudentsListUseCase

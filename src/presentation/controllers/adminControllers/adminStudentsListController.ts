@@ -10,11 +10,11 @@ export const getAdminStudentsListController =(dependencies:IDependencies) =>{
             console.log("getAdminStudentsList");
             const userList = await getStudentsListUseCase(dependencies).execute()
             console.log(userList,'list');
-                      res.status(httpStatusCode.OK).json({
-                        success: true,
-                        data: userList,
-                        message: "User logged in successfully",
-                      });
+              res.status(httpStatusCode.OK).json({
+                success: true,
+                data: userList,
+                message: "User logged in successfully",
+              });
 
         } catch (error:any) {
             console.error("Error during getAdminStudentsList:", error.message);

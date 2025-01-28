@@ -48,6 +48,7 @@ interface Profile {
 
 export interface UserEntity {
     _id?: ObjectId;
+    userId?:string;
     username?: string;
     firstName?: string;
     lastName?: string;

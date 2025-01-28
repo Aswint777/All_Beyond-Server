@@ -7,7 +7,7 @@ export const verifyOtp =async(otpData:verifyOtpEntity) : Promise <verifyOtpEntit
     const newUserOtp = {
         ...otpData
     }
-    console.log(newUserOtp);
+    console.log(newUserOtp,'.........................');
     const otpCreateNewUSer = await otpVerify.create(newUserOtp)
     console.log(otpCreateNewUSer," result form repo otp")
     if(otpCreateNewUSer){
@@ -21,3 +21,5 @@ export const verifyOtp =async(otpData:verifyOtpEntity) : Promise <verifyOtpEntit
     throw new Error("An unexpected error is occurred")
    }
 }
+
+// check the otp scema and delete the user name and do the resend otp

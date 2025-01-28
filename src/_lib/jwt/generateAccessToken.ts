@@ -10,3 +10,4 @@ export const generateAccessToken = (payload: payLoad) => {
       expiresIn: "20m",
     });
 };
+

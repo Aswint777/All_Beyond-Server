@@ -15,5 +15,6 @@ export interface IRepositories {
     // Admin
 
     getStudentsList :()=>Promise<UserEntity[]|boolean|null>
+    block_UnBlockUser :(userId:string,isBlocked:boolean)=>Promise<boolean|null>
  
 }

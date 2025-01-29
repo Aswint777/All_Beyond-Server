@@ -15,11 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const authRoutes_1 = require("./presentation/routes/authRoutes");
-const dbConnection_1 = require("./infrastructure/database/dbConnection");
+// import { connectDB } from "./infrastructure/database/dbConnection";
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const authDependencies_1 = require("./_boot/dependency/authDependencies");
 const adminRoutes_1 = require("./presentation/routes/adminRoutes");
+const dbConnection_1 = require("./infrastructure/database/dbConnection");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // Middleware to parse JSON requests
@@ -41,7 +42,8 @@ app.use('/admin', (0, adminRoutes_1.adminRouters)(authDependencies_1.dependencie
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Connect to MongoDB
-        yield (0, dbConnection_1.connectDB)();
+        // await connectDB();
+        yield (0, dbConnection_1.connectMongoDB)();
         // Start the Express server
         const PORT = process.env.PORT || 5000;
         app.listen(PORT, () => {

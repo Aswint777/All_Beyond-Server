@@ -1,4 +1,5 @@
 import { constant } from "../../../_lib/common/constant";
+import { generateUserID } from "../../../_lib/common/generateUserID";
 import { verifyOtpEntity } from "../../../domain/entities/verifyOtpEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 
@@ -10,6 +11,7 @@ export const verifyOtpTrueUseCase = (dependencies : IDependencies) => {
     return {
         execute : async(email:string) =>{
             try {
+                
                 return await verifyOtpTrue(email)
             } catch (error:constant) {
                 console.log('Error in otp verify true');

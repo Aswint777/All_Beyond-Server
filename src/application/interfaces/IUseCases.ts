@@ -1,3 +1,4 @@
+import { IBlock_UnBlockUserUseCase } from "../../domain/IUseCases/IAdminuseCases/IBlock_UnBlockUserUseCase";
 import { IGetStudentsListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetStudentsListuseCase";
 import { ICheckByEmailUseCase } from "../../domain/IUseCases/IAuthUseCases/IcheckByEmailUseCase";
 import { ICheckByNameUseCase } from "../../domain/IUseCases/IAuthUseCases/ICheckByNameUseCase";
@@ -11,6 +12,9 @@ import { IDependencies } from "./IDependencies";
 
 
 export interface IUseCases {
+
+    // common
+
     checkByNameUseCase :(dependencies : IDependencies) =>ICheckByNameUseCase
     checkByEmailUseCase :(dependencies : IDependencies ) =>ICheckByEmailUseCase
     createUserUseCase : (dependencies:IDependencies)=>ICreateUserUseCase
@@ -21,5 +25,7 @@ export interface IUseCases {
     getUserDetailsUseCase :(dependencies:IDependencies)=>IGetUserDetailsUseCase
 
     //admin
+    
     getStudentsListUseCase :(dependencies:IDependencies)=>IGetStudentsListUseCase
+    block_UnBlockUserUseCase :(dependencies:IDependencies)=>IBlock_UnBlockUserUseCase
 }

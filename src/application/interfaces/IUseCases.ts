@@ -1,4 +1,7 @@
+import { IAddCategoryUseCase } from "../../domain/IUseCases/IAdminuseCases/IAddCategoryUseCase";
+import { IBlock_UnblockCategoryUseCase } from "../../domain/IUseCases/IAdminuseCases/IBlock_UnblockCategoryUseCase";
 import { IBlock_UnBlockUserUseCase } from "../../domain/IUseCases/IAdminuseCases/IBlock_UnBlockUserUseCase";
+import { IGetCategoryListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetCategoryListUseCase";
 import { IGetStudentsListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetStudentsListuseCase";
 import { ICheckByEmailUseCase } from "../../domain/IUseCases/IAuthUseCases/IcheckByEmailUseCase";
 import { ICheckByNameUseCase } from "../../domain/IUseCases/IAuthUseCases/ICheckByNameUseCase";
@@ -23,9 +26,12 @@ export interface IUseCases {
     verifyOtpTrueUseCase :(dependencies:IDependencies)=>IVerifyOtpTrueUseCase
     loginUseCase :(dependencies:IDependencies)=>ILoginUseCase
     getUserDetailsUseCase :(dependencies:IDependencies)=>IGetUserDetailsUseCase
-
+    
     //admin
     
     getStudentsListUseCase :(dependencies:IDependencies)=>IGetStudentsListUseCase
     block_UnBlockUserUseCase :(dependencies:IDependencies)=>IBlock_UnBlockUserUseCase
+    addCategoryUseCase : (dependencies:IDependencies)=>IAddCategoryUseCase
+    getCategoryListUseCase :(dependencies:IDependencies)=>IGetCategoryListUseCase
+    block_UnblockCategoryUseCase :(dependencies:IDependencies)=>IBlock_UnblockCategoryUseCase
 }

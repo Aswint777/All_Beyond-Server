@@ -128,6 +128,7 @@ export class MongoDBConnection {
   }
 }
 
+
 // Usage
 export const connectMongoDB = async (): Promise<void> => {
   const mongoConnection = MongoDBConnection.getInstance();

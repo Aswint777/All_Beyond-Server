@@ -1,2 +1,5 @@
 export * from "./getStudentsListUseCase"
 export * from "./block_UnBlockUserUseCase"
+export * from "./addCategoryUseCase"
+export * from "./getCategoryListUseCase"
+export * from "./block_UnblockCategoryUseCase"

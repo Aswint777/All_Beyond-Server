@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Application } from "express";
 import dotenv from "dotenv";
 import {routers} from "./presentation/routes/authRoutes";
 // import { connectDB } from "./infrastructure/database/dbConnection";
@@ -7,10 +7,11 @@ import cookieParser from "cookie-parser"
 import { dependencies } from "./_boot/dependency/authDependencies";
 import { adminRouters } from "./presentation/routes/adminRoutes";
 import {connectMongoDB} from "./infrastructure/database/dbConnection";
+import { instructorRoutes } from "./presentation/routes/instructorRoutes";
 
 dotenv.config();
 
-const app = express();
+const app:Application = express();
 
 // Middleware to parse JSON requests
 app.use(express.json())
@@ -33,8 +34,9 @@ const corsOptions: CorsOptions = {
 // Use CORS middleware with the options
 app.use(cors(corsOptions));
 app.use('/auth', routers(dependencies));
-
 app.use('/admin', adminRouters(dependencies));
+app.use('/instructor',instructorRoutes(dependencies));
+
 
 
 (async () => {

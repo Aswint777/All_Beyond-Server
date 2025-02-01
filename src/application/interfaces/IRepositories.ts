@@ -1,6 +1,7 @@
 import { promises } from "dns"
 import { UserEntity } from "../../domain/entities/User"
 import { matchOtpEntity, verifyOtpEntity } from "../../domain/entities/verifyOtpEntity"
+import { categoryEntity } from "../../domain/entities/categoryEntity"
 
 
 export interface IRepositories {
@@ -16,5 +17,8 @@ export interface IRepositories {
 
     getStudentsList :()=>Promise<UserEntity[]|boolean|null>
     block_UnBlockUser :(userId:string,isBlocked:boolean)=>Promise<boolean|null>
+    addCategory : (data:categoryEntity)=>Promise<categoryEntity|null>
+    getCategoryList :()=>Promise<categoryEntity|null>
+    block_UnblockCategory :(id:string,isBlocked:boolean)=>Promise<boolean|null>
  
 }

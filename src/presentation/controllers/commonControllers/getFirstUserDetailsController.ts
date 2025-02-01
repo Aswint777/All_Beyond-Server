@@ -10,14 +10,14 @@ export const getFirstUserDetailsController = (dependencies: IDependencies) => {
   const { getUserDetailsUseCase } = useCases;
   return async (req: Request, res: Response) => {
     try {
-      console.log("start controller,,,,,,,,,,,,,,,,");
+      // console.log("start controller,,,,,,,,,,,,,,,,");
 
       // 🛑 Extract JWT from cookies
       const token = req.cookies.access_token;
-      console.log(token);
+      // console.log(token);
 
       if (!token) {
-        console.log("skjdncskjb");
+        // console.log("skjdncskjb");
 
         res.status(401).json({ message: "Unauthorized: No token provided" });
         return
@@ -25,7 +25,7 @@ export const getFirstUserDetailsController = (dependencies: IDependencies) => {
 
       // 🛑 Verify JWT
       const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
-      console.log("secrett:;;;;;;;", secretKey);
+      // console.log("secrett:;;;;;;;", secretKey);
 
       const decoded = jwt.verify(token, secretKey) as {
         _id: string;
@@ -33,7 +33,7 @@ export const getFirstUserDetailsController = (dependencies: IDependencies) => {
         role: string;
       };
 
-      console.log("Decoded User:", decoded);
+      // console.log("Decoded User:", decoded);
       const userDetails = await getUserDetailsUseCase(dependencies).execute(
         decoded._id
       );
@@ -43,7 +43,7 @@ export const getFirstUserDetailsController = (dependencies: IDependencies) => {
         message: "User details is fetched",
         user: userDetails,
       });
-      console.log(res.status(201).json);
+      // console.log(res.status(201).json);
       return;
     } catch (error: any) {
       console.error("Error in getFirstUserDetailsController:", error);

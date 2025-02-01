@@ -12,7 +12,7 @@ export const getCategoryList =async() : Promise <categoryEntity[]|null> =>{
     }
     console.log(categoryList);
     return categoryList
-    
+      
    } catch (error : unknown) {
     if(error instanceof Error){
         throw error

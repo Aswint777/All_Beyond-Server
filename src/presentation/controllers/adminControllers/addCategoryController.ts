@@ -22,7 +22,9 @@ export const addCategoryController = (dependencies:IDependencies)=>{
                 message: "category created!",
               });
         } catch (error:constant) {
-            
+            res
+            .status(500)
+            .json({ error: "Internal server error. Please try again later." });
         }
     }
 }

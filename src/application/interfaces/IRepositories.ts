@@ -20,5 +20,6 @@ export interface IRepositories {
     addCategory : (data:categoryEntity)=>Promise<categoryEntity|null>
     getCategoryList :()=>Promise<categoryEntity|null>
     block_UnblockCategory :(id:string,isBlocked:boolean)=>Promise<boolean|null>
+    categoryEdit :(  id: string,name: string,description: string, type: string)=>Promise<boolean|null>
  
 }

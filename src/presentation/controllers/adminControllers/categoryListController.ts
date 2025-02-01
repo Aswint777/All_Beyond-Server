@@ -38,7 +38,9 @@ export const blockCategoryController = (dependencies:IDependencies)=>{
                 data : categories
               });
         } catch (error:constant) {
-            
+            res
+            .status(500)
+            .json({ error: "Internal server error. Please try again later." });
         }
     }
 }

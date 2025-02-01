@@ -1,7 +1,7 @@
 import { ObjectId } from "mongoose";
 
 export interface categoryEntity{
-    _id:ObjectId
+    _id?:ObjectId
     name?:String
     description?:String
     type: "Free" | "Premium"; 

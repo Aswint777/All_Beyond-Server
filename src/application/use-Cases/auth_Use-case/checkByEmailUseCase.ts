@@ -11,9 +11,11 @@ export const checkByEmailUseCase = (dependencies : IDependencies) => {
             try {
                 const result = await checkByEmail(email)
                 if(result){
+                    
                     return true
                 }else{
                     return false
+                    
                 }
             } catch (error:constant) {
                 console.log('Error in checking with email');

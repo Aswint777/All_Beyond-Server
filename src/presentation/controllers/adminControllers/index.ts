@@ -1,5 +1,6 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { addCategoryController } from "./addCategoryController";
+import { adminInstructorApplicationListController, updateInstructorStatusController } from "./adminInstructorApplicationListController";
 import { getAdminStudentsListController } from "./adminStudentsListController";
 import { block_UnBlockUserController } from "./block_UnBlockUserController";
 import { blockCategoryController, categoryListController } from "./categoryListController";
@@ -12,6 +13,9 @@ export const adminController =(dependencies:IDependencies)=>{
         addCategory:addCategoryController(dependencies),
         categoryList:categoryListController(dependencies),
         blockCategory:blockCategoryController(dependencies),
-        editCategory :editCategoryController(dependencies)
+        editCategory :editCategoryController(dependencies),
+        instructorApplicationList:adminInstructorApplicationListController(dependencies),
+        updateInstructorStatus:updateInstructorStatusController(dependencies)
+
     }
 }

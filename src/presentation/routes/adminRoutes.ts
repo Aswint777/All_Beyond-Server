@@ -10,6 +10,8 @@ export const adminRouters = (dependencies: IDependencies) => {
     categoryList,
     blockCategory,
     editCategory,
+    instructorApplicationList,
+    updateInstructorStatus
   } = adminController(dependencies);
   const router = Router();
 
@@ -19,6 +21,8 @@ export const adminRouters = (dependencies: IDependencies) => {
   router.route("/categoryList").get(categoryList);
   router.route("/blockCategory").put(blockCategory);
   router.route("/editCategory/:id").put(editCategory);
+  router.route("/AdminInstructorApplicationList").get(instructorApplicationList)
+  router.route("/updateInstructorStatus").put(updateInstructorStatus)
 
   return router;
 };

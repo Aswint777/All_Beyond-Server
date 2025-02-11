@@ -1,4 +1,5 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
+import { adminInstructorApplicationListController } from "../adminControllers/adminInstructorApplicationListController";
 import { getFirstUserDetailsController } from "./getFirstUserDetailsController";
 import { loginController } from "./loginContrioller";
 import { logOutController } from "./logOutController";
@@ -14,6 +15,6 @@ export const controller = (dependencies: IDependencies) => {
     login: loginController(dependencies),
     logOut: logOutController(dependencies),
     resend: resentOtpController(dependencies),
-    userDetails:getFirstUserDetailsController(dependencies)
+    userDetails:getFirstUserDetailsController(dependencies),
   };
 };

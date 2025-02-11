@@ -5,4 +5,4 @@ import * as useCases from "../../application/use-Cases"
 export const dependencies:IDependencies = {
      repositories,
      useCases
-}
+}   

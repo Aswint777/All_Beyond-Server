@@ -1,14 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-// import { IDependencies } from "../../application/interfaces/IDependencies";
-// import { checkByNameUseCase } from "../../application/use-Cases/auth_Use-case";
-// import { httpStatusCode } from "../../_lib/common/HttpStatusCode";
-// import { User } from "../../infrastructure/database/model/userModel";
-import nodemailer from "nodemailer";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { sendEmail } from "../../../infrastructure/utils/nodeMailerConfig";
-// import { sendEmail } from "../../infrastructure/utils/nodeMailerConfig";
 
 export const signUpController = (dependencies: IDependencies) => {
   const { useCases } = dependencies;
@@ -24,38 +18,6 @@ export const signUpController = (dependencies: IDependencies) => {
 
       const { name, email, password, confirmPassword } = req.body;
 
-      // Validate required fields
-      if (
-        !name.trim() ||
-        !email.trim() ||
-        !password.trim() ||
-        !confirmPassword.trim()
-      ) {
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "All fields are required.",
-        });
-        return;
-      }
-
-      // Validate password match
-      if (password !== confirmPassword) {
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "Passwords do not match.",
-        });
-        return;
-      }
-
-      // Validate password length
-      if (password.length < 6) {
-        console.log("Password must be at least 6 characters long");
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "Password must be at least 6 characters long.",
-        });
-        return;
-      }
       const nameResult = await checkByNameUseCase(dependencies).execute(name);
       console.log(nameResult, "nameResult");
 
@@ -79,8 +41,14 @@ export const signUpController = (dependencies: IDependencies) => {
         return;
       }
 
-      // Hash the password (use bcrypt or similar library)
+      // let d ="admin@123"
+      // let b =d.trim()
+      // const hashedPasswordn = await bcrypt.hash(b,10);
 
+      //       await User.create({username:'admin',email:"admin@gmail.com",role:"admin",isVerified:true,password:hashedPasswordn})
+
+      // Hash the password (use bcrypt or similar library)
+      //
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const data = {

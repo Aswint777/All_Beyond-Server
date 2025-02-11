@@ -22,9 +22,11 @@ export const logOutController = (dependencies: IDependencies) => {
       res.cookie("access_token", "", cookieOptions);
       res.cookie("refresh_token", "", cookieOptions);
 
-      res.status(httpStatusCode.NO_CONTENT).json({});
+      res.status(httpStatusCode.NO_CONTENT).json({
+        success: true,
+      });
 
-      // const authHeader = req.headers.authorization;
+      // const authHeader = req.headers.authorization; 
       // if (!authHeader || !authHeader.startsWith("Bearer ")) {
       //     return res.status(401).json({ error: "Authorization token missing or invalid." });
       //   }

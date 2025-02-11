@@ -47,7 +47,7 @@ interface Profile {
 }
 
 export interface UserEntity {
-    _id?: ObjectId;
+    _id?: string | ObjectId; // ✅ Allow both types
     userId?:string;
     username?: string;
     firstName?: string;
@@ -68,4 +68,16 @@ export interface UserEntity {
     profileDescription?:string;
     qualification?: string;
     cv?:string;
+    age?:number
+    address?:string
+    contactNumber?:Number
+    gender?:string
+    city?:string
+    country?:string
+    pinNumber?:number
+    educationFile?:string
+    profilePhoto?:string
+    status?:string
+    profit?:number
+    isAppliedInstructor?:boolean
 }

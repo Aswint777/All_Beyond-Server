@@ -19,17 +19,17 @@ export const editCategoryController = (dependencies: IDependencies) => {
         description,
         type
       );
-      if(edit){
-
-          res.status(httpStatusCode.OK).json({
-              success: true,
-              data: edit,
-              message: "User logged in successfully",
-            });
-        }
+      if (edit) {
+        res.status(httpStatusCode.OK).json({
+          success: true,
+          data: edit,
+          message: "User logged in successfully",
+        });
+      }
     } catch (error: constant) {
-        res
+      res
         .status(500)
-        .json({ error: "Internal server error. Please try again later." });    }
+        .json({ error: "Internal server error. Please try again later." });
+    }
   };
 };

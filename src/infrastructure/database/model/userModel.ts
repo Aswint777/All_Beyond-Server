@@ -1,4 +1,3 @@
-
 import {model,Schema} from "mongoose"
 import { UserEntity } from "../../../domain/entities/User"
 
@@ -32,39 +31,76 @@ const userSchema = new Schema({
         enum:["student","admin","instructor"],
         default: "student"
     },
-    profile:{
-        avatar:{
-            type: String
-        },
-        dob:{
-            type: String
-        },
-        gender:{
-            type:String,
-            enum:["male","female","other"]
-        }
+    
+    age: {
+      type: Number,
     },
-    contact:{
-        additionalEmail:{
-            type:String
-        },
-        socialMedia: {
-            instagram: String,
-            linkedIn: String,
-            github: String
-        }
+    qualification: {
+      type: String,
     },
-    phoneNumber:{
-        type:String
+    address: {
+      type: String,
     },
+    contactNumber: {
+      type: String,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+    },
+    city: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    pinNumber: {
+      type: String,
+    },
+    educationFile: {
+      type: String,
+    }, // URL of uploaded file
+    profilePhoto: {
+      type: String,
+    }, // URL of profile photo (optional)
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+    // profile:{
+    //     avatar:{
+    //         type: String
+    //     },
+    //     dob:{
+    //         type: String
+    //     },
+    //     gender:{
+    //         type:String,
+    //         enum:["male","female","other"]
+    //     }
+    // },
+    // contact:{
+    //     additionalEmail:{
+    //         type:String
+    //     },
+    //     socialMedia: {
+    //         instagram: String,
+    //         linkedIn: String,
+    //         github: String
+    //     }
+    // },
+    // phoneNumber:{
+    //     type:String
+    // },
     isBlocked:{
         type:Boolean,
         default: false
     },
     isVerified:{
         type:String,
-        enum:["requested","approved","declined","false"],
-        default:"false"
+        // enum:["requested","approved","declined","false"],
+        default:false
     },
     profession:{
         type:String
@@ -80,14 +116,34 @@ const userSchema = new Schema({
         type:Boolean,
         default: true
     },
-    qualification:{
-        type: String,
-    },
     profileDescription:{
         type: String,
+    },
+    isAppliedInstructor :{
+      type : Boolean,
+      default : false
     }
 },{
     timestamps:true
 })
 
 export const User = model<UserEntity>("users",userSchema)
+
+
+
+
+
+
+
+// firstName: String,
+// lastName: String,
+// age: Number,
+// qualification: String,
+// profilePhoto: String, // Store Cloudinary URL
+// address: String,
+// contactNumber: String,
+// educationFile: String, // Store Cloudinary URL
+// gender: String,
+// city: String,
+// country: String,
+// pinNumber: String

@@ -1,3 +1,3 @@
 export * from "./adminRepositories";
 export * from "./authRepositories";
-// export * from "./instructorRepositories"
+export * from "./instructorRepositories"

@@ -3,6 +3,7 @@ import { IBlock_UnblockCategoryUseCase } from "../../domain/IUseCases/IAdminuseC
 import { IBlock_UnBlockUserUseCase } from "../../domain/IUseCases/IAdminuseCases/IBlock_UnBlockUserUseCase";
 import { ICategoryEditUseCase } from "../../domain/IUseCases/IAdminuseCases/ICategoryEditUseCase";
 import { IGetCategoryListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetCategoryListUseCase";
+import {  IGetInstructorApplicationUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetInstructorApplicationUseCase";
 import { IGetStudentsListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetStudentsListuseCase";
 import { ICheckByEmailUseCase } from "../../domain/IUseCases/IAuthUseCases/IcheckByEmailUseCase";
 import { ICheckByNameUseCase } from "../../domain/IUseCases/IAuthUseCases/ICheckByNameUseCase";
@@ -12,8 +13,9 @@ import { ILoginUseCase } from "../../domain/IUseCases/IAuthUseCases/ILoginUseCas
 import { IOtpMatchCheckingUseCase } from "../../domain/IUseCases/IAuthUseCases/IOtpMatchCheckingUseCase";
 import { IVerifyOtpUseCase } from "../../domain/IUseCases/IAuthUseCases/IVarifyOtpUseCase";
 import { IVerifyOtpTrueUseCase } from "../../domain/IUseCases/IAuthUseCases/IVerifyOtpTrueUseCase";
+import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
-
+// import {IApplyInstructorUseCase} from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase"
 
 export interface IUseCases {
 
@@ -36,4 +38,10 @@ export interface IUseCases {
     getCategoryListUseCase :(dependencies:IDependencies)=>IGetCategoryListUseCase
     block_UnblockCategoryUseCase :(dependencies:IDependencies)=>IBlock_UnblockCategoryUseCase
     categoryEditUseCase :(dependencies:IDependencies)=>ICategoryEditUseCase
+    getInstructorApplicationUseCase :(dependencies:IDependencies)=>IGetInstructorApplicationUseCase
+
+
+    //instructor
+
+    applyInstructorUseCase :(dependencies:IDependencies)=>IApplyInstructorUseCase
 }

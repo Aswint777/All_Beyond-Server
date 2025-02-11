@@ -10,12 +10,23 @@ export const loginController = (dependencies: IDependencies) => {
     try {
       console.log(req.body);
       const { email, password } = req.body;
+      if (
+        !email.trim() || !password.trim() 
+      ) {
+        res.status(httpStatusCode.CONFLICT).json({
+          success: false,
+          message: "All fields are required.",
+        });
+        return;
+      }
       const userLogin = await loginUseCase(dependencies).execute(
         email,
         password
       );
       console.log(userLogin, "userLogin");
       if (!userLogin) {
+        console.log("no login");
+        
         res.status(httpStatusCode.CONFLICT).json({
           success: false,
           message: "There is a problem in your Email or password, try again",

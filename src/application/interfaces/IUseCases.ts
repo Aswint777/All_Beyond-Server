@@ -3,7 +3,10 @@ import { IBlock_UnblockCategoryUseCase } from "../../domain/IUseCases/IAdminuseC
 import { IBlock_UnBlockUserUseCase } from "../../domain/IUseCases/IAdminuseCases/IBlock_UnBlockUserUseCase";
 import { ICategoryEditUseCase } from "../../domain/IUseCases/IAdminuseCases/ICategoryEditUseCase";
 import { IGetCategoryListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetCategoryListUseCase";
-import {  IGetInstructorApplicationUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetInstructorApplicationUseCase";
+import {
+  IGetInstructorApplicationUseCase,
+  IUpdateInstructorStatusUseCase,
+} from "../../domain/IUseCases/IAdminuseCases/IGetInstructorApplicationUseCase";
 import { IGetStudentsListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetStudentsListuseCase";
 import { ICheckByEmailUseCase } from "../../domain/IUseCases/IAuthUseCases/IcheckByEmailUseCase";
 import { ICheckByNameUseCase } from "../../domain/IUseCases/IAuthUseCases/ICheckByNameUseCase";
@@ -18,30 +21,47 @@ import { IDependencies } from "./IDependencies";
 // import {IApplyInstructorUseCase} from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase"
 
 export interface IUseCases {
+  // common
 
-    // common
+  checkByNameUseCase: (dependencies: IDependencies) => ICheckByNameUseCase;
+  checkByEmailUseCase: (dependencies: IDependencies) => ICheckByEmailUseCase;
+  createUserUseCase: (dependencies: IDependencies) => ICreateUserUseCase;
+  verifyOtpUseCase: (dependencies: IDependencies) => IVerifyOtpUseCase;
+  otpMatchCheckingUseCase: (
+    dependencies: IDependencies
+  ) => IOtpMatchCheckingUseCase;
+  verifyOtpTrueUseCase: (dependencies: IDependencies) => IVerifyOtpTrueUseCase;
+  loginUseCase: (dependencies: IDependencies) => ILoginUseCase;
+  getUserDetailsUseCase: (
+    dependencies: IDependencies
+  ) => IGetUserDetailsUseCase;
 
-    checkByNameUseCase :(dependencies : IDependencies) =>ICheckByNameUseCase
-    checkByEmailUseCase :(dependencies : IDependencies ) =>ICheckByEmailUseCase
-    createUserUseCase : (dependencies:IDependencies)=>ICreateUserUseCase
-    verifyOtpUseCase : (dependencies : IDependencies)=>IVerifyOtpUseCase
-    otpMatchCheckingUseCase:(dependencies:IDependencies)=>IOtpMatchCheckingUseCase
-    verifyOtpTrueUseCase :(dependencies:IDependencies)=>IVerifyOtpTrueUseCase
-    loginUseCase :(dependencies:IDependencies)=>ILoginUseCase
-    getUserDetailsUseCase :(dependencies:IDependencies)=>IGetUserDetailsUseCase
-    
-    //admin
-    
-    getStudentsListUseCase :(dependencies:IDependencies)=>IGetStudentsListUseCase
-    block_UnBlockUserUseCase :(dependencies:IDependencies)=>IBlock_UnBlockUserUseCase
-    addCategoryUseCase : (dependencies:IDependencies)=>IAddCategoryUseCase
-    getCategoryListUseCase :(dependencies:IDependencies)=>IGetCategoryListUseCase
-    block_UnblockCategoryUseCase :(dependencies:IDependencies)=>IBlock_UnblockCategoryUseCase
-    categoryEditUseCase :(dependencies:IDependencies)=>ICategoryEditUseCase
-    getInstructorApplicationUseCase :(dependencies:IDependencies)=>IGetInstructorApplicationUseCase
+  //admin
 
+  getStudentsListUseCase: (
+    dependencies: IDependencies
+  ) => IGetStudentsListUseCase;
+  block_UnBlockUserUseCase: (
+    dependencies: IDependencies
+  ) => IBlock_UnBlockUserUseCase;
+  addCategoryUseCase: (dependencies: IDependencies) => IAddCategoryUseCase;
+  getCategoryListUseCase: (
+    dependencies: IDependencies
+  ) => IGetCategoryListUseCase;
+  block_UnblockCategoryUseCase: (
+    dependencies: IDependencies
+  ) => IBlock_UnblockCategoryUseCase;
+  categoryEditUseCase: (dependencies: IDependencies) => ICategoryEditUseCase;
+  getInstructorApplicationUseCase: (
+    dependencies: IDependencies
+  ) => IGetInstructorApplicationUseCase;
+  updateInstructorStatusUseCase: (
+    dependencies: IDependencies
+  ) => IUpdateInstructorStatusUseCase;
 
-    //instructor
+  //instructor
 
-    applyInstructorUseCase :(dependencies:IDependencies)=>IApplyInstructorUseCase
+  applyInstructorUseCase: (
+    dependencies: IDependencies
+  ) => IApplyInstructorUseCase;
 }

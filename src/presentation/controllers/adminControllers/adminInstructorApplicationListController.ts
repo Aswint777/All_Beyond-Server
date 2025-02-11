@@ -27,13 +27,17 @@ export const adminInstructorApplicationListController =(dependencies:IDependenci
 
 export const updateInstructorStatusController =(dependencies:IDependencies)=>{
     const {useCases} = dependencies
-    const {}= useCases
+    const {updateInstructorStatusUseCase}= useCases
     return async(req:Request,res:Response)=>{
         try {
             console.log(req.body);
             
-            const {}=req.body
-
+            const {Id,status}=req.body
+             console.log(Id);
+             
+            const update = await updateInstructorStatusUseCase(dependencies).execute(Id,status)
+            console.log(update,"jjj");
+            
         } catch (error:constant) {
             console.error("Error during updateStatus:", error.message);
             res.status(500).json({ error: "Internal server error. Please try again later." });

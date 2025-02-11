@@ -26,4 +26,5 @@ export interface IRepositories {
     categoryEdit :(  id: string,name: string,description: string, type: string)=>Promise<boolean|null>
     applyInstructor :(data:UserEntity)=>Promise<boolean|null>
     getInstructorApplication : ()=>Promise<UserEntity[]|boolean|null>
+    updateInstructorStatus : (Id: string,status: string )=> Promise<boolean | null>
 }  

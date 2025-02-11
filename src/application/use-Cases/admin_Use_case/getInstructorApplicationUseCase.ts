@@ -23,3 +23,22 @@ export const getInstructorApplicationUseCase = (dependencies : IDependencies) =>
         }
     }
 }
+
+export const updateInstructorStatusUseCase = (dependencies:IDependencies)=>{
+    const {repositories:{updateInstructorStatus}} = dependencies
+    return {
+        execute:async(Id:string,status:string)=>{
+            try {
+                console.log(Id,'......');
+                
+                const update = await updateInstructorStatus(Id,status)
+                if(!update){
+                    return null
+                }
+                return true
+            } catch (error:constant) {
+                
+            }
+        }
+    }
+}

@@ -22,7 +22,7 @@ export const getInstructorApplicationUseCase = (dependencies : IDependencies) =>
             }
         }
     }
-}
+}  
 
 export const updateInstructorStatusUseCase = (dependencies:IDependencies)=>{
     const {repositories:{updateInstructorStatus}} = dependencies
@@ -37,7 +37,8 @@ export const updateInstructorStatusUseCase = (dependencies:IDependencies)=>{
                 }
                 return true
             } catch (error:constant) {
-                
+                console.error("Error updating instructor status:", error);
+                return null; 
             }
         }
     }

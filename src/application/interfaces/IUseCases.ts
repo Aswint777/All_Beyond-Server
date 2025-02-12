@@ -1,24 +1,31 @@
-import { IAddCategoryUseCase } from "../../domain/IUseCases/IAdminuseCases/IAddCategoryUseCase";
-import { IBlock_UnblockCategoryUseCase } from "../../domain/IUseCases/IAdminuseCases/IBlock_UnblockCategoryUseCase";
-import { IBlock_UnBlockUserUseCase } from "../../domain/IUseCases/IAdminuseCases/IBlock_UnBlockUserUseCase";
-import { ICategoryEditUseCase } from "../../domain/IUseCases/IAdminuseCases/ICategoryEditUseCase";
-import { IGetCategoryListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetCategoryListUseCase";
+import {
+  IAddCategoryUseCase,
+  IBlock_UnblockCategoryUseCase,
+  ICategoryEditUseCase,
+  IGetCategoryListUseCase,
+} from "../../domain/IUseCases/IAdminuseCases/ICategoryUseCase";
+import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
+import { IDependencies } from "./IDependencies";
+import {
+  IBlock_UnBlockUserUseCase,
+  IGetStudentsListUseCase,
+} from "../../domain/IUseCases/IAdminuseCases/IAdminUserUseCase";
 import {
   IGetInstructorApplicationUseCase,
   IUpdateInstructorStatusUseCase,
-} from "../../domain/IUseCases/IAdminuseCases/IGetInstructorApplicationUseCase";
-import { IGetStudentsListUseCase } from "../../domain/IUseCases/IAdminuseCases/IGetStudentsListuseCase";
-import { ICheckByEmailUseCase } from "../../domain/IUseCases/IAuthUseCases/IcheckByEmailUseCase";
-import { ICheckByNameUseCase } from "../../domain/IUseCases/IAuthUseCases/ICheckByNameUseCase";
-import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/ICreateuserUseCase";
-import { IGetUserDetailsUseCase } from "../../domain/IUseCases/IAuthUseCases/IGetUserDetailsUseCase";
-import { ILoginUseCase } from "../../domain/IUseCases/IAuthUseCases/ILoginUseCase";
-import { IOtpMatchCheckingUseCase } from "../../domain/IUseCases/IAuthUseCases/IOtpMatchCheckingUseCase";
-import { IVerifyOtpUseCase } from "../../domain/IUseCases/IAuthUseCases/IVarifyOtpUseCase";
-import { IVerifyOtpTrueUseCase } from "../../domain/IUseCases/IAuthUseCases/IVerifyOtpTrueUseCase";
-import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
-import { IDependencies } from "./IDependencies";
-// import {IApplyInstructorUseCase} from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase"
+} from "../../domain/IUseCases/IAdminuseCases/IAdminInstructorUseCase";
+import {
+  ICheckByEmailUseCase,
+  ICheckByNameUseCase,
+  ICreateUserUseCase,
+  IGetUserDetailsUseCase,
+  ILoginUseCase,
+} from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
+import {
+  IOtpMatchCheckingUseCase,
+  IVerifyOtpTrueUseCase,
+  IVerifyOtpUseCase,
+} from "../../domain/IUseCases/IAuthUseCases/IOtpUseCase";
 
 export interface IUseCases {
   // common

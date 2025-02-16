@@ -19,6 +19,7 @@ import {
   ICheckByNameUseCase,
   ICreateUserUseCase,
   IGetUserDetailsUseCase,
+  IGoogleAuthUseCase,
   ILoginUseCase,
 } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
 import {
@@ -42,6 +43,7 @@ export interface IUseCases {
   getUserDetailsUseCase: (
     dependencies: IDependencies
   ) => IGetUserDetailsUseCase;
+  googleAuthUseCase:(dependencies:IDependencies)=>IGoogleAuthUseCase
 
   //admin
 

@@ -12,6 +12,15 @@ import { instructorRoutes } from "./presentation/routes/instructorRoutes";
 dotenv.config();
 
 const app:Application = express();
+// ✅ Remove or Adjust COOP Headers to Fix Google OAuth Issues
+app.use((req, res, next) => {
+  res.removeHeader("Cross-Origin-Opener-Policy"); // ✅ Remove COOP to allow OAuth
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups"); // ✅ Allow OAuth popups
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Referrer-Policy", "no-referrer-when-downgrade"); // ✅ Allows proper OAuth communication
+  next();
+});
+
 
 // Middleware to parse JSON requests
 app.use(express.json())
@@ -19,17 +28,13 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
 // Define routes
 
-
-
-
-// Define the allowed origins
-const allowedOrigins: string = "http://localhost:5173";
-
-// Define the CORS options with type checking
 const corsOptions: CorsOptions = {
-  origin: allowedOrigins,
+  origin: process.env.REACT_APP_URL as string || "http://localhost:5173",
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE","PATCH","HEAD"], // ✅ Allow necessary methods
+  allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow required headers
 };
+
 
 // Use CORS middleware with the options
 app.use(cors(corsOptions));

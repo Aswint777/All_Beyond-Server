@@ -22,4 +22,9 @@ export interface IGetUserDetailsUseCase{
 
 export interface ILoginUseCase{
     execute(email:string,password:string):Promise<UserEntity|null>
- }
+}
+
+
+export interface IGoogleAuthUseCase{
+    execute(email:string): Promise<UserEntity|null>
+}

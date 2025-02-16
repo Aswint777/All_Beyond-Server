@@ -15,6 +15,7 @@ export interface IRepositories {
     verifyOtpTrue : (data:string)=>Promise<boolean|null>
     getUserDetails : (_id:string)=>Promise<UserEntity|null>
     checkNotBlocked : (email:string)=>Promise<UserEntity|null>
+    googleAuth : (email:string,username:string)=>Promise<UserEntity|null>
 
     // Admin
 

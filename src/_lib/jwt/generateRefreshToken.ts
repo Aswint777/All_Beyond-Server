@@ -7,3 +7,4 @@ export const generateRefreshToken = (payload: payLoad) => {
       expiresIn: "15d",
     });
   };
+  

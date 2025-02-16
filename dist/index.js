@@ -24,17 +24,24 @@ const dbConnection_1 = require("./infrastructure/database/dbConnection");
 const instructorRoutes_1 = require("./presentation/routes/instructorRoutes");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+// ✅ Remove or Adjust COOP Headers to Fix Google OAuth Issues
+app.use((req, res, next) => {
+    res.removeHeader("Cross-Origin-Opener-Policy"); // ✅ Remove COOP to allow OAuth
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups"); // ✅ Allow OAuth popups
+    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+    res.setHeader("Referrer-Policy", "no-referrer-when-downgrade"); // ✅ Allows proper OAuth communication
+    next();
+});
 // Middleware to parse JSON requests
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 // Define routes
-// Define the allowed origins
-const allowedOrigins = "http://localhost:5173";
-// Define the CORS options with type checking
 const corsOptions = {
-    origin: allowedOrigins,
+    origin: process.env.REACT_APP_URL || "http://localhost:5173",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"], // ✅ Allow necessary methods
+    allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow required headers
 };
 // Use CORS middleware with the options
 app.use((0, cors_1.default)(corsOptions));

@@ -2,6 +2,7 @@ import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { resentOtpController, verifyOtpController } from "./otpController";
 import {
   getFirstUserDetailsController,
+  google_AuthController,
   loginController,
   logOutController,
   signUpController,
@@ -15,5 +16,6 @@ export const controller = (dependencies: IDependencies) => {
     logOut: logOutController(dependencies),
     resend: resentOtpController(dependencies),
     userDetails: getFirstUserDetailsController(dependencies),
+    google_Auth:google_AuthController(dependencies),
   };
 };

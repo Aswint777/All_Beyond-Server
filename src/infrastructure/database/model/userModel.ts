@@ -15,7 +15,7 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        // required: true
     },
     userId:{
         type : String
@@ -134,16 +134,3 @@ export const User = model<UserEntity>("users",userSchema)
 
 
 
-
-// firstName: String,
-// lastName: String,
-// age: Number,
-// qualification: String,
-// profilePhoto: String, // Store Cloudinary URL
-// address: String,
-// contactNumber: String,
-// educationFile: String, // Store Cloudinary URL
-// gender: String,
-// city: String,
-// country: String,
-// pinNumber: String

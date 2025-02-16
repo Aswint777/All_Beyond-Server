@@ -7,8 +7,10 @@ import { generateAccessToken, generateRefreshToken } from "../../../_lib/jwt";
 import { controller } from ".";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { dependencies } from "../../../_boot/dependency/authDependencies";
+import { constant } from "../../../_lib/common/constant";
+import { OAuth2Client } from "google-auth-library";
 dotenv.config();
-
 
 // user signUp controller
 
@@ -85,7 +87,6 @@ export const signUpController = (dependencies: IDependencies) => {
   };
 };
 
-
 // user Login controller
 
 export const loginController = (dependencies: IDependencies) => {
@@ -95,9 +96,7 @@ export const loginController = (dependencies: IDependencies) => {
     try {
       console.log(req.body);
       const { email, password } = req.body;
-      if (
-        !email.trim() || !password.trim() 
-      ) {
+      if (!email.trim() || !password.trim()) {
         res.status(httpStatusCode.CONFLICT).json({
           success: false,
           message: "All fields are required.",
@@ -111,7 +110,7 @@ export const loginController = (dependencies: IDependencies) => {
       console.log(userLogin, "userLogin");
       if (!userLogin) {
         console.log("no login");
-        
+
         res.status(httpStatusCode.CONFLICT).json({
           success: false,
           message: "There is a problem in your Email or password, try again",
@@ -155,81 +154,147 @@ export const loginController = (dependencies: IDependencies) => {
   };
 };
 
-
 // LogOut controller
 
-
 export const logOutController = (dependencies: IDependencies) => {
-    const { useCases } = dependencies;
-    // const {logOutUseCse}=useCases
-    return async (req: Request, res: Response) => {
-      try {
-        console.log("here the console");
-        const cookieOptions: any = {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 0,
-        };
-        res.cookie("access_token", "", cookieOptions);
-        res.cookie("refresh_token", "", cookieOptions);
-  
-        res.status(httpStatusCode.NO_CONTENT).json({
-          success: true,
-        });
-  
-        // const authHeader = req.headers.authorization; 
-        // if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        //     return res.status(401).json({ error: "Authorization token missing or invalid." });
-        //   }
-        // const token = authHeader.split(" ")[1];
-  
-        // const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-  
-        // console.log("Token decoded successfully:", decoded);
-      } catch (error: any) {
-        res
-          .status(500)
-          .json({ error: "Internal server error. Please try again later." });
-      }
-    };
-  };
-  
+  const { useCases } = dependencies;
+  // const {logOutUseCse}=useCases
+  return async (req: Request, res: Response) => {
+    try {
+      console.log("here the console");
+      const cookieOptions: any = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 0,
+      };
+      res.cookie("access_token", "", cookieOptions);
+      res.cookie("refresh_token", "", cookieOptions);
 
-  
-  export const getFirstUserDetailsController = (dependencies: IDependencies) => {
-    const { useCases } = dependencies;
-    const { getUserDetailsUseCase } = useCases;
-    return async (req: Request, res: Response) => {
-      try {
-        // 🛑 Extract JWT from cookies
-        const token = req.cookies.access_token;
-        if (!token) {
-          res.status(401).json({ message: "Unauthorized: No token provided" });
-          return
-        }
-  
-        // 🛑 Verify JWT
-        const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
-        const decoded = jwt.verify(token, secretKey) as {
-          _id: string;
-          email: string;
-          role: string;
-        };
-        const userDetails = await getUserDetailsUseCase(dependencies).execute(
-          decoded._id
-        );
-  
-        res.status(201).json({
-          success: true,
-          message: "User details is fetched",
-          user: userDetails,
+      res.status(httpStatusCode.NO_CONTENT).json({
+        success: true,
+      });
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ error: "Internal server error. Please try again later." });
+    }
+  };
+};
+
+export const getFirstUserDetailsController = (dependencies: IDependencies) => {
+  const { useCases } = dependencies;
+  const { getUserDetailsUseCase } = useCases;
+  return async (req: Request, res: Response) => {
+    try {
+      // 🛑 Extract JWT from cookies
+      const token = req.cookies.access_token;
+      if (!token) {
+        res.status(401).json({ message: "Unauthorized: No token provided" });
+        return;
+      }
+
+      // 🛑 Verify JWT
+      const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
+      const decoded = jwt.verify(token, secretKey) as {
+        _id: string;
+        email: string;
+        role: string;
+      };
+      const userDetails = await getUserDetailsUseCase(dependencies).execute(
+        decoded._id
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "User details is fetched",
+        user: userDetails,
+      });
+      return;
+    } catch (error: any) {
+      console.error("Error in getFirstUserDetailsController:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+};
+
+// google authentication controller
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const google_AuthController = (dependencies: IDependencies) => {
+  // const {useCases} = dependencies;
+  // const {googleAuthUseCase} = useCases;
+  const {useCases:{ googleAuthUseCase }} = dependencies
+
+  return async (req: Request, res: Response): Promise<void> => {
+    try {
+      console.log(req.body, "sample data");
+      const { credential, userType } = req.body;
+      console.log(process.env.GOOGLE_CLIENT_ID);
+      console.log("Received credential:", credential?.substring(0, 20) + "...");
+
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+      console.log("Payload Audience (aud):", payload?.aud);
+
+      if (!payload || !payload.email) {
+        res.status(400).json({
+          success: false,
+          message:
+            "Google token is invalid or does not contain an email address.",
+        });
+        return; // Ensures the function returns void
+      }
+
+      const { email } = payload;
+      // const name = email.split("@")[0];
+      // console.log(email, name);
+
+      const userEntry = await googleAuthUseCase(dependencies).execute(email)
+      if(!userEntry){
+        
+        res.status(httpStatusCode.CONFLICT).json({
+          success: false,
+          message: "There is a problem ,try again later",
         });
         return;
-      } catch (error: any) {
-        console.error("Error in getFirstUserDetailsController:", error);
-        res.status(500).json({ message: "Internal Server Error" });
       }
-    };
+      
+      const accessToken = generateAccessToken({
+        _id: String(userEntry?._id),
+        email: userEntry?.email!,
+        role: userEntry?.role!,
+      });
+      const refreshToken = generateRefreshToken({
+        _id: String(userEntry?._id),
+        email: userEntry?.email!,
+        role: userEntry?.role!,
+      });
+
+      res.cookie("access_token", accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      });
+      res.cookie("refresh_token", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "User registered successfully!",
+        user: userEntry,
+      });
+
+    } catch (error: constant) {
+      console.error("Error in google authentication:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   };
-  
+};

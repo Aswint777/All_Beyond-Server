@@ -1,3 +1,4 @@
+import { constant } from "../../../_lib/common/constant";
 import { UserEntity } from "../../../domain/entities/User";
 import { User } from "../../database/model/userModel";
 
@@ -99,3 +100,21 @@ export const getUserDetails = async (
     }
   };
   
+
+ export const googleAuth = async(email:string,username:string):Promise<UserEntity|null>=>{
+  try {
+    console.log('.............................................acazscascawzd');
+    
+    const newUser = await User.create({email:email,username:username})
+    console.log(newUser,'googleAuth reppooooooo......................................');
+    if(!newUser){
+      return null
+    }
+    return newUser
+  } catch (error:constant) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("An unexpected error is occurred");
+  }
+ }

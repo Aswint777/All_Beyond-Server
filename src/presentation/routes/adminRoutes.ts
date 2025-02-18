@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { IDependencies } from "../../application/interfaces/IDependencies";
 import { adminController } from "../controllers/adminControllers";
+import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
+import { verifyAdmin } from "../middlewares/verifyAdmin";
 
 export const adminRouters = (dependencies: IDependencies) => {
   const {

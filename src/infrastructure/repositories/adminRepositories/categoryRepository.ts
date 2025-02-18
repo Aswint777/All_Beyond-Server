@@ -73,4 +73,22 @@ export const categoryEdit = async (
       throw new Error("An unexpected error is occurred");
     }
   };
-  
+
+
+  export const duplicateCategory = async (name:string): Promise<boolean | null> => {
+    try {
+      const trimmedName = name.trim().toLowerCase();
+      const duplicate = await category.findOne({ name: { $regex: new RegExp(`^${trimmedName}$`, 'i') } });
+      if(duplicate){
+        return true
+      }
+      return false
+
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("An unexpected error is occurred");
+    }
+  };
+    

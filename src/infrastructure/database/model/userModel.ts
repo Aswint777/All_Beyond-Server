@@ -1,37 +1,37 @@
-import {model,Schema} from "mongoose"
-import { UserEntity } from "../../../domain/entities/User"
+import { model, Schema } from "mongoose";
+import { UserEntity } from "../../../domain/entities/User";
 
-
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     username: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    email:{
-        type: String,
-        required: true,
-        unique: true,
-        index: true
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
     },
     password: {
-        type: String,
-        // required: true
+      type: String,
+      // required: true
     },
-    userId:{
-        type : String
+    userId: {
+      type: String,
     },
     firstName: {
-        type: String,
+      type: String,
     },
     lastName: {
-        type: String,
+      type: String,
     },
-    role:{
-        type: String,
-        enum:["student","admin","instructor"],
-        default: "student"
+    role: {
+      type: String,
+      enum: ["student", "admin", "instructor"],
+      default: "student",
     },
-    
+
     age: {
       type: Number,
     },
@@ -93,44 +93,49 @@ const userSchema = new Schema({
     // phoneNumber:{
     //     type:String
     // },
-    isBlocked:{
-        type:Boolean,
-        default: false
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
-    isVerified:{
-        type:String,
-        // enum:["requested","approved","declined","false"],
-        default:false
+    isVerified: {
+      type: String,
+      // enum:["requested","approved","declined","false"],
+      default: false,
     },
-    profession:{
-        type:String
+    profession: {
+      type: String,
     },
-    profit:{
-        type:Number,
-        default:0
+    profit: {
+      type: Number,
+      default: 0,
     },
     cv: {
-        type: String,
+      type: String,
     },
     isNewUser: {
-        type:Boolean,
-        default: true
+      type: Boolean,
+      default: true,
     },
-    profileDescription:{
-        type: String,
+    profileDescription: {
+      type: String,
     },
-    isAppliedInstructor :{
-      type : Boolean,
-      default : false
-    }
-},{
-    timestamps:true
-})
+    isAppliedInstructor: {
+      type: Boolean,
+      default: false,
+    },
+    instagram: {
+      type: String,
+    },
+    linkedin: {
+      type: String,
+    },
+    facebook: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const User = model<UserEntity>("users",userSchema)
-
-
-
-
-
-
+export const User = model<UserEntity>("users", userSchema);

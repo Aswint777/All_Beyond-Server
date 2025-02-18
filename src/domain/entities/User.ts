@@ -80,4 +80,7 @@ export interface UserEntity {
     status?:string
     profit?:number
     isAppliedInstructor?:boolean
+    linkedin?:string
+    facebook?:string 
+    instagram?:string
 }

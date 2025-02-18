@@ -1,5 +1,6 @@
 import { constant } from "../../../_lib/common/constant";
 import { categoryEntity } from "../../../domain/entities/categoryEntity";
+import { duplicateCategory } from "../../../infrastructure/repositories";
 import { IDependencies } from "../../interfaces/IDependencies";
 
 // useCase of the listing of all the categories
@@ -8,7 +9,7 @@ export const getCategoryListUseCase = (dependencies : IDependencies) => {
     const {repositories : {getCategoryList}} = dependencies
     return {
         execute : async() =>{
-            try {
+            try {  
                 console.log('<><><><>');
                 
                 const categoryList = await getCategoryList()
@@ -24,27 +25,34 @@ export const getCategoryListUseCase = (dependencies : IDependencies) => {
         }
     }
 }
-
-//UseCase of creating new categories
 export const addCategoryUseCase = (dependencies: IDependencies) => {
-    const { repositories: { addCategory } } = dependencies;
-    
+    const { repositories: { addCategory, duplicateCategory } } = dependencies;
+  
     return {
       execute: async (data: categoryEntity): Promise<categoryEntity | null> => {
         try {
+          const name = typeof data.name === "string" ? data.name.trim().toLowerCase() : "";
+  
+          // Check for duplicate category
+          const isDuplicate = await duplicateCategory(name);
+          if (isDuplicate) {
+            throw new Error("Category already exists.");
+          }
+  
+          // Add new category
           const result = await addCategory(data);
           if (!result) {
-            return null; // ✅ Change false to null
+            return null;
           }
           return result;
-        } catch (error: constant) {
-          console.log("Error in add category");
+        } catch (error: any) {
+          console.error("Error in add category:", error);
           throw new Error(error?.message || "Error in add category");
         }
       },
     };
   };
-
+  
 
 // useCase for the Category blocking and Unblocking
 export const block_UnblockCategoryUseCase = (dependencies : IDependencies) => {
@@ -84,6 +92,14 @@ export const categoryEditUseCase = (dependencies:IDependencies)=>{
     return{
         execute : async(id:string,name:string,description:string,type:string)=>{
             try {
+                name = typeof name === "string" ? name.trim().toLowerCase() : "";
+  
+                // Check for duplicate category
+                const isDuplicate = await duplicateCategory(name);
+                if (isDuplicate) {
+                  throw new Error("Category already exists.");
+                }
+        
                 console.log('categoryEditUseCase');
                 return await categoryEdit(id,name,description,type)
             } catch (error:constant) {

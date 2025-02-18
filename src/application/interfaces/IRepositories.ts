@@ -17,6 +17,9 @@ export interface IRepositories {
     checkNotBlocked : (email:string)=>Promise<UserEntity|null>
     googleAuth : (email:string,username:string)=>Promise<UserEntity|null>
 
+    profileEdit: (data:UserEntity)=>Promise<UserEntity|null>
+    uploadPhoto : (userId:string,profilePhoto:string)=>Promise<boolean|null>
+
     // Admin
 
     getStudentsList :()=>Promise<UserEntity[]|boolean|null>
@@ -28,4 +31,5 @@ export interface IRepositories {
     applyInstructor :(data:UserEntity)=>Promise<boolean|null>
     getInstructorApplication : ()=>Promise<UserEntity[]|boolean|null>
     updateInstructorStatus : (Id: string,status: string )=> Promise<boolean | null>
+    duplicateCategory : (name:string)=>Promise<boolean|null>
 }  

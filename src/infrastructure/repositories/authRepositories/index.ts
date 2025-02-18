@@ -7,3 +7,4 @@
 // export * from "./getUserDetails"
 export * from "./userRepository"
 export * from "./otpRepository"
+export * from "./profileRepository"

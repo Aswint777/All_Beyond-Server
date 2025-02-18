@@ -9,7 +9,6 @@ const cpUpload = upload.fields([
 
 ])
 
-
 export const instructorRoutes = (dependencies: IDependencies) => {
   const { instructorApplication } = instructorController(dependencies);
   const router = Router();

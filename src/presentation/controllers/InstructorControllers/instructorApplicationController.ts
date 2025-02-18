@@ -22,10 +22,8 @@ export const instructorApplicationController = (dependencies: IDependencies) => 
       console.log("Instructor Application Controller Triggered");
       console.log("Request Body:", req.body);
       console.log(req.params,'_id');
-      console.log('sdjnsdfkjn');
       const {_id} = req.params
       
-      // console.log(decoded,'decodeeeeeeeeeeeeeeeeeeeeeeeeeeee');
       const profilePhoto = req.files && "profilePhoto" in req.files 
       ? (req.files.profilePhoto as Express.Multer.File[])[0]?.path 
       : "";

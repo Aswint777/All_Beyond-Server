@@ -2,6 +2,7 @@ import exp from "constants"
 
 export * from "./userUseCase"
 export * from "./otpUseCase"
+export * from "./profileUseCase"
 // export {googleAuthUseCase} from "./userUseCase"
 
 // export {checkByNameUseCase} from "./checkByNameUseCase"

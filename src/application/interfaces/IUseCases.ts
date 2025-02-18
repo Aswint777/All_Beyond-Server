@@ -27,6 +27,7 @@ import {
   IVerifyOtpTrueUseCase,
   IVerifyOtpUseCase,
 } from "../../domain/IUseCases/IAuthUseCases/IOtpUseCase";
+import { IChangePasswordUseCase, IProfileEditUseCase, IUploadPhotoUseCase } from "../../domain/IUseCases/IAuthUseCases/IProfileUseCase";
 
 export interface IUseCases {
   // common
@@ -44,6 +45,11 @@ export interface IUseCases {
     dependencies: IDependencies
   ) => IGetUserDetailsUseCase;
   googleAuthUseCase:(dependencies:IDependencies)=>IGoogleAuthUseCase
+
+  ProfileEditUseCase:(dependencies:IDependencies)=>IProfileEditUseCase
+
+  changePasswordUseCase:(dependencies:IDependencies)=>IChangePasswordUseCase
+  uploadPhotoUseCase :(dependencies:IDependencies) =>IUploadPhotoUseCase
 
   //admin
 

@@ -2,32 +2,42 @@ import { Request, Response } from "express";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { constant } from "../../../_lib/common/constant";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+export const addCategoryController = (dependencies: IDependencies) => {
+  const { useCases } = dependencies;
+  const { addCategoryUseCase } = useCases;
 
-export const addCategoryController = (dependencies:IDependencies)=>{
-    const {useCases} = dependencies
-    const {addCategoryUseCase} = useCases
-    return async(req:Request,res:Response)=>{
-        try {
-            console.log(addCategoryController,req.body);
-            const {name,description,type} = req.body
-            const data ={
-                name:name,
-                description:description,
-                type:type
-            }
-            const addNewCategory = await addCategoryUseCase(dependencies).execute(data)
-            res.status(201).json({
-                success: true,
-                message: "category created!",
-              });
-        } catch (error:constant) {
-            res
-            .status(500)
-            .json({ error: "Internal server error. Please try again later." });
-        }
+  return async (req: Request, res: Response) => {
+    try {
+      console.log("Request Body:", req.body);
+
+      const { name, description, type } = req.body;
+
+      if (!name || !description || !type) {
+        return res.status(400).json({ error: "All fields are required." });
+      }
+
+      const data = { name, description, type };
+
+      const addNewCategory = await addCategoryUseCase(dependencies).execute(data);
+
+      if (!addNewCategory) {
+        return res.status(400).json({ error: "Failed to create category." });
+      }
+
+      res.status(201).json({
+        success: true,
+        message: "Category created successfully!",
+        category: addNewCategory,
+      });
+
+    } catch (error: any) {
+      console.error("Error in addCategoryController:", error);
+
+      // ✅ Send meaningful error response
+      res.status(400).json({ error: error.message || "Internal server error. Please try again later." });
     }
-}
-
+  };
+};
 
 
 export const categoryListController = (dependencies:IDependencies)=>{
@@ -93,17 +103,19 @@ export const editCategoryController = (dependencies: IDependencies) => {
         description,
         type
       );
-      if (edit) {
+      if (!edit) {
+        return res.status(400).json({ error: "Failed to create category." });
+
+      }
         res.status(httpStatusCode.OK).json({
           success: true,
           data: edit,
           message: "User logged in successfully",
         });
-      }
     } catch (error: constant) {
       res
         .status(500)
-        .json({ error: "Internal server error. Please try again later." });
-    }
+        res.status(400).json({ error: error.message || "Internal server error. Please try again later." });
+      }
   };
 };

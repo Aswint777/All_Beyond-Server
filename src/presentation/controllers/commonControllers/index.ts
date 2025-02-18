@@ -1,5 +1,6 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { resentOtpController, verifyOtpController } from "./otpController";
+import { profileEditController, uploadProfilePhotoController } from "./profileController";
 import {
   getFirstUserDetailsController,
   google_AuthController,
@@ -17,5 +18,7 @@ export const controller = (dependencies: IDependencies) => {
     resend: resentOtpController(dependencies),
     userDetails: getFirstUserDetailsController(dependencies),
     google_Auth:google_AuthController(dependencies),
+    profile: profileEditController(dependencies),
+    uploadProfilePhoto: uploadProfilePhotoController(dependencies)
   };
 };

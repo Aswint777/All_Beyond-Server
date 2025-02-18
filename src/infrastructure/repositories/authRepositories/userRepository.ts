@@ -1,4 +1,5 @@
 import { constant } from "../../../_lib/common/constant";
+import { generateUserID } from "../../../_lib/common/generateUserID";
 import { UserEntity } from "../../../domain/entities/User";
 import { User } from "../../database/model/userModel";
 
@@ -104,8 +105,9 @@ export const getUserDetails = async (
  export const googleAuth = async(email:string,username:string):Promise<UserEntity|null>=>{
   try {
     console.log('.............................................acazscascawzd');
+      const userId = generateUserID()
     
-    const newUser = await User.create({email:email,username:username})
+    const newUser = await User.create({email:email,username:username,userId:userId})
     console.log(newUser,'googleAuth reppooooooo......................................');
     if(!newUser){
       return null

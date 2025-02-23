@@ -1,17 +1,5 @@
 import {ObjectId} from "mongoose";
 
-
-
-// export class User {
-//     constructor(
-//       public id: string,
-//       public email: string,
-//       public password: string,
-//     ) {}
-//   }
-  
-
-
 enum Role {
     student = "student",
     instructor = "instructor",
@@ -47,7 +35,7 @@ interface Profile {
 }
 
 export interface UserEntity {
-    _id?: string | ObjectId; // ✅ Allow both types
+    _id?: string | ObjectId; 
     userId?:string;
     username?: string;
     firstName?: string;
@@ -74,13 +62,19 @@ export interface UserEntity {
     gender?:string
     city?:string
     country?:string
-    pinNumber?:number
+    pinNumber?:number|string
     educationFile?:string
     profilePhoto?:string
     status?:string
-    profit?:number
+    profit?:number|null
     isAppliedInstructor?:boolean
     linkedin?:string
     facebook?:string 
     instagram?:string
+}
+
+export interface createUserEntity {
+    username: string,
+    email: string,
+    password: string,
 }

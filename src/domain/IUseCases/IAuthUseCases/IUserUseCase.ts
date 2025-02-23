@@ -1,16 +1,17 @@
-import { UserEntity } from "../../entities/User"
-
-export interface ICheckByEmailUseCase {
-    execute(email:String):Promise<boolean|null>
-}
-
+import { createUserEntity, UserEntity } from "../../entities/User"
 
 export interface ICheckByNameUseCase {
     execute(name:String):Promise<boolean|null>
 }
 
+
+export interface ICheckByEmailUseCase {
+    execute(email:String):Promise<UserEntity|null>
+}
+
+
 export interface ICreateUserUseCase{
-    execute(data:UserEntity):Promise<UserEntity|null>
+    execute(data:createUserEntity):Promise<UserEntity|null>
 
 }
 

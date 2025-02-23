@@ -1,106 +1,112 @@
 import { Request, Response } from "express";
-import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { sendEmail } from "../../../infrastructure/utils/nodeMailerConfig";
+import { promises } from "dns";
 
-export const verifyOtpController = (dependencies: IDependencies) => {
-  const { useCases } = dependencies;
-  const { checkByEmailUseCase, otpMatchCheckingUseCase, verifyOtpTrueUseCase } =
-    useCases;
+export class OtpController {
+  private dependencies: IDependencies;
 
-  return async (req: Request, res: Response) => {
+  constructor(dependencies: IDependencies) {
+    this.dependencies = dependencies;
+  }
+
+  // ✅ Verify OTP Controller
+  async otpVerification(req: Request, res: Response): Promise<void> {
     try {
-      console.log("data is in the verifyOtpController");
-      console.log(req.body);
+      console.log("Incoming request in verifyOtpController:", req.body);
       const { email, otp } = req.body;
-      const data = {
-        email,
-        otp,
-      };
-      const emailResult = await otpMatchCheckingUseCase(dependencies).execute(
-        data
-      );
-      console.log(emailResult, "emailResult");
-      if (!emailResult) {
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "OTP is not matching, try again ",
-        });
-        return;
-      }
-      const verifyOtpComplete = await verifyOtpTrueUseCase(
-        dependencies
-      ).execute(email);
-      console.log(verifyOtpComplete, "verifyOtp Complete");
-      res.status(201).json({
-        success: true,
-        message: "User completed registration successfully!",
-        // user: email,
-      });
-      console.log(res.status(201).json);
-      return;
-    } catch (error: any) {
-      console.error("Error during otp:", error.message);
-      res
-        .status(500)
-        .json({ error: "Internal server error. Please try again later." });
-    }
-  };
-};
-
-
-
-export const resentOtpController = (dependencies: IDependencies) => {
-  const { useCases } = dependencies;
-  const { checkByEmailUseCase, verifyOtpUseCase } = useCases;
-
-  return async (req: Request, res: Response) => {
-    try {
-      console.log(req.body, "/////");
-      const { email } = req.body;
-      const emailResult = await checkByEmailUseCase(dependencies).execute(
-        email
-      );
-      console.log(emailResult, "email Result from resent controller");
-      if (!emailResult) {
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "There is a issue with your email, signUp again ",
-        });
-        return;
-      }
-
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-      // Send OTP via email
-      const emailResponse = await sendEmail({
-        to: email,
-        subject: "OTP Verification",
-        text: `Your OTP is: ${otp}`,
-      });
-
       const otpData = {
         email: email,
         otp: otp,
       };
-      const createResentOtp = await verifyOtpUseCase(dependencies).execute(
-        otpData
-      );
-      console.log(createResentOtp, "mmmm");
+
+      // 🔍 Check OTP Match
+      const otpMatch = await this.dependencies.useCases
+        .otpMatchCheckingUseCase(this.dependencies)
+        .execute(otpData);
+      console.log("OTP Match Result:", otpMatch);
+
+      if (!otpMatch) {
+        res.status(httpStatusCode.CONFLICT).json({
+          success: false,
+          message: "OTP is incorrect. Please try again.",
+        });
+        return;
+      }
+
+     // ✅ Mark OTP as verified
+      const verifyOtpComplete = await this.dependencies.useCases
+        .verifyOtpTrueUseCase(this.dependencies)
+        .execute(email);
+      console.log("OTP Verification Complete:", verifyOtpComplete);
 
       res.status(201).json({
         success: true,
-        message: "User registered successfully!",
-        user: emailResult,
-        requiresOTP: true,
+        message: "User registration completed successfully!",
       });
-      console.log(res.status(201).json);
       return;
     } catch (error: any) {
-      console.error("Error during resend:", error.message);
-      res
-        .status(500)
-        .json({ error: "Internal server error. Please try again later." });
+      console.error("Error in verifyOtpController:", error.message);
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error. Please try again later.",
+      });
     }
-  };
-};
+  }
+
+  //   // ✅ Resend OTP Controller
+  async resendOtp(req: Request, res: Response): Promise<void> {
+    try {
+      console.log("Incoming request in resendOtpController:", req.body);
+      const { email } = req.body;
+
+      // 🔍 Validate Email
+      const emailExists = await this.dependencies.useCases
+        .checkByEmailUseCase(this.dependencies)
+        .execute(email);
+      console.log("Email Check Result:", emailExists);
+
+      if (!emailExists) {
+        res.status(httpStatusCode.CONFLICT).json({
+          success: false,
+          message: "Email not found. Please sign up again.",
+        });
+        return;
+      }
+
+      // 🔢 Generate New OTP
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+      // 📧 Send OTP via Email
+      await sendEmail({
+        to: email,
+        subject: "OTP Verification",
+        text: `Your OTP is: ${otp}`,
+      });
+      console.log("last");
+
+      // 🔄 Save New OTP
+      const otpData = {
+        email: email,
+        otp: otp,
+      };
+      await this.dependencies.useCases
+        .verifyOtpUseCase(this.dependencies)
+        .execute(otpData);
+
+      res.status(201).json({
+        success: true,
+        message: "OTP has been resent successfully!",
+        requiresOTP: true,
+      });
+      return;
+    } catch (error: any) {
+      console.error("Error in resendOtpController:", error.message);
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error. Please try again later.",
+      });
+    }
+  }
+}

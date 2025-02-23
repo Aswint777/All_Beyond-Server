@@ -1,123 +1,142 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
-import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { sendEmail } from "../../../infrastructure/utils/nodeMailerConfig";
 import { generateAccessToken, generateRefreshToken } from "../../../_lib/jwt";
-import { controller } from ".";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import { dependencies } from "../../../_boot/dependency/authDependencies";
-import { constant } from "../../../_lib/common/constant";
-import { OAuth2Client } from "google-auth-library";
-dotenv.config();
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 
-// user signUp controller
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-export const signUpController = (dependencies: IDependencies) => {
-  const { useCases } = dependencies;
-  const {
-    createUserUseCase,
-    checkByEmailUseCase,
-    checkByNameUseCase,
-    verifyOtpUseCase,
-  } = useCases;
-  return async (req: Request, res: Response) => {
+export interface ICreateUserUseCase {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export class UserController {
+  private dependencies: IDependencies;
+
+  constructor(dependencies: IDependencies) {
+    this.dependencies = dependencies;
+  }
+
+  // ✅ Sign Up Method
+  async signUp(req: Request, res: Response): Promise<void> {
     try {
-      const { name, email, password, confirmPassword } = req.body;
-      const nameResult = await checkByNameUseCase(dependencies).execute(name);
-      if (nameResult) {
-        res.status(httpStatusCode.CONFLICT).json({
+      const { name, email, password } = req.body;
+      const { checkByNameUseCase, checkByEmailUseCase, createUserUseCase } =
+        this.dependencies.useCases;
+
+      // ✅ Input Validation
+      if (!name || !email || !password) {
+        res.status(httpStatusCode.BAD_REQUEST).json({
           success: false,
-          message: "UserName is already taken , Try alternative ",
+          message: "All fields (name, email, password) are required",
         });
         return;
       }
-      const emailResult = await checkByEmailUseCase(dependencies).execute(
+
+      // 🛑 Check if the username exists
+      const nameResult = await checkByNameUseCase(this.dependencies).execute(
+        name
+      );
+
+      if (nameResult) {
+        res.status(httpStatusCode.CONFLICT).json({
+          success: false,
+          message: "This username is already taken, please try another one",
+        });
+        return;
+      }
+
+      // 🛑 Check if the email exists
+      const emailResult = await checkByEmailUseCase(this.dependencies).execute(
         email
       );
       if (emailResult) {
         res.status(httpStatusCode.CONFLICT).json({
           success: false,
-          message: "this Email is already Logged , Try to Login ",
+          message: "This email is already registered, please log in",
         });
         return;
       }
-      // Hash the password (use bcrypt or similar library)
+
+      // 🔐 Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       const data = {
         username: name,
         email: email,
         password: hashedPassword,
       };
-      const newUser = await createUserUseCase(dependencies).execute(data);
-      // Generate an OTP
+      // ✅ Create the user
+      const newUser = await createUserUseCase(this.dependencies).execute(data);
+      if (!newUser) {
+        res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: "Failed to create user, please try again later",
+        });
+        return;
+      }
+      console.log(newUser, "success");
+
+      // 🔢 Generate OTP
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-      // Send OTP via email
-      const emailResponse = await sendEmail({
+      // 📧 Send OTP via email
+      await sendEmail({
         to: email,
         subject: "OTP Verification",
         text: `Your OTP is: ${otp}`,
       });
-      console.log("User created:", newUser);
 
       const otpData = {
         email: email,
         otp: otp,
       };
-      const createOtpVerificationData = await verifyOtpUseCase(
-        dependencies
-      ).execute(otpData);
+      await this.dependencies.useCases
+        .verifyOtpUseCase(this.dependencies)
+        .execute(otpData);
 
-      res.status(201).json({
+      res.status(httpStatusCode.CREATED).json({
         success: true,
         message: "User registered successfully!",
         user: newUser,
         requiresOTP: true,
       });
-      console.log(res.status(201).json);
       return;
     } catch (error: any) {
-      console.error("Error during signup:", error.message);
-      res
-        .status(500)
-        .json({ error: "Internal server error. Please try again later." });
+      console.error("❌ Error during signup:", error);
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error. Please try again later.",
+      });
     }
-  };
-};
-
-// user Login controller
-
-export const loginController = (dependencies: IDependencies) => {
-  const { useCases } = dependencies;
-  const { loginUseCase } = useCases;
-  return async (req: Request, res: Response) => {
+  }
+  // ✅ Login Method
+  async login(req: Request, res: Response): Promise<void> {
     try {
-      console.log(req.body);
       const { email, password } = req.body;
       if (!email.trim() || !password.trim()) {
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "All fields are required.",
-        });
+        res
+          .status(400)
+          .json({ success: false, message: "All fields are required." });
         return;
       }
-      const userLogin = await loginUseCase(dependencies).execute(
-        email,
-        password
-      );
-      console.log(userLogin, "userLogin");
+
+      // 🔐 Check login credentials
+      const userLogin = await this.dependencies.useCases
+        .loginUseCase(this.dependencies)
+        .execute(email, password);
       if (!userLogin) {
-        console.log("no login");
-
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "There is a problem in your Email or password, try again",
-        });
+        res
+          .status(401)
+          .json({ success: false, message: "Invalid email or password" });
         return;
       }
 
+      // 🔑 Generate JWT Tokens
       const accessToken = generateAccessToken({
         _id: String(userLogin?._id),
         email: userLogin?.email!,
@@ -129,6 +148,7 @@ export const loginController = (dependencies: IDependencies) => {
         role: userLogin?.role!,
       });
 
+      // 🍪 Set cookies for tokens
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: true,
@@ -140,52 +160,43 @@ export const loginController = (dependencies: IDependencies) => {
         sameSite: "none",
       });
 
-      res.status(httpStatusCode.OK).json({
+      res.status(200).json({
         success: true,
         data: userLogin,
         message: "User logged in successfully",
       });
     } catch (error: any) {
-      console.error("Error during signup:", error.message);
+      console.error("Error during login:", error.message);
       res
         .status(500)
         .json({ error: "Internal server error. Please try again later." });
     }
-  };
-};
+  }
 
-// LogOut controller
-
-export const logOutController = (dependencies: IDependencies) => {
-  const { useCases } = dependencies;
-  // const {logOutUseCse}=useCases
-  return async (req: Request, res: Response) => {
+  // ✅ Logout Method
+  async logout(req: Request, res: Response): Promise<void> {
     try {
-      console.log("here the console");
+      console.log("User logging out...");
       const cookieOptions: any = {
         httpOnly: true,
         secure: true,
         sameSite: "none",
         maxAge: 0,
       };
+
       res.cookie("access_token", "", cookieOptions);
       res.cookie("refresh_token", "", cookieOptions);
 
-      res.status(httpStatusCode.NO_CONTENT).json({
-        success: true,
-      });
+      res.status(204).json({ success: true });
     } catch (error: any) {
       res
         .status(500)
         .json({ error: "Internal server error. Please try again later." });
     }
-  };
-};
+  }
 
-export const getFirstUserDetailsController = (dependencies: IDependencies) => {
-  const { useCases } = dependencies;
-  const { getUserDetailsUseCase } = useCases;
-  return async (req: Request, res: Response) => {
+  // ✅ Get User Details Method
+  async getUserDetails(req: Request, res: Response): Promise<void> {
     try {
       // 🛑 Extract JWT from cookies
       const token = req.cookies.access_token;
@@ -201,69 +212,59 @@ export const getFirstUserDetailsController = (dependencies: IDependencies) => {
         email: string;
         role: string;
       };
-      const userDetails = await getUserDetailsUseCase(dependencies).execute(
-        decoded._id
-      );
+      const _id = decoded._id;
+      // 🔍 Fetch user details
+      const userDetails = await this.dependencies.useCases
+        .getUserDetailsUseCase(this.dependencies)
+        .execute(_id);
 
-      res.status(201).json({
+      res.status(200).json({
         success: true,
-        message: "User details is fetched",
+        message: "User details fetched successfully",
         user: userDetails,
       });
-      return;
     } catch (error: any) {
-      console.error("Error in getFirstUserDetailsController:", error);
+      console.error("Error in getUserDetails:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-  };
-};
+  }
 
-// google authentication controller
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-export const google_AuthController = (dependencies: IDependencies) => {
-  // const {useCases} = dependencies;
-  // const {googleAuthUseCase} = useCases;
-  const {useCases:{ googleAuthUseCase }} = dependencies
-
-  return async (req: Request, res: Response): Promise<void> => {
+  // ✅ Google Authentication Method
+  async googleAuth(req: Request, res: Response): Promise<void> {
     try {
-      console.log(req.body, "sample data");
-      const { credential, userType } = req.body;
-      console.log(process.env.GOOGLE_CLIENT_ID);
-      console.log("Received credential:", credential?.substring(0, 20) + "...");
+      console.log(req.body, "Google Auth Data");
+      const { credential } = req.body;
 
+      // 🛑 Verify Google ID Token
       const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: process.env.GOOGLE_CLIENT_ID,
       });
-
       const payload = ticket.getPayload();
       console.log("Payload Audience (aud):", payload?.aud);
 
       if (!payload || !payload.email) {
-        res.status(400).json({
-          success: false,
-          message:
-            "Google token is invalid or does not contain an email address.",
-        });
-        return; // Ensures the function returns void
+        res
+          .status(400)
+          .json({ success: false, message: "Invalid Google token." });
+        return;
       }
 
       const { email } = payload;
-      // const name = email.split("@")[0];
-      // console.log(email, name);
 
-      const userEntry = await googleAuthUseCase(dependencies).execute(email)
-      if(!userEntry){
-        
-        res.status(httpStatusCode.CONFLICT).json({
+      // 🔍 Check if user exists or create new one
+      const userEntry = await this.dependencies.useCases
+        .googleAuthUseCase(this.dependencies)
+        .execute(email);
+      if (!userEntry) {
+        res.status(409).json({
           success: false,
-          message: "There is a problem ,try again later",
+          message: "Google authentication failed, try again later",
         });
         return;
       }
-      
+
+      // 🔑 Generate JWT Tokens
       const accessToken = generateAccessToken({
         _id: String(userEntry?._id),
         email: userEntry?.email!,
@@ -275,6 +276,7 @@ export const google_AuthController = (dependencies: IDependencies) => {
         role: userEntry?.role!,
       });
 
+      // 🍪 Set cookies
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: true,
@@ -288,13 +290,12 @@ export const google_AuthController = (dependencies: IDependencies) => {
 
       res.status(201).json({
         success: true,
-        message: "User registered successfully!",
+        message: "User authenticated successfully!",
         user: userEntry,
       });
-
-    } catch (error: constant) {
-      console.error("Error in google authentication:", error);
+    } catch (error: any) {
+      console.error("Error in Google authentication:", error);
       res.status(500).json({ message: "Internal Server Error" });
     }
-  };
-};
+  }
+}

@@ -1,154 +1,161 @@
-import { constant } from "../../../_lib/common/constant";
-import { UserEntity } from "../../../domain/entities/User";
+import { createUserEntity, UserEntity } from "../../../domain/entities/User";
+import bcrypt from "bcrypt";
 import { IDependencies } from "../../interfaces/IDependencies";
-import bcrypt, { compare } from "bcrypt";
 
-export const checkByEmailUseCase = (dependencies: IDependencies) => {
-  console.log("console in the checkByEmailUseCAse");
+export class UserUseCase {
+  private dependencies: IDependencies;
 
-  const {
-    repositories: { checkByEmail },
-  } = dependencies;
-  return {
-    execute: async (email: string) => {
-      try {
-        const result = await checkByEmail(email);
-        if (result) {
-          return true;
-        } else {
-          return false;
-        }
-      } catch (error: constant) {
-        console.log("Error in checking with email");
+  constructor(dependencies: IDependencies) {
+    this.dependencies = dependencies;
+  }
 
-        throw new Error(error?.message || "Error in checking with email");
+  // ✅ Check if username exists
+  async checkByNameUseCase(name: string): Promise<boolean | null> {
+    try {
+      console.log('checkByNameUseCase   /////');
+      console.log(this.dependencies, "");
+      const result = await this.dependencies.repositories.checkByName(name);
+      console.log(result,'result');
+    
+      if (!result) {
+        return false;
       }
-    },
-  };
-};
-
-export const checkByNameUseCase = (dependencies: IDependencies) => {
-  console.log("console in the checkByNameUseCAse");
-
-  const {
-    repositories: { checkByName },
-  } = dependencies;
-  return {
-    execute: async (name: string) => {
-      try {
-        console.log(
-          name,
-          "name is heree ................................................."
-        );
-
-        return await checkByName(name);
-      } catch (error: constant) {
-        console.log("Error in checking with name");
-
-        throw new Error(error?.message || "Error in checking with name");
-      }
-    },
-  };
-};
-
-export const createUserUseCase = (dependencies: IDependencies) => {
-  console.log("console in the create ");
-
-  const {
-    repositories: { createUser },
-  } = dependencies;
-  return {
-    execute: async (data: UserEntity) => {
-      try {
-        return await createUser(data);
-      } catch (error: constant) {
-        console.log("Error in Creating User");
-
-        throw new Error(error?.message || "Error in Creating User");
-      }
-    },
-  };
-};
-
-export const getUserDetailsUseCase = (dependencies: IDependencies) => {
-  console.log("console in the checkByNameUseCAse");
-
-  const {
-    repositories: { getUserDetails },
-  } = dependencies;
-  return {
-    execute: async (_id: string) => {
-      try {
-        return await getUserDetails(_id);
-      } catch (error: constant) {
-        console.log("Error in user Details");
-
-        throw new Error(error?.message || "Error in user Details");
-      }
-    },
-  };
-};
-
-export const loginUseCase = (dependencies: IDependencies) => {
-  const {
-    repositories: { checkByEmail, checkNotBlocked },
-  } = dependencies;
-  return {
-    execute: async (email: string, password: string) => {
-      try {
-        const user = await checkByEmail(email);
-        if (!user) {
-          return null;
-        }
-        if (!user.password) return null;
-        console.log(user, "user in the login use case");
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-          return null;
-        }
-        const access = await checkNotBlocked(email);
-        if (access) {
-          console.log("access is here ");
-
-          return access;
-        }
-        console.log("no access is there");
-
-        return null;
-      } catch (error: constant) {
-        console.log("Error in login use case");
-        throw new Error(error?.message || "Error in login User");
-      }
-    },
-  };
-};
-
-export const googleAuthUseCase = (dependencies: IDependencies) => {
-  const { repositories: {googleAuth,checkByEmail,checkNotBlocked} } = dependencies;
-  return {
-    execute :async (email:string)=>{
-        try {
-            console.log(email);
-            
-            if(!email){
-                return null
-            }
-            const oldUser = await checkByEmail(email)
-            if(!oldUser){
-                const username = email.split("@")[0];
-                const newUser = await googleAuth(email,username)
-                console.log('sample Testing -------------------------------------------');
-                return newUser
-            }
-            const userStatus = await checkNotBlocked(email)
-            if(userStatus){
-                return userStatus
-            } 
-            
-        } catch (error:constant) {
-            console.log("Error in google auth use case");
-            throw new Error(error?.message || "unknown error");
-        }
+      return true;
+    } catch (error: any) {
+      console.error("❌ Error in checkByNameUseCase:", error);
+      throw new Error(error?.message || "Error in checking username");
     }
   }
-};
+
+  // ✅ Check if email exists
+  async checkByEmailUseCase(email: string): Promise<UserEntity | null> {
+    try {
+      const result = await this.dependencies.repositories.checkByEmail(email);
+      return result || null;
+    } catch (error: any) {
+      console.error("❌ Error in checkByEmailUseCase:", error);
+      throw new Error(error?.message || "Error in checking email");
+    }
+  }
+
+  // // ✅ Create a new user
+  async createUserUseCase(data: createUserEntity): Promise<UserEntity | null> {
+    try {
+      console.log(data,'createUserUseCase');
+      
+      return await this.dependencies.repositories.createUser(data);
+    } catch (error: any) {
+      console.error("❌ Error in createUserUseCase:", error);
+      throw new Error(error?.message || "Error in creating user");
+    }
+  }
+  
+  // ✅ Login user
+  async loginUseCase(email: string, password: string): Promise<UserEntity | null> {
+    try {
+      const { checkByEmail,checkNotBlocked } = this.dependencies.repositories;
+
+      // 🔍 Check if user exists
+      const user = await checkByEmail(email);
+      if (!user?.password) return null;
+
+      console.log("ℹ️ User found. Verifying password...");
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch){
+         return null;
+      }
+     console.log('bingo');
+      // ✅ Check if user is not blocked
+      return await checkNotBlocked(email);
+    } catch (error: any) {
+      console.error("❌ Error in loginUseCase:", error);
+      throw new Error(error?.message || "Error in login user");
+    }
+  }
+
+    // ✅ Get user details by ID
+  async getUserDetailsUseCase(_id: string): Promise<UserEntity | null> {
+    try {
+      return await this.dependencies.repositories.getUserDetails(_id);
+    } catch (error: any) {
+      console.error("❌ Error in getUserDetailsUseCase:", error);
+      throw new Error(error?.message || "Error in fetching user details");
+    }
+  }
+    // ✅ Google Authentication
+  async googleAuthUseCase(email: string): Promise<UserEntity | null> {
+    try {
+      const { googleAuth, checkByEmail, checkNotBlocked } = this.dependencies.repositories;
+      if (!email) return null;
+
+      // 🔍 Check if user already exists
+      const oldUser = await checkByEmail(email);
+      if (!oldUser) {
+        const username = email.split("@")[0];
+        return await googleAuth(email, username);
+      }
+
+      // ✅ Check if user is not blocked
+      return await checkNotBlocked(email);
+    } catch (error: any) {
+      console.error("❌ Error in googleAuthUseCase:", error);
+      throw new Error(error?.message || "Unknown error in Google Auth");
+    }
+  }
+
+}
+
+// import { UserEntity } from "../../../domain/entities/User";
+// import bcrypt from "bcrypt";
+// import { IDependencies } from "../../interfaces/IDependencies";
+
+// export class UserUseCase {
+//   private dependencies: IDependencies;
+
+//   constructor(dependencies: IDependencies) {
+//     this.dependencies = dependencies;
+//   }
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+// export const googleAuthUseCase = (dependencies: IDependencies) => {
+//   const { repositories: {googleAuth,checkByEmail,checkNotBlocked} } = dependencies;
+//   return {
+//     execute :async (email:string)=>{
+//         try {
+//             console.log(email);
+
+//             if(!email){
+//                 return null
+//             }
+//             const oldUser = await checkByEmail(email)
+//             if(!oldUser){
+//                 const username = email.split("@")[0];
+//                 const newUser = await googleAuth(email,username)
+//                 console.log('sample Testing -------------------------------------------');
+//                 return newUser
+//             }
+//             const userStatus = await checkNotBlocked(email)
+//             if(userStatus){
+//                 return userStatus
+//             }
+
+//         } catch (error:constant) {
+//             console.log("Error in google auth use case");
+//             throw new Error(error?.message || "unknown error");
+//         }
+//     }
+//   }
+// };

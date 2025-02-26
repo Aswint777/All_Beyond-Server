@@ -15,8 +15,8 @@ export const routers = (dependencies: IDependencies) => {
     logOut,
     userDetails,
     google_Auth,
-    // profile,
-    // uploadProfilePhoto,
+    editProfile,
+    uploadProfilePhoto,
   } = controller(dependencies);
 
   const router = Router();
@@ -31,11 +31,12 @@ export const routers = (dependencies: IDependencies) => {
   // // ✅ User Profile Routes
   router.route("/userDetails").get(userDetails);
   router.route("/google-auth").post(google_Auth);
-  // router.route("/updateProfile").put(jwtMiddleware, verifyUser, profile);
+
+  router.route("/updateProfile").put(editProfile);
 
   // // ✅ File Upload Route
-  // const cpUpload = upload.fields([{ name: "profilePhoto", maxCount: 1 }]);
-  // router.route("/uploadProfilePhoto").put(cpUpload, uploadProfilePhoto);
+  const cpUpload = upload.fields([{ name: "profilePhoto", maxCount: 1 }]);
+  router.route("/uploadProfilePhoto").put(cpUpload, uploadProfilePhoto);
 
   return router;
 };

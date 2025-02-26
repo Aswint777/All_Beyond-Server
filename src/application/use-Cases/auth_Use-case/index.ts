@@ -1,12 +1,14 @@
-import { createUserEntity } from "../../../domain/entities/User";
+import { createUserEntity, UserEntity } from "../../../domain/entities/User";
 import { matchOtpEntity } from "../../../domain/entities/verifyOtpEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { OtpUseCase } from "./otpUseCase";
+import { ProfileUseCase } from "./profileUseCase";
 import { UserUseCase } from "./userUseCase";
 
 export const authUseCases = (dependencies: IDependencies) => {
   const userUseCaseInstance = new UserUseCase(dependencies);
   const otpUseCaseInstance = new OtpUseCase(dependencies);
+  const profileUseCaseInstance = new ProfileUseCase(dependencies)
 
   return {
     // userUseCaseInstance
@@ -51,7 +53,22 @@ export const authUseCases = (dependencies: IDependencies) => {
       execute: (email: string) =>
         otpUseCaseInstance.verifyOtpTrueUseCase(email),
     }),
+
+    // Profile useCase 
+    profileEditUseCase: () => ({
+      execute: (data: UserEntity) =>
+        profileUseCaseInstance.profileEditUseCase(data),
+    }),
+    changePasswordUseCase: () => ({
+      execute: (email: string, currentPassword: string, newPassword: string, confirmPassword: string) =>
+        profileUseCaseInstance.changePasswordUseCase(email, currentPassword,newPassword,confirmPassword),
+    }),
+    uploadPhotoUseCase: () => ({
+      execute: (userId: string, profilePhoto: string) =>
+        profileUseCaseInstance.uploadPhotoUseCase(userId,profilePhoto),
+    }),
   };
+
 };
 
 // import { IDependencies } from "../../interfaces/IDependencies";
@@ -127,3 +144,4 @@ export const authUseCases = (dependencies: IDependencies) => {
 // export * from "./verifyOtpTrueUseCase"
 // export * from "./loginUseCase"
 // export * from "./getUserDetailsUseCase"
+

@@ -42,7 +42,6 @@ import { IDependencies } from "./IDependencies";
 
 export interface IUseCases {
   // Common Auth Use Cases
-  // checkByNameUseCase: (name: string) => Promise<boolean | null>;
 
   checkByNameUseCase:(dependencies: IDependencies)=> ICheckByNameUseCase;
   checkByEmailUseCase:(dependencies: IDependencies)=> ICheckByEmailUseCase;
@@ -53,22 +52,22 @@ export interface IUseCases {
   loginUseCase:(dependencies: IDependencies)=> ILoginUseCase;
   getUserDetailsUseCase:(dependencies: IDependencies)=> IGetUserDetailsUseCase;
   googleAuthUseCase:(dependencies: IDependencies)=> IGoogleAuthUseCase;
-  // profileEditUseCase: (dependencies: IDependencies)=>IProfileEditUseCase;
-  // changePasswordUseCase:(dependencies: IDependencies)=> IChangePasswordUseCase;
-  // uploadPhotoUseCase:(dependencies: IDependencies)=> IUploadPhotoUseCase;
+  profileEditUseCase: (dependencies: IDependencies)=>IProfileEditUseCase;
+  changePasswordUseCase:(dependencies: IDependencies)=> IChangePasswordUseCase;
+  uploadPhotoUseCase:(dependencies: IDependencies)=> IUploadPhotoUseCase;
 
   // Admin Use Cases
-  // getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;
-  // blockUnblockUserUseCase:(dependencies: IDependencies)=> IBlock_UnBlockUserUseCase;
-  // addCategoryUseCase:(dependencies: IDependencies)=> IAddCategoryUseCase;
-  // getCategoryListUseCase: (dependencies: IDependencies)=>IGetCategoryListUseCase;
-  // blockUnblockCategoryUseCase:(dependencies: IDependencies)=> IBlock_UnblockCategoryUseCase;
-  // categoryEditUseCase:(dependencies: IDependencies)=> ICategoryEditUseCase;
-  // getInstructorApplicationUseCase:(dependencies: IDependencies)=> IGetInstructorApplicationUseCase;
-  // updateInstructorStatusUseCase: (dependencies: IDependencies)=>IUpdateInstructorStatusUseCase;
+  getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;
+  blockUnblockUserUseCase:(dependencies: IDependencies)=> IBlock_UnBlockUserUseCase;
+  addCategoryUseCase:(dependencies: IDependencies)=> IAddCategoryUseCase;
+  getCategoryListUseCase: (dependencies: IDependencies)=>IGetCategoryListUseCase;
+  blockUnblockCategoryUseCase:(dependencies: IDependencies)=> IBlock_UnblockCategoryUseCase;
+  categoryEditUseCase:(dependencies: IDependencies)=> ICategoryEditUseCase;
+  getInstructorApplicationUseCase:(dependencies: IDependencies)=> IGetInstructorApplicationUseCase;
+  updateInstructorStatusUseCase: (dependencies: IDependencies)=>IUpdateInstructorStatusUseCase;
 
   // // Instructor Use Cases
-  // applyInstructorUseCase: (dependencies: IDependencies)=>IApplyInstructorUseCase;
+  applyInstructorUseCase: (dependencies: IDependencies)=>IApplyInstructorUseCase;
 }
 
 

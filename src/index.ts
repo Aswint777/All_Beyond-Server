@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser"
 import { dependencies } from "./_boot/dependency/dependencies";
 // import { adminRouters } from "./presentation/routes/adminRoutes";
 import {connectMongoDB} from "./infrastructure/database/dbConnection";
+import { instructorRoutes } from "./presentation/routes/instructorRoutes";
+import { adminRouters } from "./presentation/routes/adminRoutes";
 // import { instructorRoutes } from "./presentation/routes/instructorRoutes";
 
 dotenv.config();
@@ -39,8 +41,8 @@ const corsOptions: CorsOptions = {
 // Use CORS middleware with the options
 app.use(cors(corsOptions));
 app.use('/auth', routers(dependencies));
-// app.use('/admin', adminRouters(dependencies));
-// app.use('/instructor',instructorRoutes(dependencies));
+app.use('/admin', adminRouters(dependencies));
+app.use('/instructor',instructorRoutes(dependencies));
 
 
 

@@ -12,11 +12,11 @@ export class UserUseCase {
   // ✅ Check if username exists
   async checkByNameUseCase(name: string): Promise<boolean | null> {
     try {
-      console.log('checkByNameUseCase   /////');
+      console.log("checkByNameUseCase   /////");
       console.log(this.dependencies, "");
       const result = await this.dependencies.repositories.checkByName(name);
-      console.log(result,'result');
-    
+      console.log(result, "result");
+
       if (!result) {
         return false;
       }
@@ -41,19 +41,22 @@ export class UserUseCase {
   // // ✅ Create a new user
   async createUserUseCase(data: createUserEntity): Promise<UserEntity | null> {
     try {
-      console.log(data,'createUserUseCase');
-      
+      console.log(data, "createUserUseCase");
+
       return await this.dependencies.repositories.createUser(data);
     } catch (error: any) {
       console.error("❌ Error in createUserUseCase:", error);
       throw new Error(error?.message || "Error in creating user");
     }
   }
-  
+
   // ✅ Login user
-  async loginUseCase(email: string, password: string): Promise<UserEntity | null> {
+  async loginUseCase(
+    email: string,
+    password: string
+  ): Promise<UserEntity | null> {
     try {
-      const { checkByEmail,checkNotBlocked } = this.dependencies.repositories;
+      const { checkByEmail, checkNotBlocked } = this.dependencies.repositories;
 
       // 🔍 Check if user exists
       const user = await checkByEmail(email);
@@ -61,10 +64,10 @@ export class UserUseCase {
 
       console.log("ℹ️ User found. Verifying password...");
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch){
-         return null;
+      if (!isMatch) {
+        return null;
       }
-     console.log('bingo');
+      console.log("bingo");
       // ✅ Check if user is not blocked
       return await checkNotBlocked(email);
     } catch (error: any) {
@@ -73,7 +76,7 @@ export class UserUseCase {
     }
   }
 
-    // ✅ Get user details by ID
+  // ✅ Get user details by ID
   async getUserDetailsUseCase(_id: string): Promise<UserEntity | null> {
     try {
       return await this.dependencies.repositories.getUserDetails(_id);
@@ -82,10 +85,11 @@ export class UserUseCase {
       throw new Error(error?.message || "Error in fetching user details");
     }
   }
-    // ✅ Google Authentication
+  // ✅ Google Authentication
   async googleAuthUseCase(email: string): Promise<UserEntity | null> {
     try {
-      const { googleAuth, checkByEmail, checkNotBlocked } = this.dependencies.repositories;
+      const { googleAuth, checkByEmail, checkNotBlocked } =
+        this.dependencies.repositories;
       if (!email) return null;
 
       // 🔍 Check if user already exists
@@ -102,6 +106,4 @@ export class UserUseCase {
       throw new Error(error?.message || "Unknown error in Google Auth");
     }
   }
-
 }
-

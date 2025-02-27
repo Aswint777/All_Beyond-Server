@@ -35,7 +35,7 @@ export class OtpController {
         return;
       }
 
-     // ✅ Mark OTP as verified
+      // ✅ Mark OTP as verified
       const verifyOtpComplete = await this.dependencies.useCases
         .verifyOtpTrueUseCase(this.dependencies)
         .execute(email);

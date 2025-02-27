@@ -3,17 +3,19 @@ import { IRepositories } from "../../../application/interfaces/IRepositories";
 import { UserEntity } from "../../../domain/entities/User";
 import { User } from "../../database/model";
 
-export class ApplyInstructor implements Pick<IRepositories, "instructorApplication"> {
+export class ApplyInstructor
+  implements Pick<IRepositories, "instructorApplication">
+{
   private dependencies: IDependencies;
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
   }
+  // apply for instructor
   async instructorApplication(data: UserEntity): Promise<boolean | null> {
     try {
       const applyOne = await User.findOneAndUpdate(
-        { _id: data._id }, 
+        { _id: data._id },
         {
-          //   $setOnInsert: { _id: data._id }, // Only set `_id` on insert (not update)
           $set: {
             firstName: data.firstName,
             lastName: data.lastName,

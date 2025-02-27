@@ -11,7 +11,7 @@ export const adminRouters = (dependencies: IDependencies) => {
     blockCategory,
     editCategory,
     adminInstructorApplicationList,
-        updateInstructorStatus,
+    updateInstructorStatus,
   } = adminController(dependencies);
   const router = Router();
 

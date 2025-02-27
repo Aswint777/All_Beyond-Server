@@ -30,8 +30,8 @@ export class MongoDBConnection {
       minPoolSize: 1,
       connectTimeoutMS: 30000,
       socketTimeoutMS: 45000,
-      family: 4  // Force IPv4
-    }
+      family: 4, // Force IPv4
+    },
   };
 
   private constructor() {
@@ -48,7 +48,9 @@ export class MongoDBConnection {
 
   private setupEventHandlers(): void {
     mongoose.connection.on("connected", () => {
-      console.log(`MongoDB connected successfully to ${mongoose.connection.name}`);
+      console.log(
+        `MongoDB connected successfully to ${mongoose.connection.name}`
+      );
     });
 
     mongoose.connection.on("error", (err: Error) => {
@@ -74,8 +76,10 @@ export class MongoDBConnection {
   }
 
   private validateConnectionString(url: string): void {
-    if (!url.startsWith('mongodb+srv://')) {
-      throw new Error('Invalid MongoDB connection string. Must use mongodb+srv:// protocol for Atlas connections');
+    if (!url.startsWith("mongodb+srv://")) {
+      throw new Error(
+        "Invalid MongoDB connection string. Must use mongodb+srv:// protocol for Atlas connections"
+      );
     }
   }
 
@@ -86,39 +90,40 @@ export class MongoDBConnection {
       }
 
       this.validateConnectionString(this.config.url);
-      
+
       console.log(`Connection attempt ${attempt} of ${this.retryAttempts}...`);
-      
+
       // Ensure URL is properly trimmed and encoded
       const cleanUrl = this.config.url.trim();
       await mongoose.connect(cleanUrl, this.config.options);
-
     } catch (error) {
       if (attempt === this.retryAttempts) {
         this.handleConnectionError(error);
         return;
       }
 
-      console.log(`Connection failed. Retrying in ${this.retryDelay / 1000} seconds...`);
-      await new Promise(resolve => setTimeout(resolve, this.retryDelay));
+      console.log(
+        `Connection failed. Retrying in ${this.retryDelay / 1000} seconds...`
+      );
+      await new Promise((resolve) => setTimeout(resolve, this.retryDelay));
       await this.attemptConnection(attempt + 1);
     }
   }
 
   private handleConnectionError(error: unknown): void {
     console.error("MongoDB connection failed after all retry attempts:");
-    
+
     if (error instanceof Error) {
       console.error(`Error Name: ${error.name}`);
       console.error(`Error Message: ${error.message}`);
-      
+
       if (error instanceof mongoose.Error) {
         console.error(`Mongoose Error Details: ${error}`);
       }
     } else {
       console.error("Unknown error type:", error);
     }
-    
+
     process.exit(1);
   }
 
@@ -127,7 +132,6 @@ export class MongoDBConnection {
     await this.attemptConnection();
   }
 }
-
 
 // Usage
 export const connectMongoDB = async (): Promise<void> => {

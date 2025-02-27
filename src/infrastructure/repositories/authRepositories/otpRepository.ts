@@ -1,10 +1,15 @@
 import { generateUserID } from "../../../_lib/common/generateUserID";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { IRepositories } from "../../../application/interfaces/IRepositories";
-import { matchOtpEntity, verifyOtpEntity } from "../../../domain/entities/verifyOtpEntity";
+import {
+  matchOtpEntity,
+  verifyOtpEntity,
+} from "../../../domain/entities/verifyOtpEntity";
 import { otpVerify, User } from "../../database/model";
 
-export class OtpRepository implements Pick<IRepositories, "verifyOtp"|"otpMatchChecking" > {
+export class OtpRepository
+  implements Pick<IRepositories, "verifyOtp" | "otpMatchChecking">
+{
   private dependencies: IDependencies;
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
@@ -36,11 +41,9 @@ export class OtpRepository implements Pick<IRepositories, "verifyOtp"|"otpMatchC
         return false;
       }
       return checkUser.otp === data.otp; // Returns true if OTP matches, false otherwise
-
-
     } catch (error: unknown) {
       console.error("Error in otpMatchChecking:", error);
-      return null
+      return null;
     }
   }
 
@@ -63,4 +66,3 @@ export class OtpRepository implements Pick<IRepositories, "verifyOtp"|"otpMatchC
     }
   }
 }
-

@@ -68,31 +68,7 @@ const userSchema = new Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
-    // profile:{
-    //     avatar:{
-    //         type: String
-    //     },
-    //     dob:{
-    //         type: String
-    //     },
-    //     gender:{
-    //         type:String,
-    //         enum:["male","female","other"]
-    //     }
-    // },
-    // contact:{
-    //     additionalEmail:{
-    //         type:String
-    //     },
-    //     socialMedia: {
-    //         instagram: String,
-    //         linkedIn: String,
-    //         github: String
-    //     }
-    // },
-    // phoneNumber:{
-    //     type:String
-    // },
+
     isBlocked: {
       type: Boolean,
       default: false,

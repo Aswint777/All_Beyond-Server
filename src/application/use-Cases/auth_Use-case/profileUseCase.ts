@@ -62,14 +62,17 @@ export class ProfileUseCase {
   async uploadPhotoUseCase(
     userId: string,
     profilePhoto: string
-  ): Promise<boolean|null> {
+  ): Promise<boolean | null> {
     try {
       console.log(`Executing uploadPhotoUseCase for userId: ${userId}`);
-      const result = this.dependencies.repositories.uploadPhoto(userId, profilePhoto);
-      if(!result) {
-        return false
+      const result = this.dependencies.repositories.uploadPhoto(
+        userId,
+        profilePhoto
+      );
+      if (!result) {
+        return false;
       }
-      return true
+      return true;
     } catch (error: any) {
       console.error("Error in uploadPhotoUseCase:", error);
       throw new Error(error?.message || "Error in uploading profile photo.");

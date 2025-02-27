@@ -88,41 +88,45 @@ export class ProfileController {
     }
   }
 
-    // ✅ Upload Profile Photo Controller
-    async uploadProfilePhoto(req: Request, res: Response):Promise<void> {
-      try {
-        console.log("Incoming request in uploadProfilePhotoController:", req.body);
+  // ✅ Upload Profile Photo Controller
+  async uploadProfilePhoto(req: Request, res: Response): Promise<void> {
+    try {
+      console.log(
+        "Incoming request in uploadProfilePhotoController:",
+        req.body
+      );
 
-        const userId = req.body.userId;
-        const { uploadPhotoUseCase } = this.dependencies.useCases;
+      const userId = req.body.userId;
+      const { uploadPhotoUseCase } = this.dependencies.useCases;
 
-        // 📷 Extract Photo Path
-        const profilePhoto = req.files && "profilePhoto" in req.files
+      // 📷 Extract Photo Path
+      const profilePhoto =
+        req.files && "profilePhoto" in req.files
           ? (req.files.profilePhoto as Express.Multer.File[])[0]?.path
           : "";
 
-        if (!profilePhoto) {
-            res.status(httpStatusCode.BAD_REQUEST).json({
-                success: false,
-                message: "No profile photo provided.",
-            });
-            return
-        }
-
-        // ✅ Upload Photo
-        await uploadPhotoUseCase(this.dependencies).execute(userId, profilePhoto);
-
-         res.status(httpStatusCode.OK).json({
-          success: true,
-          message: "Profile photo uploaded successfully!",
+      if (!profilePhoto) {
+        res.status(httpStatusCode.BAD_REQUEST).json({
+          success: false,
+          message: "No profile photo provided.",
         });
-        return
-
-      } catch (error: any) {
-        console.error("Error in uploadProfilePhotoController:", error.message);
-        res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
-        return
+        return;
       }
-    }
-}
 
+      // ✅ Upload Photo
+      await uploadPhotoUseCase(this.dependencies).execute(userId, profilePhoto);
+
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        message: "Profile photo uploaded successfully!",
+      });
+      return;
+    } catch (error: any) {
+      console.error("Error in uploadProfilePhotoController:", error.message);
+      res
+        .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
+      return;
+    }
+  }
+}

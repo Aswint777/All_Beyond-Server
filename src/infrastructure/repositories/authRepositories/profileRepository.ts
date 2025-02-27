@@ -3,17 +3,28 @@ import { IRepositories } from "../../../application/interfaces/IRepositories";
 import { UserEntity } from "../../../domain/entities/User";
 import { User } from "../../database/model";
 
-export class ProfileRepository implements Pick<IRepositories,"profileEdit"|"uploadPhoto">{
-      private dependencies: IDependencies; // ✅ Store dependencies
-      constructor(dependencies: IDependencies) {
-        this.dependencies = dependencies; // ✅ Assign dependencies
-      }
+export class ProfileRepository
+  implements Pick<IRepositories, "profileEdit" | "uploadPhoto">
+{
+  private dependencies: IDependencies; // ✅ Store dependencies
+  constructor(dependencies: IDependencies) {
+    this.dependencies = dependencies; // ✅ Assign dependencies
+  }
   // ✅ Update User Profile
   async profileEdit(data: UserEntity): Promise<UserEntity | null> {
     try {
       console.log("Profile Update Data:", data);
 
-      const { userId, firstName, lastName, email, linkedin, facebook, instagram, password } = data;
+      const {
+        userId,
+        firstName,
+        lastName,
+        email,
+        linkedin,
+        facebook,
+        instagram,
+        password,
+      } = data;
 
       if (!userId) {
         console.error("User ID is required for updating profile.");
@@ -48,12 +59,17 @@ export class ProfileRepository implements Pick<IRepositories,"profileEdit"|"uplo
       return updatedUser;
     } catch (error: any) {
       console.error("Error updating profile:", error);
-      throw new Error("An unexpected error occurred while updating the profile.");
+      throw new Error(
+        "An unexpected error occurred while updating the profile."
+      );
     }
   }
 
   // ✅ Upload Profile Photo
-  async uploadPhoto(userId: string, profilePhoto: string): Promise<boolean | null> {
+  async uploadPhoto(
+    userId: string,
+    profilePhoto: string
+  ): Promise<boolean | null> {
     try {
       const photo = await User.findOneAndUpdate(
         { userId },
@@ -67,8 +83,9 @@ export class ProfileRepository implements Pick<IRepositories,"profileEdit"|"uplo
       return true;
     } catch (error: any) {
       console.error("Error updating profile photo:", error);
-      throw new Error("An unexpected error occurred while updating the profile photo.");
+      throw new Error(
+        "An unexpected error occurred while updating the profile photo."
+      );
     }
   }
 }
-

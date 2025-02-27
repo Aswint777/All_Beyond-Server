@@ -47,9 +47,9 @@ const corsOptions = {
 };
 // Use CORS middleware with the options
 app.use((0, cors_1.default)(corsOptions));
-app.use('/auth', (0, authRoutes_1.routers)(dependencies_1.dependencies));
-app.use('/admin', (0, adminRoutes_1.adminRouters)(dependencies_1.dependencies));
-app.use('/instructor', (0, instructorRoutes_1.instructorRoutes)(dependencies_1.dependencies));
+app.use("/auth", (0, authRoutes_1.routers)(dependencies_1.dependencies));
+app.use("/admin", (0, adminRoutes_1.adminRouters)(dependencies_1.dependencies));
+app.use("/instructor", (0, instructorRoutes_1.instructorRoutes)(dependencies_1.dependencies));
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Connect to MongoDB
@@ -66,10 +66,3 @@ app.use('/instructor', (0, instructorRoutes_1.instructorRoutes)(dependencies_1.d
         process.exit(1); // Exit the process with failure code
     }
 }))();
-// //connect MongoDB
-// connectDB()  
-// // port
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });

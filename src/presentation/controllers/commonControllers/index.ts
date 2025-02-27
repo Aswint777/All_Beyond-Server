@@ -3,25 +3,24 @@ import { OtpController } from "./otpController";
 import { ProfileController } from "./profileController";
 import { UserController } from "./UserController";
 
-
-
 export const controller = (dependencies: IDependencies) => {
   const userController = new UserController(dependencies);
   const otpController = new OtpController(dependencies);
-  const profileController = new ProfileController(dependencies)
+  const profileController = new ProfileController(dependencies);
 
   return {
     signUp: userController.signUp.bind(userController),
     login: userController.login.bind(userController),
-    logOut: userController.logout.bind(userController), 
+    logOut: userController.logout.bind(userController),
     google_Auth: userController.googleAuth.bind(userController),
 
-    otpVerification:otpController.otpVerification.bind(otpController),
+    otpVerification: otpController.otpVerification.bind(otpController),
     resendOtp: otpController.resendOtp.bind(otpController),
 
     userDetails: userController.getUserDetails.bind(userController),
-    editProfile:profileController.editProfile.bind(profileController),
+    editProfile: profileController.editProfile.bind(profileController),
 
-    uploadProfilePhoto: profileController.uploadProfilePhoto.bind(profileController),
+    uploadProfilePhoto:
+      profileController.uploadProfilePhoto.bind(profileController),
   };
 };

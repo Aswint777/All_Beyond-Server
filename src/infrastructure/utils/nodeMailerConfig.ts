@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import { response } from "express";
 
 dotenv.config();
@@ -10,10 +10,12 @@ interface MailOptions {
   text: string;
 }
 
-export const sendEmail = async (mailOptions: MailOptions): Promise<{ success: boolean; response?: string }> => {
+export const sendEmail = async (
+  mailOptions: MailOptions
+): Promise<{ success: boolean; response?: string }> => {
   try {
-    console.log(response,'the response here in the config nodemailer');
-    
+    console.log(response, "the response here in the config nodemailer");
+
     // Configure the transporter
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -27,8 +29,8 @@ export const sendEmail = async (mailOptions: MailOptions): Promise<{ success: bo
 
     // Send the email
     const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER, 
-      ...mailOptions, 
+      from: process.env.EMAIL_USER,
+      ...mailOptions,
     });
 
     console.log("Email sent successfully:", info.response);

@@ -1,80 +1,82 @@
-import {ObjectId} from "mongoose";
+import { ObjectId } from "mongoose";
 
 enum Role {
-    student = "student",
-    instructor = "instructor",
-    admin = "admin"
+  student = "student",
+  instructor = "instructor",
+  admin = "admin",
 }
 
 enum Gender {
-    male = "male",
-    female = "female"
+  male = "male",
+  female = "female",
 }
 
 enum isVerified {
-    requested = "requested",
-    approved = "approved",
-    rejected = "rejected"
+  requested = "requested",
+  approved = "approved",
+  rejected = "rejected",
 }
 
 interface SocialMedia {
-    instagram?: string;
-    linkedIn?: string;
-    github?: string;
+  instagram?: string;
+  linkedIn?: string;
+  github?: string;
 }
 
 interface Contact {
-    additionalEmail?: string;
-    socialMedia?: SocialMedia;
+  additionalEmail?: string;
+  socialMedia?: SocialMedia;
 }
 
 interface Profile {
-    avatar?: string;
-    dob?: Date;
-    gender?: Gender;
+  avatar?: string;
+  dob?: Date;
+  gender?: Gender;
 }
 
+// user entity
 export interface UserEntity {
-    _id?: string | ObjectId; 
-    userId?:string;
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-    phoneNumber?: string;
-    role?: Role;
-    profile?: Profile;
-    contact?: Contact;
-    isBlocked?: boolean;
-    isVerified?: isVerified;
-    createdAt?: Date;
-    updatedAt?: Date;
-    profession?: string;
-    isNewUser?: boolean;
-    additionalEmail?:string;
-    profileDescription?:string;
-    qualification?: string;
-    cv?:string;
-    age?:number
-    address?:string
-    contactNumber?:Number
-    gender?:string
-    city?:string
-    country?:string
-    pinNumber?:number|string
-    educationFile?:string
-    profilePhoto?:string
-    status?:string
-    profit?:number|null
-    isAppliedInstructor?:boolean
-    linkedin?:string
-    facebook?:string 
-    instagram?:string
+  _id?: string | ObjectId;
+  userId?: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phoneNumber?: string;
+  role?: Role;
+  profile?: Profile;
+  contact?: Contact;
+  isBlocked?: boolean;
+  isVerified?: isVerified;
+  createdAt?: Date;
+  updatedAt?: Date;
+  profession?: string;
+  isNewUser?: boolean;
+  additionalEmail?: string;
+  profileDescription?: string;
+  qualification?: string;
+  cv?: string;
+  age?: number;
+  address?: string;
+  contactNumber?: Number;
+  gender?: string;
+  city?: string;
+  country?: string;
+  pinNumber?: number | string;
+  educationFile?: string;
+  profilePhoto?: string;
+  status?: string;
+  profit?: number | null;
+  isAppliedInstructor?: boolean;
+  linkedin?: string;
+  facebook?: string;
+  instagram?: string;
 }
 
+// create user entity
 export interface createUserEntity {
-    username: string,
-    email: string,
-    password: string,
+  username: string;
+  email: string;
+  password: string;
 }

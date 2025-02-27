@@ -7,17 +7,18 @@ import { CategoryUseCase } from "./categoryUseCase";
 export const adminUseCases = (dependencies: IDependencies) => {
   const adminInstructorUseCase = new AdminInstructorUseCase(dependencies);
   const adminUserUseCase = new AdminUserUseCase(dependencies);
-  const  categoryUseCase = new CategoryUseCase(dependencies)
+  const categoryUseCase = new CategoryUseCase(dependencies);
   return {
-    //
+    // instructor useCase in admin side 
     getInstructorApplicationUseCase: () => ({
       execute: () => adminInstructorUseCase.getInstructorApplicationUseCase(),
     }),
     updateInstructorStatusUseCase: () => ({
-      execute: (Id: string,status: string) => adminInstructorUseCase.updateInstructorStatusUseCase(Id,status),
+      execute: (Id: string, status: string) =>
+        adminInstructorUseCase.updateInstructorStatusUseCase(Id, status),
     }),
 
-//////
+    // student useCase in admin side
     getStudentsListUseCase: () => ({
       execute: () => adminUserUseCase.getStudentsListUseCase(),
     }),
@@ -26,39 +27,22 @@ export const adminUseCases = (dependencies: IDependencies) => {
       execute: (userId: string, isBlocked: boolean) =>
         adminUserUseCase.blockUnblockUserUseCase(userId, isBlocked),
     }),
-    /////
 
+    // category usecase
     getCategoryListUseCase: () => ({
       execute: () => categoryUseCase.getCategoryListUseCase(),
     }),
     addCategoryUseCase: () => ({
-      execute: (data:categoryEntity) => categoryUseCase.addCategoryUseCase(data),
+      execute: (data: categoryEntity) =>
+        categoryUseCase.addCategoryUseCase(data),
     }),
-
     blockUnblockCategoryUseCase: () => ({
-      execute: (id:string,isBlocked:boolean) => categoryUseCase.blockUnblockCategoryUseCase(id,isBlocked),
+      execute: (id: string, isBlocked: boolean) =>
+        categoryUseCase.blockUnblockCategoryUseCase(id, isBlocked),
     }),
-
     categoryEditUseCase: () => ({
-      execute: (id:string,name:string,description:string,type:string) => categoryUseCase.categoryEditUseCase(id,name,description,type),
+      execute: (id: string, name: string, description: string, type: string) =>
+        categoryUseCase.categoryEditUseCase(id, name, description, type),
     }),
   };
 };
-
-
-
-
-
-// import exp from "constants"
-
-// export * from "./categoryUseCase"
-// export * from "./adminUserUseCase"
-// export * from "./adminInstructorUseCase"
-
-// export * from "./getStudentsListUseCase"
-// export * from "./block_UnBlockUserUseCase"
-// export * from "./addCategoryUseCase"
-// export * from "./getCategoryListUseCase"
-// export * from "./block_UnblockCategoryUseCase"
-// export * from "./categoryEditUseCase"
-// export * from "./getInstructorApplicationUseCase"

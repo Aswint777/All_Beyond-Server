@@ -1,4 +1,3 @@
-// import { IRepositories } from "../../application/interfaces/IRepositories";
 import { User } from "../../database/model/userModel";
 // import { UserEntity } from "../../domain/entities/User";
 import { generateUserID } from "../../../_lib/common/generateUserID";
@@ -7,23 +6,30 @@ import { createUserEntity, UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 
 export class UserRepository
-  // implements Pick<IRepositories, "checkByEmail" | "checkByName" | "createUser">
-  implements Pick<IRepositories, "checkByName"|"checkByEmail"|"createUser" >
-
+  implements
+    Pick<
+      IRepositories,
+      | "checkByName"
+      | "checkByEmail"
+      | "createUser"
+      | "checkNotBlocked"
+      | "googleAuth"
+      | "getUserDetails"
+    >
 {
-  private dependencies: IDependencies; // ✅ Store dependencies
+  private dependencies: IDependencies; 
 
   constructor(dependencies: IDependencies) {
-    this.dependencies = dependencies; // ✅ Assign dependencies
+    this.dependencies = dependencies; 
   }
   // ✅ Check if email exists
   async checkByEmail(email: string): Promise<UserEntity | null> {
     try {
-      const oldUser =  await User.findOne({ email });
-      if(!oldUser){
-        return null
+      const oldUser = await User.findOne({ email });
+      if (!oldUser) {
+        return null;
       }
-      return oldUser
+      return oldUser;
     } catch (error) {
       console.error("Error in checkByEmail:", error);
       return null;
@@ -33,13 +39,13 @@ export class UserRepository
   // ✅ Check if username exists
   async checkByName(name: string): Promise<boolean | null> {
     try {
-      const oldUser = await User.findOne({ username: name })
-      if(!oldUser){
-        return false
+      const oldUser = await User.findOne({ username: name });
+      if (!oldUser) {
+        return false;
       }
-      console.log(oldUser,'old user');
-      
-      return true
+      console.log(oldUser, "old user");
+
+      return true;
     } catch (error) {
       console.error("Error in checkByName:", error);
       return null;
@@ -77,7 +83,10 @@ export class UserRepository
   }
 
   // ✅ Google Authentication
-  async googleAuth(email: string, username: string): Promise<UserEntity | null> {
+  async googleAuth(
+    email: string,
+    username: string
+  ): Promise<UserEntity | null> {
     try {
       const userId = generateUserID();
       return await User.create({ email, username, userId });
@@ -87,4 +96,3 @@ export class UserRepository
     }
   }
 }
-

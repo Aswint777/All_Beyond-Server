@@ -7,7 +7,7 @@ export const generateAccessToken = (payload: payLoad) => {
     const newPayload = { _id, email, role };
 
     return jwt.sign(newPayload, String(env_variables.ACCESS_TOKEN_SECRET), {
-      expiresIn: "20m",
+      expiresIn: "40m",
     });
 };
 

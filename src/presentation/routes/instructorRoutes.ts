@@ -2,6 +2,7 @@ import { Router } from "express";
 import upload from "../../_boot/multerConfig";
 import { IDependencies } from "../../application/interfaces/IDependencies";
 import { instructorController } from "../controllers/InstructorControllers";
+import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
 
 const cpUpload = upload.fields([
   { name: "profilePhoto", maxCount: 1 }, // Single file for profile photo

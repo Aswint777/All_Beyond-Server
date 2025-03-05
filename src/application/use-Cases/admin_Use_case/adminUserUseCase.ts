@@ -22,7 +22,7 @@ export class AdminUserUseCase {
       throw new Error(error?.message || "Error in checking with get user");
     }
   }
-
+ 
   // blocking the users
   async blockUnblockUserUseCase(
     userId: string,

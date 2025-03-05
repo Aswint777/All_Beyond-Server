@@ -29,7 +29,7 @@ export class AdminInstructorUseCase {
   async updateInstructorStatusUseCase(
     Id: string,
     status: string
-  ): Promise<boolean | null> {
+  ): Promise<UserEntity | null> {
     const { updateInstructorStatus } = this.dependencies.repositories;
     try {
       console.log(Id, "......");
@@ -38,7 +38,7 @@ export class AdminInstructorUseCase {
       if (!update) {
         return null;
       }
-      return true;
+      return update;
     } catch (error: constant) {
       console.error("Error updating instructor status:", error);
       return null;

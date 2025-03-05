@@ -14,5 +14,5 @@ export interface IChangePasswordUseCase {
 }
 
 export interface IUploadPhotoUseCase {
-  execute(userId: string, profilePhoto: string): Promise<boolean | null>;
+  execute(userId: string, profilePhoto: string): Promise<UserEntity | null>;
 }

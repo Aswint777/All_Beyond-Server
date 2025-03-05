@@ -6,6 +6,7 @@ import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { sendEmail } from "../../../infrastructure/utils/nodeMailerConfig";
 import { generateAccessToken, generateRefreshToken } from "../../../_lib/jwt";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+import { log } from "console";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -114,6 +115,8 @@ export class UserController {
       });
     }
   }
+
+  
   // ✅ Login Method
   async login(req: Request, res: Response): Promise<void> {
     try {
@@ -132,7 +135,7 @@ export class UserController {
       if (!userLogin) {
         res
           .status(401)
-          .json({ success: false, message: "Invalid email or password" });
+          .json({ success: false, message: "Login Failed, Try Again" });
         return;
       }
 
@@ -159,6 +162,8 @@ export class UserController {
         secure: true,
         sameSite: "none",
       });
+      console.log(accessToken,refreshToken,"accessToken,refreshToken");
+      
 
       res.status(200).json({
         success: true,
@@ -176,7 +181,6 @@ export class UserController {
   // ✅ Logout Method
   async logout(req: Request, res: Response): Promise<void> {
     try {
-      console.log("User logging out...");
       const cookieOptions: any = {
         httpOnly: true,
         secure: true,
@@ -199,6 +203,9 @@ export class UserController {
   async getUserDetails(req: Request, res: Response): Promise<void> {
     try {
       // 🛑 Extract JWT from cookies
+      if(!req.user){
+        return;
+      }
       const token = req.cookies.access_token;
       if (!token) {
         res.status(401).json({ message: "Unauthorized: No token provided" });
@@ -217,12 +224,12 @@ export class UserController {
       const userDetails = await this.dependencies.useCases
         .getUserDetailsUseCase(this.dependencies)
         .execute(_id);
-
       res.status(200).json({
         success: true,
         message: "User details fetched successfully",
         user: userDetails,
-      });
+      })
+      return;
     } catch (error: any) {
       console.error("Error in getUserDetails:", error);
       res.status(500).json({ message: "Internal Server Error" });
@@ -232,7 +239,6 @@ export class UserController {
   // ✅ Google Authentication Method
   async googleAuth(req: Request, res: Response): Promise<void> {
     try {
-      console.log(req.body, "Google Auth Data");
       const { credential } = req.body;
 
       // 🛑 Verify Google ID Token
@@ -241,7 +247,6 @@ export class UserController {
         audience: process.env.GOOGLE_CLIENT_ID,
       });
       const payload = ticket.getPayload();
-      console.log("Payload Audience (aud):", payload?.aud);
 
       if (!payload || !payload.email) {
         res

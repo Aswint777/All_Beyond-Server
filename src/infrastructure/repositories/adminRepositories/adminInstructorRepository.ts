@@ -39,19 +39,19 @@ export class AdminInstructorRepository
   async updateInstructorStatus(
     Id: string,
     status: string
-  ): Promise<boolean | null> {
+  ): Promise<UserEntity | null> {
     try {
       console.log("api call is here ");
       console.log(status, Id);
 
       const update = await User.findOneAndUpdate(
         { _id: Id },
-        { $set: { status: status } }
+        { $set: { status: status ,  role: status === "approved" ? "instructor" : "student" } }, { new: true } 
       );
       if (!update) {
         return null;
       }
-      return true;
+      return update;
     } catch (error: constant) {
       if (error instanceof Error) {
         throw error;

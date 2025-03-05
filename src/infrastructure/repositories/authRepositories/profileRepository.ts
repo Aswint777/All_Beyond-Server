@@ -69,7 +69,7 @@ export class ProfileRepository
   async uploadPhoto(
     userId: string,
     profilePhoto: string
-  ): Promise<boolean | null> {
+  ): Promise<UserEntity | null> {
     try {
       const photo = await User.findOneAndUpdate(
         { userId },
@@ -78,9 +78,9 @@ export class ProfileRepository
       );
 
       if (!photo) {
-        return false;
+        return null;
       }
-      return true;
+      return photo;
     } catch (error: any) {
       console.error("Error updating profile photo:", error);
       throw new Error(

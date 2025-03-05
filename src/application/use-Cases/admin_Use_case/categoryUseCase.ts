@@ -35,8 +35,8 @@ export class CategoryUseCase {
     try {
       const name =
         typeof data.name === "string" ? data.name.trim().toLowerCase() : "";
-
-      // Check for duplicate category
+      const id = ""
+      // Check for duplicate category  
       const isDuplicate = await duplicateCategory(name);
       if (isDuplicate) {
         throw new Error("Category already exists.");
@@ -93,20 +93,34 @@ export class CategoryUseCase {
     type: string
   ): Promise<boolean | null> {
     const { categoryEdit, duplicateCategory } = this.dependencies.repositories;
-
+  
     try {
       name = typeof name === "string" ? name.trim().toLowerCase() : "";
-
-      // Check for duplicate category
-      const isDuplicate = await duplicateCategory(name);
-      if (isDuplicate) {
-        throw new Error("Category already exists.");
+  
+      // Fetch the existing category to compare names
+      const existingCategory = await categoryEdit(id, name, description, type);
+      if (!existingCategory) {
+        throw new Error("Category not found.");
       }
-
+  
+      // Check for duplicate category only if name is changed
+      if (name !== existingCategory?.name) {
+        const isDuplicate = await duplicateCategory(name, id); // Exclude current category
+        console.log(isDuplicate?.length, 'number');
+        console.log(isDuplicate);
+  
+        if (isDuplicate) {  // Check if duplicate exists
+          throw new Error("Category already exists.");
+        }
+      }
+  
       console.log("categoryEditUseCase");
-      return await categoryEdit(id, name, description, type);
-    } catch (error: constant) {
-      throw new Error(error?.message || "error occurred in category Edit ");
+      const result = await categoryEdit(id, name, description, type);
+      if(result) return true
+      return false
+    } catch (error: any) {
+      throw new Error(error?.message || "Error occurred in category Edit");
     }
   }
+  
 }

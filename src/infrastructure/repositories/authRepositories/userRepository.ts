@@ -43,7 +43,6 @@ export class UserRepository
       if (!oldUser) {
         return false;
       }
-      console.log(oldUser, "old user");
 
       return true;
     } catch (error) {

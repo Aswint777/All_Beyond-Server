@@ -78,7 +78,7 @@ export class CategoryRepository
     name: string,
     description: string,
     type: string
-  ): Promise<boolean | null> {
+  ): Promise<categoryEntity | null> {
     try {
       console.log("categoryEdit repo");
       const edit = await category.findOneAndUpdate(
@@ -86,7 +86,7 @@ export class CategoryRepository
         { $set: { name: name, description: description, type: type } }
       );
       if (edit) {
-        return true;
+        return edit;
       }
       return null;
     } catch (error) {
@@ -98,21 +98,24 @@ export class CategoryRepository
   }
 
   // check duplicate category
-  async duplicateCategory(name: string): Promise<boolean | null> {
-    try {
-      const trimmedName = name.trim().toLowerCase();
-      const duplicate = await category.findOne({
-        name: { $regex: new RegExp(`^${trimmedName}$`, "i") },
-      });
-      if (duplicate) {
-        return true;
-      }
-      return false;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error("An unexpected error is occurred");
+  // Check duplicate category, excluding current category ID if provided
+async duplicateCategory(name: string, excludeId?: string): Promise<categoryEntity[] | null> {
+  try {
+    const trimmedName = name.trim().toLowerCase();
+    const filter: any = { name: { $regex: new RegExp(`^${trimmedName}$`, "i") } };
+
+    if (excludeId) {
+      filter._id = { $ne: excludeId }; // Exclude current category
     }
+
+    const duplicate = await category.find(filter);
+    return duplicate.length > 0 ? duplicate : null; // Return null if no duplicates
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("An unexpected error occurred");
   }
+}
+
 }

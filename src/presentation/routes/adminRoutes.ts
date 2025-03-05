@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { IDependencies } from "../../application/interfaces/IDependencies";
 import { adminController } from "../controllers/adminControllers";
+import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
+import { verifyAdmin } from "../middlewares/verifyAdmin";
 
 export const adminRouters = (dependencies: IDependencies) => {
   const {
@@ -15,16 +17,18 @@ export const adminRouters = (dependencies: IDependencies) => {
   } = adminController(dependencies);
   const router = Router();
 
-  router.route("/AdminStudentsListPage").get(getAdminStudentsList);
-  router.route("/block_UnBlock").put(block_UnBlock);
-  router.route("/addCategory").post(createCategory);
-  router.route("/categoryList").get(categoryList);
-  router.route("/blockCategory").put(blockCategory);
-  router.route("/editCategory/:id").put(editCategory);
+  router.route("/AdminStudentsListPage").get(jwtMiddleware,verifyAdmin,getAdminStudentsList);
+  router.route("/block_UnBlock").put(jwtMiddleware,verifyAdmin,block_UnBlock);
+  router.route("/addCategory").post(jwtMiddleware,verifyAdmin,createCategory);
+  router.route("/categoryList").get(jwtMiddleware,verifyAdmin,categoryList);
+  router.route("/blockCategory").put(jwtMiddleware,verifyAdmin,blockCategory);
+  router.route("/editCategory/:id").put(jwtMiddleware,verifyAdmin,editCategory);
   router
     .route("/AdminInstructorApplicationList")
-    .get(adminInstructorApplicationList);
-  router.route("/updateInstructorStatus").put(updateInstructorStatus);
+    .get(jwtMiddleware,verifyAdmin,adminInstructorApplicationList);
+  router.route("/updateInstructorStatus").put(jwtMiddleware,verifyAdmin,updateInstructorStatus);
 
   return router;
 };
+
+

@@ -114,11 +114,12 @@ export class ProfileController {
       }
 
       // ✅ Upload Photo
-      await uploadPhotoUseCase(this.dependencies).execute(userId, profilePhoto);
+      const data = await uploadPhotoUseCase(this.dependencies).execute(userId, profilePhoto);
 
       res.status(httpStatusCode.OK).json({
         success: true,
         message: "Profile photo uploaded successfully!",
+        data : data
       });
       return;
     } catch (error: any) {

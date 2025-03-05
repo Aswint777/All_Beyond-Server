@@ -12,6 +12,8 @@ export const verifyAdmin = async (
     }
 
     if (req.user.role !== "admin") {
+      console.log(req.user.role,"role hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+      
       return next("Role mismatch, verify admin");
     }
 

@@ -26,8 +26,10 @@ export const jwtMiddleware = async (
 
     // ✅ Extract Cookies (First Check the Cookie Before Authorization Header)
     const { access_token, refresh_token } = req.cookies;
-
+   console.log(req.cookies,"req.cookies");
+   
     let user: UserPayload | null = null;
+    console.log(access_token, refresh_token);
 
     // ✅ If Access Token Exists in Cookie, Verify It
     if (access_token) {

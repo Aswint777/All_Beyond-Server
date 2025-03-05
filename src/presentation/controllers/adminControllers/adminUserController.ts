@@ -12,11 +12,9 @@ export class AdminUserController {
   async getAdminStudentsList(req: Request, res: Response): Promise<void> {
     try {
       const { getStudentsListUseCase } = this.dependencies.useCases;
-      console.log("getAdminStudentsList");
       const userList = await getStudentsListUseCase(
         this.dependencies
       ).execute();
-      console.log(userList, "list");
       res.status(httpStatusCode.OK).json({
         success: true,
         data: userList,
@@ -33,8 +31,9 @@ export class AdminUserController {
   async block_UnBlockUser(req: Request, res: Response): Promise<void> {
     const { blockUnblockUserUseCase } = this.dependencies.useCases;
     try {
-      console.log("block here", req.body);
       const { userId, isBlocked } = req.body;
+      console.log("testing is under going");
+      
       const statusChange = await blockUnblockUserUseCase(
         this.dependencies
       ).execute(userId, isBlocked);

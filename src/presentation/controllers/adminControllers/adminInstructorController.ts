@@ -47,6 +47,12 @@ export class AdminInstructorController {
         status
       )
       console.log(update, "jjj");
+      res.status(200).json({
+        success: true,
+        data: update,
+        message: "status updated successfully",
+      });
+      return
     } catch (error: constant) {
       console.error("Error during updateStatus:", error.message);
       res

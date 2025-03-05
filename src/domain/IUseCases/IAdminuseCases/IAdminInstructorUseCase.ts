@@ -5,5 +5,5 @@ export interface IGetInstructorApplicationUseCase {
 }
 
 export interface IUpdateInstructorStatusUseCase {
-  execute(Id: string, status: string): Promise<boolean | null>;
+  execute(Id: string, status: string): Promise<UserEntity | null>;
 }

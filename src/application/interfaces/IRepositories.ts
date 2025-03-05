@@ -28,7 +28,7 @@ export interface IRepositories {
   uploadPhoto: (
     userId: string,
     profilePhoto: string
-  ) => Promise<boolean | null>;
+  ) => Promise<UserEntity | null>;
 
   // => Admin Repository
 
@@ -51,15 +51,15 @@ export interface IRepositories {
     name: string,
     description: string,
     type: string
-  ) => Promise<boolean | null>;
-  duplicateCategory: (name: string) => Promise<boolean | null>;
+  ) => Promise<categoryEntity | null>;
+  duplicateCategory: (name: string,id?:string) => Promise<categoryEntity[] | null>;
 
   // adminInstructorRepository
   getInstructorApplication: () => Promise<UserEntity[] | boolean | null>;
   updateInstructorStatus: (
     Id: string,
     status: string
-  ) => Promise<boolean | null>;
+  ) => Promise<UserEntity | null>;
 
   // => instructor
 

@@ -11,8 +11,8 @@ interface MulterRequest extends Request {
     educationFile?: Express.Multer.File[];
   };
 }
-
-export class InstructorController {
+              
+export class ApplyInstructorController {
   private dependencies: IDependencies;
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
@@ -24,7 +24,7 @@ export class InstructorController {
       console.log("Request Body:", req.body);
       console.log(req.params, "_id");
       const { _id } = req.params;
-
+      console.log('hai')
       const profilePhoto =
         req.files && "profilePhoto" in req.files
           ? (req.files.profilePhoto as Express.Multer.File[])[0]?.path

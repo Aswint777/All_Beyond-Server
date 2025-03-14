@@ -3,7 +3,12 @@ import { IDependencies } from "../../application/interfaces/IDependencies";
 import { controller } from "../controllers/commonControllers";
 import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
 import { verifyUser } from "../middlewares/verifyUser";
-import upload from "../../_boot/multerConfig";
+import { uploadCloudinary } from "../../_boot/multerConfig";
+// import upload from "../../_boot/multerConfig";
+
+const cpUpload = uploadCloudinary.fields([
+  { name: "profilePhoto", maxCount: 1 },
+]);
 
 // ✅ Ensure we accept dependencies as a parameter instead of importing it directly.
 export const routers = (dependencies: IDependencies) => {
@@ -31,14 +36,15 @@ export const routers = (dependencies: IDependencies) => {
   router.route("/OtpVerify").post(otpVerification);
   router.route("/resent").post(resendOtp);
 
-  router.route("/userDetails").get(jwtMiddleware,userDetails);   
+  router.route("/userDetails").get(jwtMiddleware, userDetails);
 
   // // ✅ User Profile Routes
-  router.route("/updateProfile").put(jwtMiddleware,verifyUser,editProfile);
+  router.route("/updateProfile").put(jwtMiddleware, verifyUser, editProfile);
 
   // // ✅ File Upload Route
-  const cpUpload = upload.fields([{ name: "profilePhoto", maxCount: 1 }]);
-  router.route("/uploadProfilePhoto").put(jwtMiddleware,cpUpload, uploadProfilePhoto);
+  router
+    .route("/uploadProfilePhoto")
+    .put(jwtMiddleware, cpUpload, uploadProfilePhoto);
 
   return router;
 };

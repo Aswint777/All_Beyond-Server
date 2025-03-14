@@ -1,10 +1,14 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
-import { InstructorController } from "./instructorApplicationController";
+import { CourseController } from "./courseController";
+import { ApplyInstructorController } from "./instructorApplicationController";
+// import { InstructorController } from "./instructorApplicationController";
 
 export const instructorController = (dependencies: IDependencies) => {
-  const instructorController = new InstructorController(dependencies);
+  const instructorApply = new ApplyInstructorController(dependencies);
+  const courseController = new CourseController(dependencies)
   return {
-    instructorApplication:
-      instructorController.instructorApplication.bind(instructorController),
+    instructorApplication:instructorApply.instructorApplication.bind(instructorApply),
+    createCourse: courseController.createCourse.bind(courseController)
+
   };
 };

@@ -1,5 +1,6 @@
 import { Account } from "aws-sdk";
 import { model, Schema, Types } from "mongoose";
+import { CourseEntity } from "../../../domain/entities/courseEntity";
 
 const courseSchema = new Schema({
   courseTitle: {
@@ -16,6 +17,9 @@ const courseSchema = new Schema({
   },
   aboutInstructor: {
     type: String,
+  },
+  thumbnailUrl:{
+    type:String
   },
   content: [
     {
@@ -40,8 +44,9 @@ const courseSchema = new Schema({
     },
   ],
   pricingOption: {
+    type:String,
     enum: ["Premium", "Free"],
-    default: "Free",
+    // default: "Free",
   },
   Price: {
     type: Number,
@@ -56,4 +61,4 @@ const courseSchema = new Schema({
     type: String,
   },
 });
-export const Course = model("Course", courseSchema);
+export const Course = model<CourseEntity>("Course", courseSchema);

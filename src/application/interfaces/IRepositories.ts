@@ -6,6 +6,7 @@ import {
 } from "../../domain/entities/verifyOtpEntity";
 import { categoryEntity } from "../../domain/entities/categoryEntity";
 import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
+import { CourseEntity } from "../../domain/entities/courseEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -29,6 +30,8 @@ export interface IRepositories {
     userId: string,
     profilePhoto: string
   ) => Promise<UserEntity | null>;
+
+
 
   // => Admin Repository
 
@@ -64,6 +67,10 @@ export interface IRepositories {
   // => instructor
 
   instructorApplication: (data: UserEntity) => Promise<boolean | null>;
+
+  createCourseRepository : (data:CourseEntity)=>Promise<CourseEntity | null>
+  getAllCategoryRepository:()=>Promise<categoryEntity[]|null>
+  
 
   // => student
 }

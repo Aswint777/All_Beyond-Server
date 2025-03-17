@@ -8,7 +8,8 @@ export const instructorController = (dependencies: IDependencies) => {
   const courseController = new CourseController(dependencies)
   return {
     instructorApplication:instructorApply.instructorApplication.bind(instructorApply),
-    createCourse: courseController.createCourse.bind(courseController)
+    createCourse: courseController.createCourse.bind(courseController),
+    getCourseCategories:courseController.getCourseCategories.bind(courseController)
 
   };
 };

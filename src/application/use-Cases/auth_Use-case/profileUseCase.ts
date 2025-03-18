@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { UserEntity } from "../../../domain/entities/User";
+import { constant } from "../../../_lib/common/constant";
 
 export class ProfileUseCase {
   private dependencies: IDependencies;
@@ -76,6 +77,15 @@ export class ProfileUseCase {
     } catch (error: any) {
       console.error("Error in uploadPhotoUseCase:", error);
       throw new Error(error?.message || "Error in uploading profile photo.");
+    }
+  }
+
+  async switchUserRoleUseCase(id:string):Promise<UserEntity|null>{
+    try {
+      const {switchRole} = this.dependencies.repositories
+      return await switchRole(id)
+    } catch (error:constant) {
+      throw new Error(error?.message || "Error in switching Role.");
     }
   }
 }

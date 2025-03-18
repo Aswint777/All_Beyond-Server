@@ -1,3 +1,4 @@
+import { constant } from "../../../_lib/common/constant";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { IRepositories } from "../../../application/interfaces/IRepositories";
 import { UserEntity } from "../../../domain/entities/User";
@@ -86,6 +87,33 @@ export class ProfileRepository
       throw new Error(
         "An unexpected error occurred while updating the profile photo."
       );
+    }
+  }
+
+  //switch user Role
+  async switchRole(id: string): Promise<UserEntity | null> {
+    try {
+      const changeRole = await User.findOneAndUpdate(
+        { _id: id },
+        [
+          {
+            $set: {
+              role: {
+                $cond: {
+                  if: { $eq: ["$role", "instructor"] },
+                  then: "student",
+                  else: "instructor",
+                },
+              },
+            },
+          },
+        ],
+        { new: true } // Returns the updated document
+      );
+      if (!changeRole) return null;
+      return changeRole;
+    } catch (error: constant) {
+      throw new Error(error?.message || "Error in switching Role...");
     }
   }
 }

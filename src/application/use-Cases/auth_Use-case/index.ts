@@ -73,5 +73,9 @@ export const authUseCases = (dependencies: IDependencies) => {
       execute: (userId: string, profilePhoto: string) =>
         profileUseCaseInstance.uploadPhotoUseCase(userId, profilePhoto),
     }),
+
+    switchUserRoleUseCase:()=>({
+      execute:(id:string)=>profileUseCaseInstance.switchUserRoleUseCase(id)
+    })
   };
 };

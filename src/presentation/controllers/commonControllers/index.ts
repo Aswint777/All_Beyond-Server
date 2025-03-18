@@ -13,14 +13,14 @@ export const controller = (dependencies: IDependencies) => {
     login: userController.login.bind(userController),
     logOut: userController.logout.bind(userController),
     google_Auth: userController.googleAuth.bind(userController),
+    userDetails: userController.getUserDetails.bind(userController),
 
     otpVerification: otpController.otpVerification.bind(otpController),
     resendOtp: otpController.resendOtp.bind(otpController),
 
-    userDetails: userController.getUserDetails.bind(userController),
     editProfile: profileController.editProfile.bind(profileController),
-
     uploadProfilePhoto:
       profileController.uploadProfilePhoto.bind(profileController),
+    switchUserRole: profileController.switchUserRole.bind(profileController),
   };
 };

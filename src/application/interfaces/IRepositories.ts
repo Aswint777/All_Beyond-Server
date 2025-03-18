@@ -30,6 +30,8 @@ export interface IRepositories {
     userId: string,
     profilePhoto: string
   ) => Promise<UserEntity | null>;
+  switchRole:(id:string)=>Promise<UserEntity|null>
+
 
 
 

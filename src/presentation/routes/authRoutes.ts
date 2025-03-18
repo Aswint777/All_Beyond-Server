@@ -22,6 +22,7 @@ export const routers = (dependencies: IDependencies) => {
     google_Auth,
     editProfile,
     uploadProfilePhoto,
+    switchUserRole
   } = controller(dependencies);
 
   const router = Router();
@@ -45,6 +46,8 @@ export const routers = (dependencies: IDependencies) => {
   router
     .route("/uploadProfilePhoto")
     .put(jwtMiddleware, cpUpload, uploadProfilePhoto);
+
+    router.route("/switchUserRole").put(jwtMiddleware,switchUserRole)
 
   return router;
 };

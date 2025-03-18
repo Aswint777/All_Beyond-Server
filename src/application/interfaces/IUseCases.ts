@@ -17,6 +17,7 @@ import {
 import {
   IChangePasswordUseCase,
   IProfileEditUseCase,
+  ISwitchUserRoleUseCase,
   IUploadPhotoUseCase,
 } from "../../domain/IUseCases/IAuthUseCases/IProfileUseCase";
 
@@ -58,6 +59,7 @@ export interface IUseCases {
   profileEditUseCase: (dependencies: IDependencies)=>IProfileEditUseCase;
   changePasswordUseCase:(dependencies: IDependencies)=> IChangePasswordUseCase;
   uploadPhotoUseCase:(dependencies: IDependencies)=> IUploadPhotoUseCase;
+  switchUserRoleUseCase:(dependencies:IDependencies)=>ISwitchUserRoleUseCase
 
   // Admin Use Cases
   getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;

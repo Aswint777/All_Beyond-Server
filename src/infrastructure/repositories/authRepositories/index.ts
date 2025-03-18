@@ -38,5 +38,6 @@ export const AuthRepositories = (dependencies: IDependencies) => {
       profileRepositoryInstance.profileEdit(data),
     uploadPhoto: (userId: string, profilePhoto: string) =>
       profileRepositoryInstance.uploadPhoto(userId, profilePhoto),
+    switchRole:(id:string)=>profileRepositoryInstance.switchRole(id)
   };
 };

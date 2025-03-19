@@ -9,7 +9,8 @@ export const instructorController = (dependencies: IDependencies) => {
   return {
     instructorApplication:instructorApply.instructorApplication.bind(instructorApply),
     createCourse: courseController.createCourse.bind(courseController),
-    getCourseCategories:courseController.getCourseCategories.bind(courseController)
+    getCourseCategories:courseController.getCourseCategories.bind(courseController),
+    // listInstructorCourse:courseController.listInstructorCourse.bind(courseController),
 
   };
 };

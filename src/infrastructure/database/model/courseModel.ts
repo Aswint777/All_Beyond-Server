@@ -60,5 +60,9 @@ const courseSchema = new Schema({
   additionalContactNumber: {
     type: String,
   },
+  user:{
+    type: Types.ObjectId,
+    ref:"users"
+  }
 });
 export const Course = model<CourseEntity>("Course", courseSchema);

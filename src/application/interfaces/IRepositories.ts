@@ -70,9 +70,9 @@ export interface IRepositories {
 
   instructorApplication: (data: UserEntity) => Promise<boolean | null>;
 
-  createCourseRepository : (data:CourseEntity)=>Promise<CourseEntity | null>
+  createCourseRepository : (data:CourseEntity,id:string)=>Promise<CourseEntity | null>
   getAllCategoryRepository:()=>Promise<categoryEntity[]|null>
-  
+  // listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
 
   // => student
 }

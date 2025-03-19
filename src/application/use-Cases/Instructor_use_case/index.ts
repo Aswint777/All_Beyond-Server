@@ -13,7 +13,7 @@ export const instructorUseCase = (dependencies: IDependencies) => {
         instructorApplyUseCase.applyInstructorUseCase(courseData),
     }),
     createCourseUseCase:()=>({
-      execute:(data:CourseEntity)=>courseUseCase.createCourseUseCase(data)
+      execute:(data:CourseEntity,id:string)=>courseUseCase.createCourseUseCase(data,id)
     }),
     allCategoriesUseCase:()=>({
       execute:()=>courseUseCase.allCategoriesUseCase()

@@ -19,4 +19,5 @@ export interface CourseEntity {
   accountNumber?: number;
   additionalEmail?: string;
   additionalContactNumber?: string;
+  user?:ObjectId
 }

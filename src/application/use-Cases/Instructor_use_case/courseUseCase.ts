@@ -11,13 +11,13 @@ export class CourseUseCase {
     this.dependencies = dependencies;
   }
   // Create Course UseCase 
-  async createCourseUseCase(courseData:CourseEntity):Promise<CourseEntity|null>{
+  async createCourseUseCase(courseData:CourseEntity,id:string):Promise<CourseEntity|null>{
     try {
         console.log('createCourseUseCase(courseData:CourseEntity):Promise<CourseEntity');
         console.log(courseData,'jjjjjjj');
         
         const{createCourseRepository}=this.dependencies.repositories
-        const saveCourse = await createCourseRepository(courseData)
+        const saveCourse = await createCourseRepository(courseData,id)
         if(!saveCourse){
             return null
         }

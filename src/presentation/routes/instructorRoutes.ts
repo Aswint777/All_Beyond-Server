@@ -10,7 +10,7 @@ const cpUpload = uploadCloudinary.fields([
 ]);
 
 export const instructorRoutes = (dependencies: IDependencies) => {
-  const { instructorApplication, createCourse, getCourseCategories } =
+  const { instructorApplication, createCourse, getCourseCategories} =
     instructorController(dependencies);
 
   const router = Router();
@@ -20,10 +20,11 @@ export const instructorRoutes = (dependencies: IDependencies) => {
     .route("/instructorApplication/:_id")
     .post(cpUpload, instructorApplication);
 
-  router.route("/createCourse").post(uploadS3.any(), createCourse);
+  router.route("/createCourse").post(jwtMiddleware,uploadS3.any(), createCourse);
 
   router.route("/courseCategories").get(getCourseCategories);
 
+  // router.route("/courses").get(listInstructorCourse)
   //  router.route("/createCourse").post(courseUpload,createCourse)
   return router;
 };

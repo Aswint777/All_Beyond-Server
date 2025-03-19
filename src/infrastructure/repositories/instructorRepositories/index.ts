@@ -12,7 +12,7 @@ export const InstructorRepositories = (dependencies: IDependencies) => {
   return {
     instructorApplication: (data: UserEntity) =>
       applyInstructorInstance.instructorApplication(data),
-    createCourseRepository :(courseData:CourseEntity)=>courseRepository.createCourseRepository(courseData),
+    createCourseRepository :(courseData:CourseEntity,id:string)=>courseRepository.createCourseRepository(courseData,id),
     getAllCategoryRepository:()=>courseRepository.getAllCategoryRepository(),
   };
 };

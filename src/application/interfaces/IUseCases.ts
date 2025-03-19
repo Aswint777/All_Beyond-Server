@@ -40,7 +40,7 @@ import {
 
 import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
-import { IAllCategoriesUseCase, ICreateCourseUseCase } from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
+import { IAllCategoriesUseCase, ICreateCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -77,6 +77,7 @@ export interface IUseCases {
   applyInstructorUseCase: (dependencies: IDependencies)=>IApplyInstructorUseCase;
   createCourseUseCase : (dependencies:IDependencies)=>ICreateCourseUseCase
   allCategoriesUseCase : (dependencies:IDependencies)=>IAllCategoriesUseCase
+  // listInstructorCourseUseCase : (dependencies:IDependencies)=>IListInstructorCourseUseCase
 
 }
 

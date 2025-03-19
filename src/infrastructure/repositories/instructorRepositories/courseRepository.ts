@@ -16,7 +16,7 @@ export class CourseRepository
     this.dependencies = dependencies;
   }
 
-  async createCourseRepository(courseData: CourseEntity): Promise<CourseEntity | null> {
+  async createCourseRepository(courseData: CourseEntity,id:string): Promise<CourseEntity | null> {
     try {
       console.log("🔹 createCourseRepository called with data:", JSON.stringify(courseData, null, 2));
 
@@ -65,7 +65,12 @@ export class CourseRepository
       console.log("📌 Final Course Data Before Saving:", JSON.stringify(courseData, null, 2));
 
       // Create Course
-      const saveCourse = await Course.create(courseData);
+      const saveCourse = await Course.create({ ...courseData, user: id });
+
+      // const saveCourse = await Course.create(courseData);
+      // console.log("user id : ",id);
+      
+      // const saveId = await Course.findByIdAndUpdate(saveCourse._id, { $set: { user: id } });
       if (!saveCourse) {
         console.log("❌ Error: Course not saved.");
         return null;

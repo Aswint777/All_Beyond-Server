@@ -28,6 +28,10 @@ export const adminUseCases = (dependencies: IDependencies) => {
         adminUserUseCase.blockUnblockUserUseCase(userId, isBlocked),
     }),
 
+    userDetailsUseCase:()=>({
+      execute:(userId:string)=>adminUserUseCase.userDetailsUseCase(userId)
+    }),
+
     // category usecase
     getCategoryListUseCase: () => ({
       execute: () => categoryUseCase.getCategoryListUseCase(),
@@ -44,5 +48,6 @@ export const adminUseCases = (dependencies: IDependencies) => {
       execute: (id: string, name: string, description: string, type: string) =>
         categoryUseCase.categoryEditUseCase(id, name, description, type),
     }),
+
   };
 };

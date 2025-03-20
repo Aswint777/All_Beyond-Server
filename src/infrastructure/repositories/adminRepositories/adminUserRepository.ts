@@ -1,3 +1,4 @@
+import { constant } from "../../../_lib/common/constant";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { IRepositories } from "../../../application/interfaces/IRepositories";
 import { UserEntity } from "../../../domain/entities/User";
@@ -49,6 +50,17 @@ export class AdminUserRepository
       }
       return false;
     } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("An unexpected error is occurred");
+    }
+  }
+
+  async findByUserId(userId:string):Promise<UserEntity|null>{
+    try {
+      return await User.findOne({userId:userId})
+    } catch (error:constant) {
       if (error instanceof Error) {
         throw error;
       }

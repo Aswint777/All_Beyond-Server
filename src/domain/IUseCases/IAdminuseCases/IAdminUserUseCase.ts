@@ -7,3 +7,8 @@ export interface IBlock_UnBlockUserUseCase {
 export interface IGetStudentsListUseCase {
   execute(): Promise<UserEntity[] | boolean | null>;
 }
+
+
+export interface IUserDetailsUseCase{
+  execute(userId:string): Promise<UserEntity| null>;
+}

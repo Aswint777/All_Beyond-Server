@@ -14,6 +14,7 @@ export const adminRouters = (dependencies: IDependencies) => {
     editCategory,
     adminInstructorApplicationList,
     updateInstructorStatus,
+    userDetailsController
   } = adminController(dependencies);
   const router = Router();
 
@@ -27,6 +28,8 @@ export const adminRouters = (dependencies: IDependencies) => {
     .route("/AdminInstructorApplicationList")
     .get(jwtMiddleware,verifyAdmin,adminInstructorApplicationList);
   router.route("/updateInstructorStatus").put(jwtMiddleware,verifyAdmin,updateInstructorStatus);
+
+  router.route("/user-details/:userId").get(userDetailsController)
 
   return router;
 };

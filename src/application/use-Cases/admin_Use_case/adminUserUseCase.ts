@@ -1,4 +1,5 @@
 import { constant } from "../../../_lib/common/constant";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../interfaces/IDependencies";
 
@@ -42,4 +43,22 @@ export class AdminUserUseCase {
       throw new Error(error?.message || "Error in block and unblock");
     }
   }
+
+  // user Details 
+  async userDetailsUseCase(userId:string): Promise<UserEntity| null>{
+    const {findByUserId} = this.dependencies.repositories
+    try {
+      const details = await findByUserId(userId)
+      
+      if(!details){
+        return null
+      }
+      return details
+
+    } catch (error:constant) {
+      throw new Error(error?.message || "Error in user Details use case");
+
+    }
+  }
+
 }

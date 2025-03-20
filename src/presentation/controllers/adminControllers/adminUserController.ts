@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+import { constant } from "../../../_lib/common/constant";
 
 export class AdminUserController {
   private dependencies: IDependencies;
@@ -49,6 +50,27 @@ export class AdminUserController {
       res
         .status(500)
         .json({ error: "Internal server error. Please try again later." });
+    }
+  }
+  
+  // user Details controller 
+  async userDetailsController(req: Request, res: Response): Promise<void> {
+    const {userDetailsUseCase} = this.dependencies.useCases
+    try {
+         console.log( req.params,'userDetails ' );
+         const {userId} = req.params
+      const userData = await userDetailsUseCase(this.dependencies).execute(userId)
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        message: "User status changed",
+        data:userData
+      });
+    } catch (error:constant) {
+      console.error("Error in user Details :", error.message);
+      res
+        .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
+      return;
     }
   }
 }

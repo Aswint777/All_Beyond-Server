@@ -14,6 +14,9 @@ export const adminController = (dependencies: IDependencies) => {
     block_UnBlock:
       adminUserController.block_UnBlockUser.bind(adminUserController),
 
+    userDetailsController:
+      adminUserController.userDetailsController.bind(adminUserController),
+
     createCategory:
       categoryController.createCategoryController.bind(categoryController),
     categoryList:

@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import { constant } from "../../../_lib/common/constant";
 import jwt from "jsonwebtoken";
 
-
 export class ProfileController {
   private dependencies: IDependencies;
 
@@ -117,12 +116,15 @@ export class ProfileController {
       }
 
       // ✅ Upload Photo
-      const data = await uploadPhotoUseCase(this.dependencies).execute(userId, profilePhoto);
+      const data = await uploadPhotoUseCase(this.dependencies).execute(
+        userId,
+        profilePhoto
+      );
 
       res.status(httpStatusCode.OK).json({
         success: true,
         message: "Profile photo uploaded successfully!",
-        data : data
+        data: data,
       });
       return;
     } catch (error: any) {
@@ -135,38 +137,39 @@ export class ProfileController {
   }
 
   // Change user Role controller
-  async switchUserRole (req: Request, res: Response): Promise<void> {
-    const {switchUserRoleUseCase} = this.dependencies.useCases
+  async switchUserRole(req: Request, res: Response): Promise<void> {
+    const { switchUserRoleUseCase } = this.dependencies.useCases;
     try {
       console.log("switchUserRole");
-            if(!req.user){
-              return;
-            }
-            const token = req.cookies.access_token;
-            if (!token) {
-              res.status(401).json({ message: "Unauthorized: No token provided" });
-              return;
-            }
-      
-            // 🛑 Verify JWT
-            const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
-            const decoded = jwt.verify(token, secretKey) as {
-              _id: string;
-              email: string;
-              role: string;
-            };
-            const id = decoded._id;
-            console.log( 'id :',id);
-            const newRole = await switchUserRoleUseCase(this.dependencies).execute(id)
+      if (!req.user) {
+        return;
+      }
+      const token = req.cookies.access_token;
+      if (!token) {
+        res.status(401).json({ message: "Unauthorized: No token provided" });
+        return;
+      }
 
-             res.status(httpStatusCode.OK).json({
+      // 🛑 Verify JWT
+      const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
+      const decoded = jwt.verify(token, secretKey) as {
+        _id: string;
+        email: string;
+        role: string;
+      };
+      const id = decoded._id;
+      console.log("id :", id);
+      const newRole = await switchUserRoleUseCase(this.dependencies).execute(
+        id
+      );
+
+      res.status(httpStatusCode.OK).json({
         success: true,
         message: "Role switched successfully!",
-        data : newRole
+        data: newRole,
       });
       return;
-      
-    } catch (error:constant) {
+    } catch (error: constant) {
       console.error("Error in uploadProfilePhotoController:", error.message);
       res
         .status(httpStatusCode.INTERNAL_SERVER_ERROR)

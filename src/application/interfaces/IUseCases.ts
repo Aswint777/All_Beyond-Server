@@ -31,6 +31,7 @@ import {
 import {
   IBlock_UnBlockUserUseCase,
   IGetStudentsListUseCase,
+  IUserDetailsUseCase,
 } from "../../domain/IUseCases/IAdminuseCases/IAdminUserUseCase";
 
 import {
@@ -64,6 +65,7 @@ export interface IUseCases {
   // Admin Use Cases
   getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;
   blockUnblockUserUseCase:(dependencies: IDependencies)=> IBlock_UnBlockUserUseCase;
+  userDetailsUseCase:(dependency:IDependencies)=>IUserDetailsUseCase
   
   addCategoryUseCase:(dependencies: IDependencies)=> IAddCategoryUseCase;
   getCategoryListUseCase: (dependencies: IDependencies)=>IGetCategoryListUseCase;

@@ -30,10 +30,7 @@ export interface IRepositories {
     userId: string,
     profilePhoto: string
   ) => Promise<UserEntity | null>;
-  switchRole:(id:string)=>Promise<UserEntity|null>
-
-
-
+  switchRole: (id: string) => Promise<UserEntity | null>;
 
   // => Admin Repository
 
@@ -43,6 +40,8 @@ export interface IRepositories {
     userId: string,
     isBlocked: boolean
   ) => Promise<boolean | null>;
+
+  findByUserId: (userId: string) => Promise<UserEntity | null>;
 
   // category repository
   addCategory: (data: categoryEntity) => Promise<categoryEntity | null>;
@@ -57,7 +56,10 @@ export interface IRepositories {
     description: string,
     type: string
   ) => Promise<categoryEntity | null>;
-  duplicateCategory: (name: string,id?:string) => Promise<categoryEntity[] | null>;
+  duplicateCategory: (
+    name: string,
+    id?: string
+  ) => Promise<categoryEntity[] | null>;
 
   // adminInstructorRepository
   getInstructorApplication: () => Promise<UserEntity[] | boolean | null>;
@@ -70,8 +72,11 @@ export interface IRepositories {
 
   instructorApplication: (data: UserEntity) => Promise<boolean | null>;
 
-  createCourseRepository : (data:CourseEntity,id:string)=>Promise<CourseEntity | null>
-  getAllCategoryRepository:()=>Promise<categoryEntity[]|null>
+  createCourseRepository: (
+    data: CourseEntity,
+    id: string
+  ) => Promise<CourseEntity | null>;
+  getAllCategoryRepository: () => Promise<categoryEntity[] | null>;
   // listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
 
   // => student

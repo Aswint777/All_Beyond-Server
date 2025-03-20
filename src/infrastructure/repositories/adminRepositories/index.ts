@@ -5,7 +5,7 @@ import { AdminUserRepository } from "./adminUserRepository";
 import { CategoryRepository } from "./categoryRepository";
 
 export const AdminRepositories = (dependencies: IDependencies) => {
-  const AdminUserRepositoryInstance = new AdminUserRepository(dependencies);
+  const adminUserRepositoryInstance = new AdminUserRepository(dependencies);
   const adminInstructorRepositoryInstance = new AdminInstructorRepository(
     dependencies
   );
@@ -13,9 +13,10 @@ export const AdminRepositories = (dependencies: IDependencies) => {
 
   return {
     ////
-    getStudentsList: () => AdminUserRepositoryInstance.getStudentsList(),
+    getStudentsList: () => adminUserRepositoryInstance.getStudentsList(),
     block_UnBlockUser: (userId: string, isBlocked: boolean) =>
-      AdminUserRepositoryInstance.block_UnBlockUser(userId, isBlocked),
+      adminUserRepositoryInstance.block_UnBlockUser(userId, isBlocked),
+    findByUserId:(userId:string)=>adminUserRepositoryInstance.findByUserId(userId),
 
     /////
     getInstructorApplication: () =>

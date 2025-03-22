@@ -3,6 +3,8 @@ import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { constant } from "../../../_lib/common/constant";
 import jwt from "jsonwebtoken";
+import { getUserFromToken } from "../../../infrastructure/utils/getUserFromToken";
+import { getSignedUrlForS3 } from "../../../_boot/getSignedUrl";
 
 interface S3File extends Express.Multer.File {
   location: string; // S3 adds 'location' property with the file URL
@@ -96,7 +98,8 @@ export class CourseController {
       };
 
       const savedCourse = await createCourseUseCase(this.dependencies).execute(
-        courseData,id
+        courseData,
+        id
       );
       res
         .status(httpStatusCode.CREATED)
@@ -113,12 +116,9 @@ export class CourseController {
   async getCourseCategories(req: Request, res: Response): Promise<void> {
     const { allCategoriesUseCase } = this.dependencies.useCases;
     try {
-      console.log("get course Categories ............");
       const allCategories = await allCategoriesUseCase(
         this.dependencies
       ).execute();
-      console.log(allCategories, ">>>>>>>>>>>>>>>>>>>>>>>");
-
       res.status(httpStatusCode.CREATED).json({
         success: true,
         message: "Instructor application submitted successfully",
@@ -132,15 +132,44 @@ export class CourseController {
     }
   }
 
-  // // course listing in the Instructor side
-  // async listInstructorCourse(req: Request, res: Response): Promise<void> {
-  //   try {
-  //     console.log("listing the users ?");
-  //   } catch (error: constant) {
-  //     res
-  //       .status(httpStatusCode.INTERNAL_SERVER_ERROR)
-  //       .json({ message: "Internal Server Error" });
-  //     return;
-  //   }
-  // }
+// Course listing in the Instructor side
+// Course listing in the Instructor side
+async listInstructorCourse(req: Request, res: Response): Promise<void> {
+  const { listInstructorCourseUseCase } = this.dependencies.useCases;
+  try {
+    console.log("Listing the courses...");
+    const user = getUserFromToken(req, res);
+    if (!user) return;
+    const id = user._id;
+
+    let courses = await listInstructorCourseUseCase(this.dependencies).execute(id);
+    if (!courses) {
+       res.status(404).json({
+        success: false,
+        message: "No courses found",
+      });
+      return
+    }
+    // ✅ Generate Signed URL for Thumbnails
+    courses = await Promise.all(
+      courses.map(async (course) => {
+        if (course.thumbnailUrl) {
+          const fileKey = course.thumbnailUrl.split("/course_assets/thumbnails/")[1]; // Extract filename
+          course.thumbnailUrl = await getSignedUrlForS3(fileKey);
+        }
+        return course;
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Course Listing successful",
+      data: courses,
+    });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 }

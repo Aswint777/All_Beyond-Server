@@ -77,7 +77,7 @@ export interface IRepositories {
     id: string
   ) => Promise<CourseEntity | null>;
   getAllCategoryRepository: () => Promise<categoryEntity[] | null>;
-  // listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
+  listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
 
   // => student
 }

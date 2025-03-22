@@ -9,7 +9,7 @@ import { Course } from "../../database/model/courseModel";
 
 
 export class CourseRepository
-  implements Pick<IRepositories, "createCourseRepository">
+  implements Pick<IRepositories, "createCourseRepository"|"getAllCategoryRepository"|"listInstructorRepository">
 {
   private dependencies: IDependencies;
   constructor(dependencies: IDependencies) {
@@ -66,11 +66,6 @@ export class CourseRepository
 
       // Create Course
       const saveCourse = await Course.create({ ...courseData, user: id });
-
-      // const saveCourse = await Course.create(courseData);
-      // console.log("user id : ",id);
-      
-      // const saveId = await Course.findByIdAndUpdate(saveCourse._id, { $set: { user: id } });
       if (!saveCourse) {
         console.log("❌ Error: Course not saved.");
         return null;
@@ -84,47 +79,6 @@ export class CourseRepository
     }
   }
 
-
-//   // Save new course or create new course 
-//   async createCourseRepository(courseData: CourseEntity): Promise<CourseEntity | null> {
-//     try {
-//       console.log("createCourseRepository called", courseData);
-//       console.log(courseData.content,"***************************************************************");
-      
-
-//     //   // Convert categoryName to ObjectId if needed
-//     //   if (courseData.categoryName && typeof courseData.categoryName === "string") {
-//     //     courseData.categoryName = new mongoose.Types.ObjectId(courseData.categoryName);
-//     //   }
-//     console.log(courseData.categoryName,"OOOOOOO");
-//     // let name = courseData.categoryName
-//     const courseCategory = await category.findOne({name:courseData.categoryName});
-//     console.log(courseCategory,'LLLLLLLLL');
-    
-//     courseData.categoryName = courseCategory?._id
-
-//       // Convert price if it's NaN
-//     //   courseData.price = isNaN(courseData.price) ? 0 : Number(courseData.price);
-
-//       // Ensure `pricingOption` is correct
-//       if (courseData.pricingOption !== "Premium" && courseData.pricingOption !== "Free") { 
-//         courseData.pricingOption = "Free"; // Default value
-//       }  
-
-//       // Create course
-//       const saveCourse = await Course.create(courseData);
-      
-//       if (!saveCourse) {
-//         console.log("Error: Course not saved");
-//         return null;
-//       }
-//       return saveCourse;
-//     } catch (error) {
-//       console.error("Error in createCourseRepository:", error);
-//       throw new Error("An unexpected error occurred");
-//     }
-//   }
-
   // Fetch all the categories 
   async getAllCategoryRepository():Promise<categoryEntity[]|null>{
     try {
@@ -136,6 +90,17 @@ export class CourseRepository
     } catch (error) {
         throw new Error("An unexpected error is occurred");
 
+    }
+  }
+
+  async listInstructorRepository(id:string): Promise <CourseEntity[]|null>{
+    try {
+      console.log(id,'kkkk');
+      
+
+      return await Course.find({ user: new mongoose.Types.ObjectId(id) });
+    } catch (error:constant) {
+      throw new Error("An unexpected error is occurred");
     }
   }
 

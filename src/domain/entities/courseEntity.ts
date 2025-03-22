@@ -6,6 +6,7 @@ export interface CourseEntity {
   courseDescription?: string;
   categoryName?: ObjectId; 
   aboutInstructor?: string;
+  thumbnailUrl?:string
   content?: {
     moduleTitle?: string;
     lessons?: {

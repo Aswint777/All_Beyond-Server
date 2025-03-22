@@ -18,5 +18,8 @@ export const instructorUseCase = (dependencies: IDependencies) => {
     allCategoriesUseCase:()=>({
       execute:()=>courseUseCase.allCategoriesUseCase()
     }),
+    listInstructorCourseUseCase:()=>({
+      execute:(id:string)=>courseUseCase.listInstructorCourseUseCase(id)
+    })
   };
 };

@@ -9,7 +9,7 @@ export interface IAllCategoriesUseCase {
     execute ():Promise<categoryEntity[] |null>
 }
 
-// export interface IListInstructorCourseUseCase{
-//     execute (id:string):Promise<CourseEntity[] |null>
+export interface IListInstructorCourseUseCase{
+    execute (id:string):Promise<CourseEntity[] |null>
 
-// }
+}

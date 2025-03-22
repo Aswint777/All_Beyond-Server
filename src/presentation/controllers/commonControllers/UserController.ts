@@ -7,6 +7,7 @@ import { sendEmail } from "../../../infrastructure/utils/nodeMailerConfig";
 import { generateAccessToken, generateRefreshToken } from "../../../_lib/jwt";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { log } from "console";
+import { getUserFromToken } from "../../../infrastructure/utils/getUserFromToken";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -116,7 +117,6 @@ export class UserController {
     }
   }
 
-  
   // ✅ Login Method
   async login(req: Request, res: Response): Promise<void> {
     try {
@@ -162,8 +162,7 @@ export class UserController {
         secure: true,
         sameSite: "none",
       });
-      console.log(accessToken,refreshToken,"accessToken,refreshToken");
-      
+      console.log(accessToken, refreshToken, "accessToken,refreshToken");
 
       res.status(200).json({
         success: true,
@@ -202,24 +201,10 @@ export class UserController {
   // ✅ Get User Details Method
   async getUserDetails(req: Request, res: Response): Promise<void> {
     try {
-      // 🛑 Extract JWT from cookies
-      if(!req.user){
-        return;
-      }
-      const token = req.cookies.access_token;
-      if (!token) {
-        res.status(401).json({ message: "Unauthorized: No token provided" });
-        return;
-      }
+      const user = getUserFromToken(req, res);
+      if (!user) return;
+      const _id = user._id;
 
-      // 🛑 Verify JWT
-      const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
-      const decoded = jwt.verify(token, secretKey) as {
-        _id: string;
-        email: string;
-        role: string;
-      };
-      const _id = decoded._id;
       // 🔍 Fetch user details
       const userDetails = await this.dependencies.useCases
         .getUserDetailsUseCase(this.dependencies)
@@ -228,7 +213,7 @@ export class UserController {
         success: true,
         message: "User details fetched successfully",
         user: userDetails,
-      })
+      });
       return;
     } catch (error: any) {
       console.error("Error in getUserDetails:", error);

@@ -1,4 +1,5 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
+import { CourseController } from "./courseController";
 import { OtpController } from "./otpController";
 import { ProfileController } from "./profileController";
 import { UserController } from "./UserController";
@@ -7,6 +8,7 @@ export const controller = (dependencies: IDependencies) => {
   const userController = new UserController(dependencies);
   const otpController = new OtpController(dependencies);
   const profileController = new ProfileController(dependencies);
+  const courseController = new CourseController(dependencies)
 
   return {
     signUp: userController.signUp.bind(userController),
@@ -22,5 +24,10 @@ export const controller = (dependencies: IDependencies) => {
     uploadProfilePhoto:
       profileController.uploadProfilePhoto.bind(profileController),
     switchUserRole: profileController.switchUserRole.bind(profileController),
+
+    allCourses: courseController.allCourses.bind(courseController),
+    courseDetails : courseController.courseDetailsController.bind(courseController),
+    similarCourse:courseController.similarCourseController.bind(courseController),
+
   };
 };

@@ -1,6 +1,7 @@
 import { createUserEntity, UserEntity } from "../../../domain/entities/User";
 import { matchOtpEntity } from "../../../domain/entities/verifyOtpEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
+import { CourseUseCase } from "./courseUseCase";
 import { OtpUseCase } from "./otpUseCase";
 import { ProfileUseCase } from "./profileUseCase";
 import { UserUseCase } from "./userUseCase";
@@ -9,6 +10,7 @@ export const authUseCases = (dependencies: IDependencies) => {
   const userUseCaseInstance = new UserUseCase(dependencies);
   const otpUseCaseInstance = new OtpUseCase(dependencies);
   const profileUseCaseInstance = new ProfileUseCase(dependencies);
+  const courseUseCase = new CourseUseCase(dependencies)
 
   return {
     // userUseCaseInstance
@@ -76,6 +78,17 @@ export const authUseCases = (dependencies: IDependencies) => {
 
     switchUserRoleUseCase:()=>({
       execute:(id:string)=>profileUseCaseInstance.switchUserRoleUseCase(id)
+    }),
+
+    allCoursesUseCase:()=>({
+      execute:()=>courseUseCase.allCoursesUseCase()
+    }),
+    courseDetailsUseCase:()=>({
+      execute:(courseId:string)=>courseUseCase.courseDetailsUseCase(courseId)
+    }),
+    similarCourseUseCase:()=>({
+      execute:(courseId:string)=>courseUseCase.similarCourseUseCase(courseId)
+
     })
   };
 };

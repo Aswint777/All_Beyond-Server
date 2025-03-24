@@ -32,6 +32,14 @@ export interface IRepositories {
   ) => Promise<UserEntity | null>;
   switchRole: (id: string) => Promise<UserEntity | null>;
 
+  // course Repository
+  allCoursesRepo :()=>Promise<CourseEntity[]|null>
+  courseDetailsRepo:(courseId:string)=>Promise<CourseEntity|null>
+  similarCourseRepo:(courseId:string)=>Promise<CourseEntity[]|null>
+  
+
+
+
   // => Admin Repository
 
   // adminUserRepository

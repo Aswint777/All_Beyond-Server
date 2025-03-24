@@ -42,6 +42,7 @@ import {
 import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
 import { IAllCategoriesUseCase, ICreateCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
+import { allCoursesUseCase, ICourseDetailsUseCase, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -61,6 +62,10 @@ export interface IUseCases {
   changePasswordUseCase:(dependencies: IDependencies)=> IChangePasswordUseCase;
   uploadPhotoUseCase:(dependencies: IDependencies)=> IUploadPhotoUseCase;
   switchUserRoleUseCase:(dependencies:IDependencies)=>ISwitchUserRoleUseCase
+
+  allCoursesUseCase:(dependencies:IDependencies)=>allCoursesUseCase
+  courseDetailsUseCase:(dependencies:IDependencies)=>ICourseDetailsUseCase
+  similarCourseUseCase:(dependencies:IDependencies)=>ISimilarCourseUseCase
 
   // Admin Use Cases
   getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;

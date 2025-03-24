@@ -132,44 +132,47 @@ export class CourseController {
     }
   }
 
-// Course listing in the Instructor side
-// Course listing in the Instructor side
-async listInstructorCourse(req: Request, res: Response): Promise<void> {
-  const { listInstructorCourseUseCase } = this.dependencies.useCases;
-  try {
-    console.log("Listing the courses...");
-    const user = getUserFromToken(req, res);
-    if (!user) return;
-    const id = user._id;
+  // Course listing in the Instructor side
+  async listInstructorCourse(req: Request, res: Response): Promise<void> {
+    const { listInstructorCourseUseCase } = this.dependencies.useCases;
+    try {
+      console.log("Listing the courses...");
+      const user = getUserFromToken(req, res);
+      if (!user) return;
+      const id = user._id;
 
-    let courses = await listInstructorCourseUseCase(this.dependencies).execute(id);
-    if (!courses) {
-       res.status(404).json({
-        success: false,
-        message: "No courses found",
+      let courses = await listInstructorCourseUseCase(
+        this.dependencies
+      ).execute(id);
+      if (!courses) {
+        res.status(404).json({
+          success: false,
+          message: "No courses found",
+        });
+        return;
+      }
+      // ✅ Generate Signed URL for Thumbnails
+      courses = await Promise.all(
+        courses.map(async (course) => {
+          if (course.thumbnailUrl) {
+            const fileKey = course.thumbnailUrl.split(
+              "/course_assets/thumbnails/"
+            )[1]; // Extract filename
+            course.thumbnailUrl = await getSignedUrlForS3(fileKey);
+          }
+          return course;
+        })
+      );
+      res.status(200).json({
+        success: true,
+        message: "Course Listing successful",
+        data: courses,
       });
-      return
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-    // ✅ Generate Signed URL for Thumbnails
-    courses = await Promise.all(
-      courses.map(async (course) => {
-        if (course.thumbnailUrl) {
-          const fileKey = course.thumbnailUrl.split("/course_assets/thumbnails/")[1]; // Extract filename
-          course.thumbnailUrl = await getSignedUrlForS3(fileKey);
-        }
-        return course;
-      })
-    );
-
-    res.status(200).json({
-      success: true,
-      message: "Course Listing successful",
-      data: courses,
-    });
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-    res.status(500).json({ message: "Internal Server Error" });
   }
-}
 
 }
+

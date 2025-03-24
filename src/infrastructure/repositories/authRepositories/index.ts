@@ -4,6 +4,7 @@ import {
   matchOtpEntity,
   verifyOtpEntity,
 } from "../../../domain/entities/verifyOtpEntity";
+import { CourseRepository } from "./courseRepository";
 import { OtpRepository } from "./otpRepository";
 import { ProfileRepository } from "./profileRepository";
 import { UserRepository } from "./userRepository";
@@ -12,6 +13,7 @@ export const AuthRepositories = (dependencies: IDependencies) => {
   const UserRepositoryInstance = new UserRepository(dependencies);
   const OtpRepositoryInstance = new OtpRepository(dependencies);
   const profileRepositoryInstance = new ProfileRepository(dependencies);
+  const courseRepositoryInstance = new CourseRepository(dependencies)
 
   return {
     //UserRepository
@@ -38,6 +40,13 @@ export const AuthRepositories = (dependencies: IDependencies) => {
       profileRepositoryInstance.profileEdit(data),
     uploadPhoto: (userId: string, profilePhoto: string) =>
       profileRepositoryInstance.uploadPhoto(userId, profilePhoto),
-    switchRole:(id:string)=>profileRepositoryInstance.switchRole(id)
+    switchRole:(id:string)=>profileRepositoryInstance.switchRole(id),
+
+
+    // course repository
+
+    allCoursesRepo:()=>courseRepositoryInstance.allCoursesRepo(),
+    courseDetailsRepo:(courseId:string)=>courseRepositoryInstance.courseDetailsRepo(courseId),
+    similarCourseRepo:(courseId:string)=>courseRepositoryInstance.similarCourseRepo(courseId),
   };
 };

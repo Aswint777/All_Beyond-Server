@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { IDependencies } from "../../application/interfaces/IDependencies";
 import { controller } from "../controllers/commonControllers";
 import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
@@ -22,7 +22,10 @@ export const routers = (dependencies: IDependencies) => {
     google_Auth,
     editProfile,
     uploadProfilePhoto,
-    switchUserRole
+    switchUserRole,
+    allCourses,
+    courseDetails,
+    similarCourse
   } = controller(dependencies);
 
   const router = Router();
@@ -48,6 +51,9 @@ export const routers = (dependencies: IDependencies) => {
     .put(jwtMiddleware, cpUpload, uploadProfilePhoto);
 
     router.route("/switchUserRole").put(jwtMiddleware,switchUserRole)
-
+    
+    router.route("/courses").get(allCourses);
+    router.route('/courseDetails/:courseId').get(courseDetails)
+    router.route('/similarCourses/:courseId').get(similarCourse)
   return router;
 };

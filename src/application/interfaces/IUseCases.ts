@@ -41,7 +41,7 @@ import {
 
 import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
-import { IAllCategoriesUseCase, ICreateCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
+import { IAllCategoriesUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
 import { allCoursesUseCase, ICourseDetailsUseCase, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
 
 export interface IUseCases {
@@ -85,6 +85,7 @@ export interface IUseCases {
   createCourseUseCase : (dependencies:IDependencies)=>ICreateCourseUseCase
   allCategoriesUseCase : (dependencies:IDependencies)=>IAllCategoriesUseCase
   listInstructorCourseUseCase : (dependencies:IDependencies)=>IListInstructorCourseUseCase
+  editCourseUseCase : (dependencies:IDependencies)=>IEditCourseUseCase
 
 }
 

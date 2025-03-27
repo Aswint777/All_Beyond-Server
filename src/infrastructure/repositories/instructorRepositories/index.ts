@@ -14,6 +14,8 @@ export const InstructorRepositories = (dependencies: IDependencies) => {
       applyInstructorInstance.instructorApplication(data),
     createCourseRepository :(courseData:CourseEntity,id:string)=>courseRepository.createCourseRepository(courseData,id),
     getAllCategoryRepository:()=>courseRepository.getAllCategoryRepository(),
-    listInstructorRepository:(id:string)=>courseRepository.listInstructorRepository(id)             
+    listInstructorRepository:(id:string)=>courseRepository.listInstructorRepository(id),
+    editCourseRepository:(courseData: CourseEntity)=>courseRepository.editCourseRepository(courseData)
+
   };
 };

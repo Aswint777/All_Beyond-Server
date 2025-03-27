@@ -54,5 +54,16 @@ export class CourseUseCase {
       throw new Error("An unexpected error is occurred");
     }
   }
+  async editCourseUseCase(courseData:CourseEntity):Promise<CourseEntity|null>{
+    const {editCourseRepository} = this.dependencies.repositories
+    try {
+      const course = await editCourseRepository(courseData)
+      if(!course) return null
+      return course
+    } catch (error:constant) {
+      throw new Error("An unexpected error is occurred");
+
+    }
+  }
   
 }

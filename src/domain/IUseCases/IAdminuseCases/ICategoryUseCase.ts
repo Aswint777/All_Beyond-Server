@@ -13,8 +13,7 @@ export interface ICategoryEditUseCase {
     id: string,
     name: string,
     description: string,
-    type: string
-  ): Promise<boolean | null>;
+  ): Promise<{ success: boolean; message?: string }>;
 }
 
 export interface IGetCategoryListUseCase {

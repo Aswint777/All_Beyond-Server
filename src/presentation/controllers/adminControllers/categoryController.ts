@@ -15,14 +15,14 @@ export class CategoryController {
     try {
       console.log("Request Body:", req.body);
 
-      const { name, description, type } = req.body;
+      const { name, description } = req.body;
 
-      if (!name || !description || !type) {
+      if (!name || !description ) {
         res.status(400).json({ error: "All fields are required." });
         return;
       }
 
-      const data = { name: name, description: description, type: type };
+      const data = { name: name, description: description };
 
       const addNewCategory = await addCategoryUseCase(
         this.dependencies
@@ -100,18 +100,24 @@ export class CategoryController {
       console.log("editCategoryController");
       const { id } = req.params;
       console.log(id);
-      const { name, description, type } = req.body;
-      console.log(name, description, type);
+      const { name, description } = req.body;
       const edit = await categoryEditUseCase(this.dependencies).execute(
         id,
         name,
         description,
-        type
       );
-      if (!edit) {
-        res.status(400).json({ error: "Failed to create category." });
-        return;
+
+      if (!edit.success) {
+        console.log(edit);
+        
+         res.status(400).json({
+          success: false,
+          message: edit.message || "Failed to update category.",
+        });
+        return
       }
+      console.log('edit : ',edit);
+      
       res.status(httpStatusCode.OK).json({
         success: true,
         data: edit,

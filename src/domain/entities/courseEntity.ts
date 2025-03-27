@@ -5,6 +5,7 @@ export interface CourseEntity {
   courseTitle?: string;
   courseDescription?: string;
   categoryName?: ObjectId; 
+  instructor?:string
   aboutInstructor?: string;
   thumbnailUrl?:string
   content?: {

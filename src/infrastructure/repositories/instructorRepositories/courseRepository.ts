@@ -94,14 +94,230 @@ export class CourseRepository
   }
 
   async listInstructorRepository(id:string): Promise <CourseEntity[]|null>{
-    try {
-      console.log(id,'kkkk');
-      
-
+    try {    
       return await Course.find({ user: new mongoose.Types.ObjectId(id) });
     } catch (error:constant) {
       throw new Error("An unexpected error is occurred");
     }
   }
 
+
+  async editCourseRepository(courseData: Partial<CourseEntity>): Promise<CourseEntity | null> {
+    try {
+      const updateData: any = {};
+  
+      if (courseData.categoryName) {
+        const courseCategory = await category.findOne({ name: courseData.categoryName });
+        if (!courseCategory) {
+          throw new Error(`Category "${courseData.categoryName}" not found.`);
+        }
+        updateData.categoryName = courseCategory._id;
+      }
+  
+      if (courseData.content) {
+        if (!Array.isArray(courseData.content) || courseData.content.length === 0) {
+          throw new Error("Course content must be an array with at least one module.");
+        }
+        courseData.content.forEach((module, moduleIndex) => {
+          if (!module.moduleTitle) {
+            throw new Error(`❌ Module ${moduleIndex + 1} is missing a moduleTitle.`);
+          }
+          if (!Array.isArray(module.lessons) || module.lessons.length === 0) {
+            throw new Error(`❌ Module ${moduleIndex + 1} must have at least one lesson.`);
+          }
+          module.lessons.forEach((lesson, lessonIndex) => {
+            if (!lesson.lessonTitle) {
+              throw new Error(`❌ Lesson ${lessonIndex + 1} in Module ${moduleIndex + 1} is missing a lessonTitle.`);
+            }
+          });
+        });
+        updateData.content = courseData.content;
+      }
+  
+      if (courseData.pricingOption) {
+        updateData.pricingOption =
+          courseData.pricingOption === "Premium" || courseData.pricingOption === "Free"
+            ? courseData.pricingOption
+            : "Free";
+      }
+  
+      if (courseData.price !== undefined) {
+        updateData.price = !isNaN(courseData.price) ? Number(courseData.price) : 0;
+      }
+  
+      if (courseData.courseTitle) updateData.courseTitle = courseData.courseTitle;
+      if (courseData.courseDescription) updateData.courseDescription = courseData.courseDescription;
+      if (courseData.instructor) updateData.instructorName = courseData.instructor;
+      if (courseData.aboutInstructor) updateData.aboutInstructor = courseData.aboutInstructor;
+      if (courseData.accountNumber) updateData.accountNumber = courseData.accountNumber;
+      if (courseData.additionalEmail) updateData.additionalEmail = courseData.additionalEmail;
+      if (courseData.additionalContactNumber) updateData.additionalContactNumber = courseData.additionalContactNumber;
+      if (courseData.thumbnailUrl) updateData.thumbnailUrl = courseData.thumbnailUrl;
+  
+      const updatedCourse = await Course.findByIdAndUpdate(
+        { _id: courseData._id },
+        { $set: updateData },
+        { new: true }
+      );
+  
+      if (!updatedCourse) {
+        console.log("❌ Error: Course not found for update.");
+        return null;
+      }
+  
+      console.log("✅ Course updated successfully:", updatedCourse);
+      return updatedCourse;
+    } catch (error) {
+      console.error("❌ Error in editCourseRepository:", error);
+      throw new Error("An unexpected error occurred while updating course.");
+    }
+    // try {
+    //   const updateData: any = {};
+  
+    //   if (courseData.categoryName) {
+    //     const courseCategory = await category.findOne({ name: courseData.categoryName });
+    //     if (!courseCategory) {
+    //       throw new Error(`Category "${courseData.categoryName}" not found.`);
+    //     }
+    //     updateData.categoryName = courseCategory._id;
+    //   }
+  
+    //   if (courseData.content) {
+    //     if (!Array.isArray(courseData.content) || courseData.content.length === 0) {
+    //       throw new Error("Course content must be an array with at least one module.");
+    //     }
+  
+    //     courseData.content.forEach((module, moduleIndex) => {
+    //       if (!module.moduleTitle) {
+    //         throw new Error(`Module ${moduleIndex + 1} is missing a moduleTitle.`);
+    //       }
+    //       if (!Array.isArray(module.lessons) || module.lessons.length === 0) {
+    //         throw new Error(`Module ${moduleIndex + 1} must have at least one lesson.`);
+    //       }
+    //       module.lessons.forEach((lesson, lessonIndex) => {
+    //         if (!lesson.lessonTitle) {
+    //           throw new Error(`Lesson ${lessonIndex + 1} in Module ${moduleIndex + 1} is missing a lessonTitle.`);
+    //         }
+    //       });
+    //     });
+    //     updateData.content = courseData.content;
+    //   }
+  
+    //   if (courseData.pricingOption) {
+    //     updateData.pricingOption =
+    //       courseData.pricingOption === "Premium" || courseData.pricingOption === "Free"
+    //         ? courseData.pricingOption
+    //         : "Free";
+    //   }
+  
+    //   if (courseData.price !== undefined) {
+    //     updateData.price = !isNaN(courseData.price) ? Number(courseData.price) : 0;
+    //   }
+  
+    //   if (courseData.courseTitle) updateData.courseTitle = courseData.courseTitle;
+    //   if (courseData.courseDescription) updateData.courseDescription = courseData.courseDescription;
+    //   if (courseData.instructor) updateData.instructorName = courseData.instructor;
+    //   if (courseData.aboutInstructor) updateData.aboutInstructor = courseData.aboutInstructor;
+    //   if (courseData.accountNumber) updateData.accountNumber = courseData.accountNumber;
+    //   if (courseData.additionalEmail) updateData.additionalEmail = courseData.additionalEmail;
+    //   if (courseData.additionalContactNumber) updateData.additionalContactNumber = courseData.additionalContactNumber;
+    //   if (courseData.thumbnailUrl) updateData.thumbnailUrl = courseData.thumbnailUrl;
+    //   // if (courseData.thumbnailKey) updateData.thumbnailKey = courseData.thumbnailKey;
+  
+    //   const updatedCourse = await Course.findByIdAndUpdate(
+    //     { _id: courseData._id },
+    //     { $set: updateData },
+    //     { new: true }
+    //   );
+  
+    //   if (!updatedCourse) {
+    //     console.log("❌ Course not found for update.");
+    //     return null;
+    //   }
+  
+    //   console.log("✅ Course updated successfully:", updatedCourse);
+    //   return updatedCourse;
+    // } catch (error) {
+    //   console.error("❌ Error in editCourseRepository:", error);
+    //   throw new Error("An unexpected error occurred while updating course.");
+    // }
+//////////////////////////////////////////////////////////////////////////////////////////
+    // try {
+    //   const updateData: any = {};
+  
+    //   // Category Validation if provided
+    //   if (courseData.categoryName) {
+    //     const courseCategory = await category.findOne({ name: courseData.categoryName });
+    //     if (!courseCategory) {
+    //       throw new Error(`Category "${courseData.categoryName}" not found.`);
+    //     }
+    //     updateData.categoryName = courseCategory._id;
+    //   }
+  
+    //   // Content Validation if provided
+    //   if (courseData.content) {
+    //     if (!Array.isArray(courseData.content) || courseData.content.length === 0) {
+    //       throw new Error("Course content must be an array with at least one module.");
+    //     }
+  
+    //     courseData.content.forEach((module, moduleIndex) => {
+    //       if (!module.moduleTitle) {
+    //         throw new Error(`❌ Module ${moduleIndex + 1} is missing a moduleTitle.`);
+    //       }
+    //       if (!Array.isArray(module.lessons) || module.lessons.length === 0) {
+    //         throw new Error(`❌ Module ${moduleIndex + 1} must have at least one lesson.`);
+    //       }
+    //       module.lessons.forEach((lesson, lessonIndex) => {
+    //         if (!lesson.lessonTitle) {
+    //           throw new Error(`❌ Lesson ${lessonIndex + 1} in Module ${moduleIndex + 1} is missing a lessonTitle.`);
+    //         }
+    //       });
+    //     });
+    //     updateData.content = courseData.content;
+    //   }
+  
+    //   // Pricing option validation if provided
+    //   if (courseData.pricingOption) {
+    //     updateData.pricingOption =
+    //       courseData.pricingOption === "Premium" || courseData.pricingOption === "Free"
+    //         ? courseData.pricingOption
+    //         : "Free";
+    //   }
+  
+    //   // Price
+    //   if (courseData.price !== undefined) {
+    //     updateData.price = !isNaN(courseData.price) ? Number(courseData.price) : 0;
+    //   }
+  
+    //   // Other fields
+    //   if (courseData.courseTitle) updateData.courseTitle = courseData.courseTitle;
+    //   if (courseData.courseDescription) updateData.courseDescription = courseData.courseDescription;
+    //   if (courseData.instructor) updateData.instructorName = courseData.instructor;
+    //   if (courseData.aboutInstructor) updateData.aboutInstructor = courseData.aboutInstructor;
+    //   if (courseData.accountNumber) updateData.accountNumber = courseData.accountNumber;
+    //   if (courseData.additionalEmail) updateData.additionalEmail = courseData.additionalEmail;
+    //   if (courseData.additionalContactNumber) updateData.additionalContactNumber = courseData.additionalContactNumber;
+    //   if (courseData.thumbnailUrl) updateData.thumbnailUrl = courseData.thumbnailUrl;
+    //   // if (courseData.thumbnailKey) updateData.thumbnailKey = courseData.thumbnailKey;
+  
+    //   // 🔥 Find and update
+    //   const updatedCourse = await Course.findByIdAndUpdate(
+    //     { _id: courseData._id },
+    //     { $set: updateData },
+    //     { new: true }
+    //   );
+  
+    //   if (!updatedCourse) {
+    //     console.log("❌ Error: Course not found for update.");
+    //     return null;
+    //   }
+  
+    //   console.log("✅ Course updated successfully:", updatedCourse);
+    //   return updatedCourse;
+    // } catch (error) {
+    //   console.error("❌ Error in editCourseRepository:", error);
+    //   throw new Error("An unexpected error occurred while updating course.");
+    // }
+  }
+  
 }

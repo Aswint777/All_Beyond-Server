@@ -15,6 +15,9 @@ const courseSchema = new Schema({
     type: Types.ObjectId,
     ref: "category",
   },
+  instructor:{
+    type:String
+  },
   aboutInstructor: {
     type: String,
   },
@@ -48,7 +51,7 @@ const courseSchema = new Schema({
     enum: ["Premium", "Free"],
     // default: "Free",
   },
-  Price: {
+  price: {
     type: Number,
   },
   accountNumber: {

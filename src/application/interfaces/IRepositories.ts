@@ -62,7 +62,6 @@ export interface IRepositories {
     id: string,
     name: string,
     description: string,
-    type: string
   ) => Promise<categoryEntity | null>;
   duplicateCategory: (
     name: string,
@@ -86,6 +85,8 @@ export interface IRepositories {
   ) => Promise<CourseEntity | null>;
   getAllCategoryRepository: () => Promise<categoryEntity[] | null>;
   listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
+  editCourseRepository:(data:CourseEntity)=>Promise<CourseEntity|null>
+
 
   // => student
 }

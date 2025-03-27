@@ -20,6 +20,10 @@ export const instructorUseCase = (dependencies: IDependencies) => {
     }),
     listInstructorCourseUseCase:()=>({
       execute:(id:string)=>courseUseCase.listInstructorCourseUseCase(id)
+    }),
+    editCourseUseCase:()=>({
+      execute:(courseData:CourseEntity)=>courseUseCase.editCourseUseCase(courseData)
     })
+
   };
 };

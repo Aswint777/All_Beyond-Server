@@ -89,38 +89,31 @@ export class CategoryUseCase {
   async categoryEditUseCase(
     id: string,
     name: string,
-    description: string,
-    type: string
-  ): Promise<boolean | null> {
+    description: string
+  ): Promise<{ success: boolean; message?: string }> {
     const { categoryEdit, duplicateCategory } = this.dependencies.repositories;
   
     try {
-      name = typeof name === "string" ? name.trim().toLowerCase() : "";
+      name = name.trim(); // Ensure name is properly formatted
   
-      // Fetch the existing category to compare names
-      const existingCategory = await categoryEdit(id, name, description, type);
-      if (!existingCategory) {
-        throw new Error("Category not found.");
+      // Check if the category name is a duplicate
+      const isDuplicate = await duplicateCategory(name, id);
+      if (isDuplicate) {
+        console.log("Duplicate category detected.");
+        return { success: false, message: "Category already exists." }; // Return structured response
       }
   
-      // Check for duplicate category only if name is changed
-      if (name !== existingCategory?.name) {
-        const isDuplicate = await duplicateCategory(name, id); // Exclude current category
-        console.log(isDuplicate?.length, 'number');
-        console.log(isDuplicate);
+      console.log("categoryEditUseCase: Updating category");
+      const result = await categoryEdit(id, name, description);
   
-        if (isDuplicate) {  // Check if duplicate exists
-          throw new Error("Category already exists.");
-        }
-      }
-  
-      console.log("categoryEditUseCase");
-      const result = await categoryEdit(id, name, description, type);
-      if(result) return true
-      return false
+      return result
+        ? { success: true, message: "Category updated successfully." }
+        : { success: false, message: "Failed to update category." };
     } catch (error: any) {
-      throw new Error(error?.message || "Error occurred in category Edit");
+      console.error("Error in categoryEditUseCase:", error);
+      throw new Error(error?.message || "Error occurred in category edit.");
     }
   }
+  
   
 }

@@ -34,8 +34,7 @@ export const AdminRepositories = (dependencies: IDependencies) => {
       id: string,
       name: string,
       description: string,
-      type: string
-    ) => categoryRepositoryInstance.categoryEdit(id, name, description, type),
+    ) => categoryRepositoryInstance.categoryEdit(id, name, description),
     duplicateCategory: (name: string,id?:string) =>
       categoryRepositoryInstance.duplicateCategory(name,id),
   };

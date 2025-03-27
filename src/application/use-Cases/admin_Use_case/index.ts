@@ -45,8 +45,8 @@ export const adminUseCases = (dependencies: IDependencies) => {
         categoryUseCase.blockUnblockCategoryUseCase(id, isBlocked),
     }),
     categoryEditUseCase: () => ({
-      execute: (id: string, name: string, description: string, type: string) =>
-        categoryUseCase.categoryEditUseCase(id, name, description, type),
+      execute: (id: string, name: string, description: string) =>
+        categoryUseCase.categoryEditUseCase(id, name, description),
     }),
 
   };

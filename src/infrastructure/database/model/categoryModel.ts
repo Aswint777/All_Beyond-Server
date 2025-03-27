@@ -10,10 +10,10 @@ const categorySchema = new Schema(
     description: {
       type: String,
     },
-    type: {
-      type: String,
-      required: true,
-    },
+    // type: {
+    //   type: String,
+    //   required: true,
+    // },
     isBlocked: {
       type: Boolean,
       default: false,

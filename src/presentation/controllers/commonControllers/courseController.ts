@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { constant } from "../../../_lib/common/constant";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
-import { getSignedUrlForS3 } from "../../../_boot/getSignedUrl";
+import {  getSignedUrlForS3thumbnails } from "../../../_boot/getSignedUrl";
 
 export class CourseController {
   private dependencies: IDependencies;
@@ -28,7 +28,7 @@ export class CourseController {
             const fileKey = course.thumbnailUrl.split(
               "/course_assets/thumbnails/"
             )[1]; // Extract filename
-            course.thumbnailUrl = await getSignedUrlForS3(fileKey);
+            course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
           }
           return course;
         })
@@ -69,7 +69,7 @@ export class CourseController {
         const fileKey = course.thumbnailUrl.split(
           "/course_assets/thumbnails/"
         )[1];
-        course.thumbnailUrl = await getSignedUrlForS3(fileKey);
+        course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
       }
 
 
@@ -106,7 +106,7 @@ export class CourseController {
             const fileKey = course.thumbnailUrl.split(
               "/course_assets/thumbnails/"
             )[1]; // Extract filename
-            course.thumbnailUrl = await getSignedUrlForS3(fileKey);
+            course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
           }
           return course;
         })

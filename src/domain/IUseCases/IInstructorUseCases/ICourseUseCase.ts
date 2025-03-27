@@ -13,3 +13,8 @@ export interface IListInstructorCourseUseCase{
     execute (id:string):Promise<CourseEntity[] |null>
 
 }
+
+export interface IEditCourseUseCase{
+    execute(data:CourseEntity):Promise<CourseEntity|null>
+
+}

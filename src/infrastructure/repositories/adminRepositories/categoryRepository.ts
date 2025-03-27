@@ -77,13 +77,12 @@ export class CategoryRepository
     id: string,
     name: string,
     description: string,
-    type: string
   ): Promise<categoryEntity | null> {
     try {
       console.log("categoryEdit repo");
       const edit = await category.findOneAndUpdate(
         { _id: id },
-        { $set: { name: name, description: description, type: type } }
+        { $set: { name: name, description: description} }
       );
       if (edit) {
         return edit;

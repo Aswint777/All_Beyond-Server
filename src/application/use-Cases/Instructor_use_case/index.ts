@@ -23,7 +23,9 @@ export const instructorUseCase = (dependencies: IDependencies) => {
     }),
     editCourseUseCase:()=>({
       execute:(courseData:CourseEntity)=>courseUseCase.editCourseUseCase(courseData)
+    }),
+    blockCourseUseCase:()=>({
+      execute:(courseId:string)=>courseUseCase.blockCourseUseCase(courseId)
     })
-
   };
 };

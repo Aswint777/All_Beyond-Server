@@ -41,6 +41,7 @@ export class CourseUseCase {
         throw new Error("An unexpected error is occurred");
     }
   }
+
   async listInstructorCourseUseCase(id:string):Promise<CourseEntity[] |null>{
     const {listInstructorRepository} = this.dependencies.repositories
     try {
@@ -54,6 +55,7 @@ export class CourseUseCase {
       throw new Error("An unexpected error is occurred");
     }
   }
+
   async editCourseUseCase(courseData:CourseEntity):Promise<CourseEntity|null>{
     const {editCourseRepository} = this.dependencies.repositories
     try {
@@ -62,8 +64,22 @@ export class CourseUseCase {
       return course
     } catch (error:constant) {
       throw new Error("An unexpected error is occurred");
-
     }
   }
+
+  // Block Course 
+  async blockCourseUseCase(courseId:string):Promise<CourseEntity|null>{
+    const {blockCourseRepository} = this.dependencies.repositories
+    try {
+      console.log('usecase');
+      
+      const course = await blockCourseRepository(courseId)
+      if(!course) return null
+      return course
+    } catch (error) {
+      throw new Error("An unexpected error is occurred");
+    }
+  }
+
   
 }

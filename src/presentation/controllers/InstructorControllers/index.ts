@@ -12,7 +12,8 @@ export const instructorController = (dependencies: IDependencies) => {
     getCourseCategories:courseController.getCourseCategories.bind(courseController),
     listInstructorCourse:courseController.listInstructorCourse.bind(courseController),
     viewCourses:courseController.viewCourses.bind(courseController),
-    editCourse : courseController.editCourse.bind(courseController)
+    editCourse : courseController.editCourse.bind(courseController),
+    blockCourse: courseController.blockCourse.bind(courseController)
 
   };
 };

@@ -74,7 +74,11 @@ export class UserRepository
   // ✅ Get user details by ID
   async getUserDetails(_id: string): Promise<UserEntity | null> {
     try {
-      return await User.findOne({ _id });
+      const d =  await User.findOne({ _id });
+      console.log(' D   :',d);
+      
+      if(!d) return null
+      return d
     } catch (error) {
       console.error("Error in getUserDetails:", error);
       return null;

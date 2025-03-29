@@ -8,20 +8,44 @@ export class CourseUseCase {
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
   }
-    async allCoursesUseCase():Promise<CourseEntity[] |null>{
-      const {allCoursesRepo} = this.dependencies.repositories
-      try {
-        console.log('zdfhvbzjdfcbh');
-        
-        const list = await allCoursesRepo()
-        console.log(list);
-        
-        if(!list) return null
-        return list
-      } catch (error:constant) {
-        throw new Error("An unexpected error is occurred");
-      }
+
+  async allCoursesUseCase(page: number, limit: number): Promise<CourseEntity[] | null> {
+    const { allCoursesRepo } = this.dependencies.repositories;
+    try {
+      console.log(`Fetching courses for page ${page}, limit ${limit}`);
+      const list = await allCoursesRepo(page, limit);
+      console.log("Courses fetched:", list);
+      if (!list) return null;
+      return list;
+    } catch (error: any) {
+      throw new Error("An unexpected error occurred: " + error.message);
     }
+  }
+
+  async getTotalCount(): Promise<number> {
+    const { getCoursesCountRepo } = this.dependencies.repositories;
+    try {
+      const count = await getCoursesCountRepo();
+      return count;
+    } catch (error: any) {
+      throw new Error("An unexpected error occurred: " + error.message);
+    }
+  }
+
+    // async allCoursesUseCase():Promise<CourseEntity[] |null>{
+    //   const {allCoursesRepo} = this.dependencies.repositories
+    //   try {
+    //     console.log('zdfhvbzjdfcbh');
+        
+    //     const list = await allCoursesRepo()
+    //     console.log(list);
+        
+    //     if(!list) return null
+    //     return list
+    //   } catch (error:constant) {
+    //     throw new Error("An unexpected error is occurred");
+    //   }
+    // }
 
     // course details use case
 

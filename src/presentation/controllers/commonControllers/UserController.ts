@@ -209,6 +209,8 @@ export class UserController {
       const userDetails = await this.dependencies.useCases
         .getUserDetailsUseCase(this.dependencies)
         .execute(_id);
+        console.log('userDetails :',userDetails);
+        
       res.status(200).json({
         success: true,
         message: "User details fetched successfully",

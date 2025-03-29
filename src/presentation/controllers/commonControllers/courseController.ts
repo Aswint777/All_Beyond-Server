@@ -10,18 +10,36 @@ export class CourseController {
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
   }
+
   async allCourses(req: Request, res: Response): Promise<void> {
-    const { allCoursesUseCase } = this.dependencies.useCases;
+    const {allCoursesUseCase,getTotalCount} = this.dependencies.useCases
     try {
-      let courses = await allCoursesUseCase(this.dependencies).execute();
-      if (!courses) {
-        res.status(404).json({
-          success: false,
+      console.log('lppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp');
+      
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 3;
+       console.log(page,limit);
+       
+      // const allCourses = dependencies.useCases.allCoursesUseCase(dependencies);
+      // const getTotalCount = dependencies.useCases.getTotalCount(dependencies);
+
+      let courses = await allCoursesUseCase(this.dependencies).execute(page, limit);
+      
+      if (!courses || courses.length === 0) {
+        res.status(200).json({
+          success: true,
           message: "No courses found",
+          data: {
+            courses: [],
+            totalPages: 0,
+            currentPage: page,
+            totalCourses: 0
+          },
         });
         return;
       }
-      // ✅ Generate Signed URL for Thumbnails
+        console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
+              // ✅ Generate Signed URL for Thumbnails
       courses = await Promise.all(
         courses.map(async (course) => {
           if (course.thumbnailUrl) {
@@ -33,18 +51,68 @@ export class CourseController {
           return course;
         })
       );
+        
+      const totalCourses = await getTotalCount(this.dependencies).execute();
+
+      // Remove S3 URL generation for now - add it back when properly implemented
       res.status(200).json({
         success: true,
-        message: "Course Listing successful",
-        data: courses,
+        message: "Courses retrieved successfully",
+        data: {
+          courses,
+          totalCourses,
+          currentPage: page,
+          totalPages: Math.ceil(totalCourses / limit),
+        },
       });
-    } catch (error: constant) {
-      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+    } catch (error: any) {
+      console.error("Error in allCourses:", error);
+      res.status(500).json({
         success: false,
-        message: "Internal server error.",
+        message: "Internal server error: " + error.message,
+        data: {},
       });
     }
   }
+  // Add other controller
+
+  
+  // // List all the courses 
+  // async allCourses(req: Request, res: Response): Promise<void> {
+  //   const { allCoursesUseCase } = this.dependencies.useCases;
+  //   try {
+  //     let courses = await allCoursesUseCase(this.dependencies).execute();
+  //     if (!courses) {
+  //       res.status(404).json({
+  //         success: false,
+  //         message: "No courses found",
+  //       });
+  //       return;
+  //     }
+  //     // ✅ Generate Signed URL for Thumbnails
+  //     courses = await Promise.all(
+  //       courses.map(async (course) => {
+  //         if (course.thumbnailUrl) {
+  //           const fileKey = course.thumbnailUrl.split(
+  //             "/course_assets/thumbnails/"
+  //           )[1]; // Extract filename
+  //           course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
+  //         }
+  //         return course;
+  //       })
+  //     );
+  //     res.status(200).json({
+  //       success: true,
+  //       message: "Course Listing successful",
+  //       data: courses,
+  //     });
+  //   } catch (error: constant) {
+  //     res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+  //       success: false,
+  //       message: "Internal server error.",
+  //     });
+  //   }
+  // }
 
   // course details page
   async courseDetailsController(req: Request, res: Response): Promise<void> {

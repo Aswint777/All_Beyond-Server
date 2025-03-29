@@ -21,6 +21,7 @@ export class ProfileController {
         userId,
         firstName,
         lastName,
+        contactNumber,
         email,
         linkedin,
         facebook,
@@ -28,6 +29,7 @@ export class ProfileController {
         currentPassword,
         newPassword,
         confirmPassword,
+
       } = req.body;
 
       const { changePasswordUseCase, profileEditUseCase } =
@@ -56,11 +58,13 @@ export class ProfileController {
         userId,
         firstName,
         lastName,
+        contactNumber,
         email,
         linkedin,
         facebook,
         instagram,
         password: hashedPassword,
+        
       };
 
       const updatedProfile = await profileEditUseCase(

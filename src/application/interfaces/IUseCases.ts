@@ -41,8 +41,8 @@ import {
 
 import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
-import { IAllCategoriesUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
-import { allCoursesUseCase, ICourseDetailsUseCase, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
+import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
+import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -64,6 +64,7 @@ export interface IUseCases {
   switchUserRoleUseCase:(dependencies:IDependencies)=>ISwitchUserRoleUseCase
 
   allCoursesUseCase:(dependencies:IDependencies)=>allCoursesUseCase
+  getTotalCount :(dependencies:IDependencies)=>IGetTotalCount
   courseDetailsUseCase:(dependencies:IDependencies)=>ICourseDetailsUseCase
   similarCourseUseCase:(dependencies:IDependencies)=>ISimilarCourseUseCase
 
@@ -86,6 +87,7 @@ export interface IUseCases {
   allCategoriesUseCase : (dependencies:IDependencies)=>IAllCategoriesUseCase
   listInstructorCourseUseCase : (dependencies:IDependencies)=>IListInstructorCourseUseCase
   editCourseUseCase : (dependencies:IDependencies)=>IEditCourseUseCase
+  blockCourseUseCase : (dependencies:IDependencies)=>IBlockCourseUseCase
 
 }
 

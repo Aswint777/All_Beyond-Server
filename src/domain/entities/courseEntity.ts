@@ -22,4 +22,5 @@ export interface CourseEntity {
   additionalEmail?: string;
   additionalContactNumber?: string;
   user?:ObjectId
+  isBlocked?:boolean
 }

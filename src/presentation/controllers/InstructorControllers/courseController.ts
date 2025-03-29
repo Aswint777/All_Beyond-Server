@@ -253,214 +253,138 @@ export class CourseController {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
-//////////////////////////////////////////
-async editCourse(req: Request, res: Response): Promise<void> {
-  const { editCourseUseCase } = this.dependencies.useCases;
+  //////////////////////////////////////////
+  async editCourse(req: Request, res: Response): Promise<void> {
+    const { editCourseUseCase } = this.dependencies.useCases;
 
-  try {
-    console.log("edit Course in instructor");
-    const files = req.files as S3File[];
-    const { courseId } = req.params;
+    try {
+      console.log("edit Course in instructor");
+      const files = req.files as S3File[];
+      const { courseId } = req.params;
 
-    if (!req.user) {
-      res.status(401).json({ message: "Unauthorized: No user" });
-      return;
+      if (!req.user) {
+        res.status(401).json({ message: "Unauthorized: No user" });
+        return;
+      }
+      const token = req.cookies.access_token;
+      if (!token) {
+        res.status(401).json({ message: "Unauthorized: No token provided" });
+        return;
+      }
+      const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
+      const decoded = jwt.verify(token, secretKey) as {
+        _id: string;
+        email: string;
+        role: string;
+      };
+      const id = decoded._id;
+
+      if (!req.files || !Array.isArray(req.files)) {
+        res
+          .status(httpStatusCode.BAD_REQUEST)
+          .json({ message: "No files uploaded" });
+        return;
+      }
+
+      const {
+        title,
+        courseDescription,
+        category,
+        instructorName,
+        aboutInstructor,
+        isPaid,
+        price,
+        accountNumber,
+        email,
+        phone,
+        modules, // Expecting modules as an array from FormData
+      } = req.body;
+
+      const thumbnail = files.find((file) => file.fieldname === "thumbnail");
+      const videoFiles = files.filter((file) =>
+        file.fieldname.startsWith("video_")
+      );
+
+      // Parse module and lesson data from req.body.modules
+      const content = modules.map((module: any, moduleIndex: number) => ({
+        moduleTitle: module.title,
+        lessons: module.lessons.map((lesson: any, lessonIndex: number) => {
+          const video = videoFiles.find(
+            (file) => file.fieldname === `video_${moduleIndex}_${lessonIndex}`
+          );
+          return {
+            lessonTitle: lesson.title,
+            lessonDescription: lesson.lessonDescription,
+            video: video?.location || lesson.video || "", // Use existing URL if no new video
+          };
+        }),
+      }));
+      const _id = courseId;
+      const courseData = {
+        _id,
+        courseTitle: title,
+        courseDescription,
+        categoryName: category,
+        instructorName,
+        aboutInstructor,
+        pricingOption: isPaid,
+        price: price ? parseFloat(price) : undefined,
+        accountNumber: accountNumber ? parseInt(accountNumber) : undefined,
+        additionalEmail: email,
+        additionalContactNumber: phone,
+        thumbnailUrl: thumbnail?.location || "",
+        thumbnailKey: thumbnail?.key || "",
+        content,
+      };
+
+      console.log("courseData:", courseData);
+
+      const updatedCourse = await editCourseUseCase(this.dependencies).execute(
+        courseData
+      );
+
+      if (!updatedCourse) {
+        res
+          .status(httpStatusCode.NOT_FOUND)
+          .json({ message: "Course not found or update failed" });
+        return;
+      }
+
+      res.status(httpStatusCode.OK).json({
+        message: "Course updated successfully",
+        course: updatedCourse,
+      });
+    } catch (error) {
+      console.error("Error updating course:", error);
+      res
+        .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
     }
-    const token = req.cookies.access_token;
-    if (!token) {
-      res.status(401).json({ message: "Unauthorized: No token provided" });
-      return;
-    }
-    const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
-    const decoded = jwt.verify(token, secretKey) as { _id: string; email: string; role: string };
-    const id = decoded._id;
-
-    if (!req.files || !Array.isArray(req.files)) {
-      res.status(httpStatusCode.BAD_REQUEST).json({ message: "No files uploaded" });
-      return;
-    }
-
-    const {
-      title,
-      courseDescription,
-      category,
-      instructorName,
-      aboutInstructor,
-      isPaid,
-      price,
-      accountNumber,
-      email,
-      phone,
-      modules, // Expecting modules as an array from FormData
-    } = req.body;
-
-    const thumbnail = files.find((file) => file.fieldname === "thumbnail");
-    const videoFiles = files.filter((file) => file.fieldname.startsWith("video_"));
-
-    // Parse module and lesson data from req.body.modules
-    const content = modules.map((module: any, moduleIndex: number) => ({
-      moduleTitle: module.title,
-      lessons: module.lessons.map((lesson: any, lessonIndex: number) => {
-        const video = videoFiles.find((file) => file.fieldname === `video_${moduleIndex}_${lessonIndex}`);
-        return {
-          lessonTitle: lesson.title,
-          lessonDescription: lesson.lessonDescription,
-          video: video?.location || lesson.video || "", // Use existing URL if no new video
-        };
-      }),
-    }));
-     const _id = courseId
-    const courseData = {
-      _id,
-      courseTitle: title,
-      courseDescription,
-      categoryName: category,
-      instructorName,
-      aboutInstructor,
-      pricingOption: isPaid,
-      price: price ? parseFloat(price) : undefined,
-      accountNumber: accountNumber ? parseInt(accountNumber) : undefined,
-      additionalEmail: email,
-      additionalContactNumber: phone,
-      thumbnailUrl: thumbnail?.location || "",
-      thumbnailKey: thumbnail?.key || "",
-      content,
-    };
-
-    console.log("courseData:", courseData);
-
-    const updatedCourse = await editCourseUseCase(this.dependencies).execute(courseData);
-
-    if (!updatedCourse) {
-      res.status(httpStatusCode.NOT_FOUND).json({ message: "Course not found or update failed" });
-      return;
-    }
-
-    res.status(httpStatusCode.OK).json({
-      message: "Course updated successfully",
-      course: updatedCourse,
-    });
-  } catch (error) {
-    console.error("Error updating course:", error);
-    res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
   }
-}
-  // // edit course
-  // async editCourse(req: Request, res: Response): Promise<void> {
-  //   const { editCourseUseCase } = this.dependencies.useCases;
-  //   try {
-  //     console.log("edit Course in instructor");
-  //     const files = req.files as S3File[];
-  //     const { courseId } = req.params;
 
-  //     if (!req.user) {
-  //       res.status(401).json({ message: "Unauthorized: No user" });
-  //       return;
-  //     }
-  //     const token = req.cookies.access_token;
-  //     if (!token) {
-  //       res.status(401).json({ message: "Unauthorized: No token provided" });
-  //       return;
-  //     }
-  //     const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
-  //     const decoded = jwt.verify(token, secretKey) as {
-  //       _id: string;
-  //       email: string;
-  //       role: string;
-  //     };
-  //     const instructorId = decoded._id;
-      
-  //     const _id = courseId
-  //     const {
-  //       courseTitle,
-  //       courseDescription,
-  //       categoryName,
-  //       instructorName,
-  //       aboutInstructor,
-  //       pricingOption,
-  //       price,
-  //       accountNumber,
-  //       additionalEmail,
-  //       additionalContactNumber,
-  //     } = req.body;
-
-  //     console.log("Request body:", req.body);
-  //     console.log("Uploaded files:", files);
-
-  //     const thumbnail = files?.find((file) => file.fieldname === "thumbnail");
-  //     const videoFiles = files?.filter((file) =>
-  //       file.fieldname.startsWith("video_")
-  //     );
-
-  //     // Parse content from FormData with explicit typing
-  //     const content: Module[] = [];
-  //     for (let i = 0; req.body[`content[${i}][id]`]; i++) {
-  //       const module: Module = {
-  //         _id: req.body[`content[${i}][id]`],
-  //         moduleTitle: req.body[`content[${i}][moduleTitle]`],
-  //         lessons: [],
-  //       };
-
-  //       for (let j = 0; req.body[`content[${i}][lessons][${j}][id]`]; j++) {
-  //         const lesson: Lesson = {
-  //           _id: req.body[`content[${i}][lessons][${j}][id]`],
-  //           lessonTitle: req.body[`content[${i}][lessons][${j}][lessonTitle]`],
-  //           lessonDescription:
-  //             req.body[`content[${i}][lessons][${j}][lessonDescription]`],
-  //           video: req.body[`content[${i}][lessons][${j}][video]`] || "",
-  //         };
-
-  //         const video = videoFiles?.find(
-  //           (file) => file.fieldname === `video_${i}_${j}`
-  //         );
-  //         if (video) {
-  //           lesson.video = video.location;
-  //         }
-
-  //         module.lessons.push(lesson);
-  //       }
-  //       content.push(module);
-  //     }
-
-  //     const courseData = {
-  //       _id,
-  //       courseTitle,
-  //       courseDescription,
-  //       categoryName,
-  //       instructorName,
-  //       aboutInstructor,
-  //       pricingOption,
-  //       price: price ? parseFloat(price) : undefined,
-  //       accountNumber: accountNumber ? parseInt(accountNumber) : undefined,
-  //       additionalEmail,
-  //       additionalContactNumber, // Kept as string to match createCourse
-  //       thumbnailUrl: thumbnail?.location || "",
-  //       thumbnailKey: thumbnail?.key || "",
-  //       content,
-  //     };
-
-  //     console.log("courseData:", courseData);
-
-  //     const updatedCourse = await editCourseUseCase(this.dependencies).execute(
-  //       courseData
-  //     );
-
-  //     if (!updatedCourse) {
-  //       res
-  //         .status(httpStatusCode.NOT_FOUND)
-  //         .json({ message: "Course not found or update failed" });
-  //       return;
-  //     }
-
-  //     res.status(httpStatusCode.OK).json({
-  //       message: "Course updated successfully",
-  //       course: updatedCourse,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error updating course:", error);
-  //     res
-  //       .status(httpStatusCode.INTERNAL_SERVER_ERROR)
-  //       .json({ message: "Internal Server Error" });
-  //   }
-  // }
+  // block course controller
+  async blockCourse(req: Request, res: Response): Promise<void> {
+    const {blockCourseUseCase} = this.dependencies.useCases
+    try {
+      console.log("block course");
+      const {courseId} = req.params
+      console.log(courseId);
+      const course = await blockCourseUseCase(this.dependencies).execute(courseId)
+      if (course?.thumbnailUrl) {
+        const thumbnailKey = course.thumbnailUrl.split(
+          "/course_assets/thumbnails/"
+        )[1];
+        course.thumbnailUrl = await getSignedUrlForS3thumbnails(thumbnailKey);
+      }
+      res.status(httpStatusCode.OK).json({
+        message: "Course updated successfully",
+        course: course,
+      });
+    } catch (error:constant) {
+      res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal Server Error" });
+  
+    }
+  }
 }

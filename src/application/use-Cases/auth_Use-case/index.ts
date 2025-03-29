@@ -80,8 +80,10 @@ export const authUseCases = (dependencies: IDependencies) => {
       execute:(id:string)=>profileUseCaseInstance.switchUserRoleUseCase(id)
     }),
 
+    // course 
+
     allCoursesUseCase:()=>({
-      execute:()=>courseUseCase.allCoursesUseCase()
+      execute:(page:number,limit:number)=>courseUseCase.allCoursesUseCase(page,limit)
     }),
     courseDetailsUseCase:()=>({
       execute:(courseId:string)=>courseUseCase.courseDetailsUseCase(courseId)
@@ -89,6 +91,12 @@ export const authUseCases = (dependencies: IDependencies) => {
     similarCourseUseCase:()=>({
       execute:(courseId:string)=>courseUseCase.similarCourseUseCase(courseId)
 
+    }),
+    getTotalCount:()=>({
+      execute:()=>courseUseCase.getTotalCount()
+
     })
+
+
   };
 };

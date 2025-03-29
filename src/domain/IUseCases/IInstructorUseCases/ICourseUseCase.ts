@@ -5,16 +5,19 @@ export interface ICreateCourseUseCase {
     execute(data:CourseEntity,id:string):Promise<CourseEntity|null>
 }
 
-export interface IAllCategoriesUseCase {
+export interface IAllCategoriesUseCase {   
     execute ():Promise<categoryEntity[] |null>
 }
 
+
 export interface IListInstructorCourseUseCase{
     execute (id:string):Promise<CourseEntity[] |null>
-
 }
 
 export interface IEditCourseUseCase{
     execute(data:CourseEntity):Promise<CourseEntity|null>
+}
 
+export interface IBlockCourseUseCase{
+    execute(courseId:string):Promise<CourseEntity|null>
 }

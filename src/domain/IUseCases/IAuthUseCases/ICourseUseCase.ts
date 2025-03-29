@@ -1,7 +1,11 @@
 import { CourseEntity } from "../../entities/courseEntity";
 
 export interface allCoursesUseCase{
-    execute():Promise<CourseEntity[]|null>
+    execute(page: number, limit: number):Promise<CourseEntity[]|null>
+}
+
+export interface IGetTotalCount{
+    execute():Promise<number>
 }
 
 export interface ICourseDetailsUseCase{

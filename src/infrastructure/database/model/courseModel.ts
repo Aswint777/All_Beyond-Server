@@ -66,6 +66,10 @@ const courseSchema = new Schema({
   user:{
     type: Types.ObjectId,
     ref:"users"
-  }
+  },
+  isBlocked :{
+    type:Boolean,
+    default:false
+  },
 });
 export const Course = model<CourseEntity>("Course", courseSchema);

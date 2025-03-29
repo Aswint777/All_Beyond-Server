@@ -46,7 +46,7 @@ export interface UserEntity {
   phoneNumber?: string;
   role?: Role;
   profile?: Profile;
-  contact?: Contact;
+  // contact?: Contact;
   isBlocked?: boolean;
   isVerified?: isVerified;
   createdAt?: Date;
@@ -59,7 +59,7 @@ export interface UserEntity {
   cv?: string;
   age?: number;
   address?: string;
-  contactNumber?: Number;
+  contactNumber?: string;
   gender?: string;
   city?: string;
   country?: string;

@@ -8,6 +8,8 @@ import {
   getSignedUrlForS3thumbnails,
   getSignedUrlForS3Videos,
 } from "../../../_boot/getSignedUrl";
+import { CourseEntity } from "../../../domain/entities/courseEntity";
+import { dependencies } from "../../../_boot/dependency/dependencies";
 
 interface S3File extends Express.Multer.File {
   location: string; // S3 adds 'location' property with the file URL
@@ -154,47 +156,115 @@ export class CourseController {
     }
   }
 
-  // Course listing in the Instructor side
+  //list course
   async listInstructorCourse(req: Request, res: Response): Promise<void> {
     const { listInstructorCourseUseCase } = this.dependencies.useCases;
     try {
       console.log("Listing the courses...");
       const user = getUserFromToken(req, res);
-      if (!user) return;
+      if (!user) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+        return;
+      }
       const id = user._id;
+      console.log("req.query:", req.query);
 
-      let courses = await listInstructorCourseUseCase(
-        this.dependencies
-      ).execute(id);
-      if (!courses) {
+      const { search = "", page = "1", limit = "6" } = req.query;
+      const pageNum = parseInt(page as string, 10) || 1;
+      const limitNum = parseInt(limit as string, 10) || 6;
+      const skip = (pageNum - 1) * limitNum;
+
+      // Ensure search is a string and not undefined
+      const safeSearch = typeof search === "string" ? search : "";
+      
+      console.log("Query params:", { id, search: safeSearch, skip, limitNum });
+
+      const result = await listInstructorCourseUseCase(this.dependencies).execute(
+        id,
+        safeSearch, // Pass safeSearch instead of search as string
+        skip,
+        limitNum
+      );
+
+      if (!result) {
         res.status(404).json({
           success: false,
           message: "No courses found",
         });
         return;
       }
-      // ✅ Generate Signed URL for Thumbnails
-      courses = await Promise.all(
-        courses.map(async (course) => {
+
+      const { courses, totalCourses } = result;
+
+      const coursesWithSignedUrls = await Promise.all(
+        courses.map(async (course: CourseEntity) => {
           if (course.thumbnailUrl) {
-            const fileKey = course.thumbnailUrl.split(
-              "/course_assets/thumbnails/"
-            )[1]; // Extract filename
+            const fileKey = course.thumbnailUrl.split("/course_assets/thumbnails/")[1];
             course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
           }
           return course;
         })
       );
+
+      const totalPages = Math.ceil(totalCourses / limitNum);
+
       res.status(200).json({
         success: true,
         message: "Course Listing successful",
-        data: courses,
+        data: {
+          courses: coursesWithSignedUrls,
+          totalPages,
+          currentPage: pageNum,
+          totalCourses,
+        },
       });
     } catch (error) {
       console.error("Error fetching courses:", error);
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json({ success: false, message: "Internal Server Error" });
     }
   }
+
+  // // Course listing in the Instructor side
+  // async listInstructorCourse(req: Request, res: Response): Promise<void> {
+  //   const { listInstructorCourseUseCase } = this.dependencies.useCases;
+  //   try {
+  //     console.log("Listing the courses...");
+  //     const user = getUserFromToken(req, res);
+  //     if (!user) return;
+  //     const id = user._id;
+
+  //     let courses = await listInstructorCourseUseCase(
+  //       this.dependencies
+  //     ).execute(id);
+  //     if (!courses) {
+  //       res.status(404).json({
+  //         success: false,
+  //         message: "No courses found",
+  //       });
+  //       return;
+  //     }
+  //     // ✅ Generate Signed URL for Thumbnails
+  //     courses = await Promise.all(
+  //       courses.map(async (course) => {
+  //         if (course.thumbnailUrl) {
+  //           const fileKey = course.thumbnailUrl.split(
+  //             "/course_assets/thumbnails/"
+  //           )[1]; // Extract filename
+  //           course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
+  //         }
+  //         return course;
+  //       })
+  //     );
+  //     res.status(200).json({
+  //       success: true,
+  //       message: "Course Listing successful",
+  //       data: courses,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching courses:", error);
+  //     res.status(500).json({ message: "Internal Server Error" });
+  //   }
+  // }
 
   // Fetch Course Details
   async viewCourses(req: Request, res: Response): Promise<void> {
@@ -364,12 +434,14 @@ export class CourseController {
 
   // block course controller
   async blockCourse(req: Request, res: Response): Promise<void> {
-    const {blockCourseUseCase} = this.dependencies.useCases
+    const { blockCourseUseCase } = this.dependencies.useCases;
     try {
       console.log("block course");
-      const {courseId} = req.params
+      const { courseId } = req.params;
       console.log(courseId);
-      const course = await blockCourseUseCase(this.dependencies).execute(courseId)
+      const course = await blockCourseUseCase(this.dependencies).execute(
+        courseId
+      );
       if (course?.thumbnailUrl) {
         const thumbnailKey = course.thumbnailUrl.split(
           "/course_assets/thumbnails/"
@@ -380,11 +452,10 @@ export class CourseController {
         message: "Course updated successfully",
         course: course,
       });
-    } catch (error:constant) {
+    } catch (error: constant) {
       res
-      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
-      .json({ message: "Internal Server Error" });
-  
+        .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
     }
   }
 }

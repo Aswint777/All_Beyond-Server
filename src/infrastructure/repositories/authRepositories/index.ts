@@ -45,7 +45,7 @@ export const AuthRepositories = (dependencies: IDependencies) => {
 
     // course repository
 
-    allCoursesRepo:(page: number, limit: number)=>courseRepositoryInstance.allCoursesRepo(page,limit),
+    allCoursesRepo:(page: number, limit: number, search?:string, category?:string)=>courseRepositoryInstance.allCoursesRepo(page,limit, search, category),
     getCoursesCountRepo:()=>courseRepositoryInstance.getCoursesCountRepo(),
 
     courseDetailsRepo:(courseId:string)=>courseRepositoryInstance.courseDetailsRepo(courseId),

@@ -13,7 +13,7 @@ export class CourseRepository
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
   }
-  async allCoursesRepo(page: number, limit: number): Promise<CourseEntity[] | null> {
+  async allCoursesRepo(page: number, limit: number, search?:string, category?:string): Promise<CourseEntity[] | null> {
     try {
       const pipeline: any[] = [
         {
@@ -29,6 +29,13 @@ export class CourseRepository
           $match: {
             isBlocked: false,
             "categoryDetails.isBlocked": false,
+            ...(search && {
+              $or: [
+                { courseTitle: { $regex: search, $options: "i" } },
+                { courseDescription: { $regex: search, $options: "i" } },
+              ],
+            }),
+            ...(category && { "categoryDetails.name": category }),
           },
         },
         { $skip: (page - 1) * limit },

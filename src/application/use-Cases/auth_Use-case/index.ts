@@ -83,7 +83,7 @@ export const authUseCases = (dependencies: IDependencies) => {
     // course 
 
     allCoursesUseCase:()=>({
-      execute:(page:number,limit:number)=>courseUseCase.allCoursesUseCase(page,limit)
+      execute:(page:number,limit:number, search?:string, category?:string)=>courseUseCase.allCoursesUseCase(page,limit, search, category)
     }),
     courseDetailsUseCase:()=>({
       execute:(courseId:string)=>courseUseCase.courseDetailsUseCase(courseId)

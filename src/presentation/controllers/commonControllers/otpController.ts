@@ -3,6 +3,7 @@ import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { sendEmail } from "../../../infrastructure/utils/nodeMailerConfig";
 import { promises } from "dns";
+import { generateOTP } from "../../../_lib/common/generateOtp";
 
 export class OtpController {
   private dependencies: IDependencies;
@@ -76,11 +77,11 @@ export class OtpController {
       }
 
       // 🔢 Generate New OTP
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
+      // const otp = Math.floor(100000 + Math.random() * 900000).toString();
+       const otp = generateOTP()
       // 📧 Send OTP via Email
       await sendEmail({
-        to: email,
+        to: email,   
         subject: "OTP Verification",
         text: `Your OTP is: ${otp}`,
       });

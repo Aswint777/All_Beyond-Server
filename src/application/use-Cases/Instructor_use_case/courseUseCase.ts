@@ -42,19 +42,38 @@ export class CourseUseCase {
     }
   }
 
-  async listInstructorCourseUseCase(id:string):Promise<CourseEntity[] |null>{
-    const {listInstructorRepository} = this.dependencies.repositories
-    try {
-      console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaahhhhh',id);
-      const list = await listInstructorRepository(id)
-      console.log(list);
-      
-      if(!list) return null
-      return list
-    } catch (error:constant) {
-      throw new Error("An unexpected error is occurred");
-    }
+// list 
+async listInstructorCourseUseCase(
+  id: string,
+  search: string = "", // Default to empty string
+  skip: number = 0,   // Default to 0
+  limit: number = 6   // Default to 6
+): Promise<{ courses: CourseEntity[]; totalCourses: number } | null> {
+  const { listInstructorRepository } = this.dependencies.repositories;
+  try {
+    console.log("Fetching courses with:", { id, search, skip, limit });
+    const result = await listInstructorRepository(id, search, skip, limit);
+    console.log("Courses fetched:", result);
+    if (!result || !result.courses || result.courses.length === 0) return null;
+    return result;
+  } catch (error: any) {
+    console.error("Error in use case:", error);
+    throw new Error("An unexpected error occurred");
   }
+}
+  // async listInstructorCourseUseCase(id:string):Promise<CourseEntity[] |null>{
+  //   const {listInstructorRepository} = this.dependencies.repositories
+  //   try {
+  //     console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaahhhhh',id);
+  //     const list = await listInstructorRepository(id)
+  //     console.log(list);
+      
+  //     if(!list) return null
+  //     return list
+  //   } catch (error:constant) {
+  //     throw new Error("An unexpected error is occurred");
+  //   }
+  // }
 
   async editCourseUseCase(courseData:CourseEntity):Promise<CourseEntity|null>{
     const {editCourseRepository} = this.dependencies.repositories

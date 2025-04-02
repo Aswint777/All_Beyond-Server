@@ -19,7 +19,12 @@ export const instructorUseCase = (dependencies: IDependencies) => {
       execute:()=>courseUseCase.allCategoriesUseCase()
     }),
     listInstructorCourseUseCase:()=>({
-      execute:(id:string)=>courseUseCase.listInstructorCourseUseCase(id)
+      execute:(
+        id: string,
+        search: string = "", // Default to empty string
+        skip: number = 0,   // Default to 0
+        limit: number = 6   // Default to 6
+      )=>courseUseCase.listInstructorCourseUseCase(id,search,skip,limit)
     }),
     editCourseUseCase:()=>({
       execute:(courseData:CourseEntity)=>courseUseCase.editCourseUseCase(courseData)

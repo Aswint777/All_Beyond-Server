@@ -1,4 +1,5 @@
 import { constant } from "../../../_lib/common/constant";
+import { notification } from "../../../_lib/common/emailDesign";
 import { UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../interfaces/IDependencies";
 
@@ -38,6 +39,17 @@ export class AdminInstructorUseCase {
       if (!update) {
         return null;
       }
+      if(update.status === "approved" && update.email&& update.username ){
+         console.log('approved');
+         await notification(update.username,update.email,'approved');
+        }
+      if(update.status === "rejected" && update.username &&update.email){
+        console.log('rejected');
+        await notification(update.username,update.email,'rejected');
+
+      }
+      console.log(update,"kskskskskksskskkkssk");
+      
       return update;
     } catch (error: constant) {
       console.error("Error updating instructor status:", error);

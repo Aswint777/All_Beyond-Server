@@ -28,6 +28,7 @@ export const controller = (dependencies: IDependencies) => {
     allCourses: courseController.allCourses.bind(courseController),
     courseDetails : courseController.courseDetailsController.bind(courseController),
     similarCourse:courseController.similarCourseController.bind(courseController),
+    allCategory:courseController.allCategory.bind(courseController)
 
   };
 };

@@ -8,6 +8,7 @@ import { generateAccessToken, generateRefreshToken } from "../../../_lib/jwt";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { log } from "console";
 import { getUserFromToken } from "../../../infrastructure/utils/getUserFromToken";
+import { generateOTP } from "../../../_lib/common/generateOtp";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -84,7 +85,8 @@ export class UserController {
       console.log(newUser, "success");
 
       // 🔢 Generate OTP
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      // const otp = Math.floor(100000 + Math.random() * 900000).toString();
+       const otp = generateOTP()
 
       // 📧 Send OTP via email
       await sendEmail({

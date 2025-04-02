@@ -38,15 +38,15 @@ export class AdminInstructorController {
   async updateInstructorStatus(req: Request, res: Response): Promise<void> {
     const { updateInstructorStatusUseCase } = this.dependencies.useCases;
     try {
-      console.log(req.body);
+      // console.log(req.body);
       const { Id, status } = req.body;
-      console.log(Id);
+      // console.log(Id);
 
       const update = await updateInstructorStatusUseCase(this.dependencies).execute(
         Id,
         status
       )
-      console.log(update, "jjj");
+      // console.log(update, "jjj");
       res.status(200).json({
         success: true,
         data: update,

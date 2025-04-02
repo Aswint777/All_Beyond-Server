@@ -25,7 +25,8 @@ export const routers = (dependencies: IDependencies) => {
     switchUserRole,
     allCourses,
     courseDetails,
-    similarCourse
+    similarCourse,
+    allCategory,
   } = controller(dependencies);
 
   const router = Router();
@@ -54,6 +55,7 @@ export const routers = (dependencies: IDependencies) => {
     
     router.route("/courses").get(allCourses);
     router.route('/courseDetails/:courseId').get(courseDetails)
+    router.route('/allCategory').get(allCategory)
     router.route('/similarCourses/:courseId').get(similarCourse)
   return router;
 };

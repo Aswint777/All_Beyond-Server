@@ -1,7 +1,7 @@
 import { CourseEntity } from "../../entities/courseEntity";
 
 export interface allCoursesUseCase{
-    execute(page: number, limit: number):Promise<CourseEntity[]|null>
+    execute(page: number, limit: number, search?:string, category?:string):Promise<CourseEntity[]|null>
 }
 
 export interface IGetTotalCount{

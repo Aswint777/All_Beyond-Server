@@ -33,7 +33,7 @@ export interface IRepositories {
   switchRole: (id: string) => Promise<UserEntity | null>;
 
   // course Repository
-  allCoursesRepo :(page: number, limit: number)=>Promise<CourseEntity[]|null>
+  allCoursesRepo :(page: number, limit: number, search?:string, category?:string)=>Promise<CourseEntity[]|null>
    getCoursesCountRepo:()=> Promise<number> 
 
   courseDetailsRepo:(courseId:string)=>Promise<CourseEntity|null>
@@ -86,7 +86,9 @@ export interface IRepositories {
     id: string
   ) => Promise<CourseEntity | null>;
   getAllCategoryRepository: () => Promise<categoryEntity[] | null>;
-  listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
+  // listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
+  listInstructorRepository:(id: string,search: string,skip: number,limit: number)=> Promise<{ courses: CourseEntity[]; totalCourses: number } | null>
+
   editCourseRepository:(data:CourseEntity)=>Promise<CourseEntity|null>
   blockCourseRepository:(courseId:string)=>Promise<CourseEntity|null>
 

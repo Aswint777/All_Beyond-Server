@@ -14,7 +14,12 @@ export const InstructorRepositories = (dependencies: IDependencies) => {
       applyInstructorInstance.instructorApplication(data),
     createCourseRepository :(courseData:CourseEntity,id:string)=>courseRepository.createCourseRepository(courseData,id),
     getAllCategoryRepository:()=>courseRepository.getAllCategoryRepository(),
-    listInstructorRepository:(id:string)=>courseRepository.listInstructorRepository(id),
+    listInstructorRepository:(
+      id: string,
+      search: string = "",
+      skip: number = 0,
+      limit: number = 6
+    )=>courseRepository.listInstructorRepository(id,search,skip,limit),
     editCourseRepository:(courseData: CourseEntity)=>courseRepository.editCourseRepository(courseData),
     blockCourseRepository:(courseId: string)=>courseRepository.blockCourseRepository(courseId)
   };

@@ -10,9 +10,18 @@ export interface IAllCategoriesUseCase {
 }
 
 
-export interface IListInstructorCourseUseCase{
-    execute (id:string):Promise<CourseEntity[] |null>
-}
+// export interface IListInstructorCourseUseCase{
+//     execute (id:string):Promise<CourseEntity[] |null>
+// }
+
+export interface IListInstructorCourseUseCase {
+    execute(
+      id: string,
+      search: string,
+      skip: number,
+      limitNum: number
+    ): Promise<{ courses: CourseEntity[]; totalCourses: number } | null>;
+  }
 
 export interface IEditCourseUseCase{
     execute(data:CourseEntity):Promise<CourseEntity|null>

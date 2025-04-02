@@ -127,13 +127,44 @@ export class CourseRepository
     }
   }
 
-  async listInstructorRepository(id: string): Promise<CourseEntity[] | null> {
+
+  
+  async  listInstructorRepository(
+    id: string,
+    search: string = "",
+    skip: number = 0,
+    limit: number = 6
+  ): Promise<{ courses: CourseEntity[]; totalCourses: number } | null> {
     try {
-      return await Course.find({ user: new mongoose.Types.ObjectId(id) });
-    } catch (error: constant) {
-      throw new Error("An unexpected error is occurred");
+      const query = {
+        user: new mongoose.Types.ObjectId(id),
+        ...(search && { courseTitle: { $regex: search, $options: "i" } }), // Case-insensitive search
+      };
+  
+      console.log("Repository query:", query); // Debugging
+  
+      const [courses, totalCourses] = await Promise.all([
+        Course.find(query).skip(skip).limit(limit).lean() as Promise<CourseEntity[]>,
+        Course.countDocuments(query),
+      ]);
+  
+      console.log("Repository result:", { courses, totalCourses }); // Debugging
+  
+      return { courses, totalCourses };
+    } catch (error: any) {
+      console.error("Error in repository:", error);
+      throw new Error("An unexpected error occurred");
     }
   }
+  
+
+  // async listInstructorRepository(id: string): Promise<CourseEntity[] | null> {
+  //   try {
+  //     return await Course.find({ user: new mongoose.Types.ObjectId(id) });
+  //   } catch (error: constant) {
+  //     throw new Error("An unexpected error is occurred");
+  //   }
+  // }
 
   async editCourseRepository(
     courseData: Partial<CourseEntity>

@@ -9,11 +9,11 @@ export class CourseUseCase {
     this.dependencies = dependencies;
   }
 
-  async allCoursesUseCase(page: number, limit: number): Promise<CourseEntity[] | null> {
+  async allCoursesUseCase(page: number, limit: number, search?:string, category?:string): Promise<CourseEntity[] | null> {
     const { allCoursesRepo } = this.dependencies.repositories;
     try {
       console.log(`Fetching courses for page ${page}, limit ${limit}`);
-      const list = await allCoursesRepo(page, limit);
+      const list = await allCoursesRepo(page, limit, search, category);
       console.log("Courses fetched:", list);
       if (!list) return null;
       return list;

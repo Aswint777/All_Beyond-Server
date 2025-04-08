@@ -61,19 +61,6 @@ async listInstructorCourseUseCase(
     throw new Error("An unexpected error occurred");
   }
 }
-  // async listInstructorCourseUseCase(id:string):Promise<CourseEntity[] |null>{
-  //   const {listInstructorRepository} = this.dependencies.repositories
-  //   try {
-  //     console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaahhhhh',id);
-  //     const list = await listInstructorRepository(id)
-  //     console.log(list);
-      
-  //     if(!list) return null
-  //     return list
-  //   } catch (error:constant) {
-  //     throw new Error("An unexpected error is occurred");
-  //   }
-  // }
 
   async editCourseUseCase(courseData:CourseEntity):Promise<CourseEntity|null>{
     const {editCourseRepository} = this.dependencies.repositories

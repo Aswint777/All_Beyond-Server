@@ -15,15 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const authRoutes_1 = require("./presentation/routes/authRoutes");
-// import { connectDB } from "./infrastructure/database/dbConnection";
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dependencies_1 = require("./_boot/dependency/dependencies");
-// import { adminRouters } from "./presentation/routes/adminRoutes";
 const dbConnection_1 = require("./infrastructure/database/dbConnection");
 const instructorRoutes_1 = require("./presentation/routes/instructorRoutes");
 const adminRoutes_1 = require("./presentation/routes/adminRoutes");
-// import { instructorRoutes } from "./presentation/routes/instructorRoutes";
+const studentRoutes_1 = require("./presentation/routes/studentRoutes");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // ✅ Remove or Adjust COOP Headers to Fix Google OAuth Issues
@@ -50,10 +48,10 @@ app.use((0, cors_1.default)(corsOptions));
 app.use("/auth", (0, authRoutes_1.routers)(dependencies_1.dependencies));
 app.use("/admin", (0, adminRoutes_1.adminRouters)(dependencies_1.dependencies));
 app.use("/instructor", (0, instructorRoutes_1.instructorRoutes)(dependencies_1.dependencies));
+app.use("/student", (0, studentRoutes_1.studentRoutes)(dependencies_1.dependencies));
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Connect to MongoDB
-        // await connectDB();
         yield (0, dbConnection_1.connectMongoDB)();
         // Start the Express server
         const PORT = process.env.PORT || 5000;

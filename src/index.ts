@@ -1,15 +1,13 @@
 import express, { Application } from "express";
 import dotenv from "dotenv";
 import { routers } from "./presentation/routes/authRoutes";
-// import { connectDB } from "./infrastructure/database/dbConnection";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import { dependencies } from "./_boot/dependency/dependencies";
-// import { adminRouters } from "./presentation/routes/adminRoutes";
 import { connectMongoDB } from "./infrastructure/database/dbConnection";
 import { instructorRoutes } from "./presentation/routes/instructorRoutes";
 import { adminRouters } from "./presentation/routes/adminRoutes";
-// import { instructorRoutes } from "./presentation/routes/instructorRoutes";
+import { studentRoutes } from "./presentation/routes/studentRoutes";
 
 dotenv.config();
 
@@ -41,11 +39,11 @@ app.use(cors(corsOptions));
 app.use("/auth", routers(dependencies));
 app.use("/admin", adminRouters(dependencies));
 app.use("/instructor", instructorRoutes(dependencies));
+app.use("/student",studentRoutes(dependencies));
 
 (async () => {
   try {
     // Connect to MongoDB
-    // await connectDB();
     await connectMongoDB();
 
     // Start the Express server

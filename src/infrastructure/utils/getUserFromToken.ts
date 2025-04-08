@@ -18,7 +18,6 @@ export const getUserFromToken = (
           res.status(401).json({ message: "Unauthorized: No token provided" });
           return null;
         }
-        console.log('bfhtbvdgfdcx');
 
     const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
     const decoded = jwt.verify(token, secretKey) as DecodedToken;

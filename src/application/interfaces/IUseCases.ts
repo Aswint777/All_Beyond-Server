@@ -43,6 +43,7 @@ import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCa
 import { IDependencies } from "./IDependencies";
 import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
 import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
+import { ICoursePaymentUseCase, IEnrolCourseUseCases } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -58,15 +59,15 @@ export interface IUseCases {
   otpMatchCheckingUseCase:(dependencies: IDependencies)=> IOtpMatchCheckingUseCase;
   verifyOtpTrueUseCase:(dependencies: IDependencies)=> IVerifyOtpTrueUseCase;
 
-  profileEditUseCase: (dependencies: IDependencies)=>IProfileEditUseCase;
-  changePasswordUseCase:(dependencies: IDependencies)=> IChangePasswordUseCase;
-  uploadPhotoUseCase:(dependencies: IDependencies)=> IUploadPhotoUseCase;
-  switchUserRoleUseCase:(dependencies:IDependencies)=>ISwitchUserRoleUseCase
-
   allCoursesUseCase:(dependencies:IDependencies)=>allCoursesUseCase
   getTotalCount :(dependencies:IDependencies)=>IGetTotalCount
   courseDetailsUseCase:(dependencies:IDependencies)=>ICourseDetailsUseCase
   similarCourseUseCase:(dependencies:IDependencies)=>ISimilarCourseUseCase
+  
+  profileEditUseCase: (dependencies: IDependencies)=>IProfileEditUseCase;
+  changePasswordUseCase:(dependencies: IDependencies)=> IChangePasswordUseCase;
+  uploadPhotoUseCase:(dependencies: IDependencies)=> IUploadPhotoUseCase;
+  switchUserRoleUseCase:(dependencies:IDependencies)=>ISwitchUserRoleUseCase
 
   // Admin Use Cases
   getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;
@@ -83,11 +84,15 @@ export interface IUseCases {
 
   // Instructor Use Cases
   applyInstructorUseCase: (dependencies: IDependencies)=>IApplyInstructorUseCase;
+  listInstructorCourseUseCase : (dependencies:IDependencies)=>IListInstructorCourseUseCase
+
   createCourseUseCase : (dependencies:IDependencies)=>ICreateCourseUseCase
   allCategoriesUseCase : (dependencies:IDependencies)=>IAllCategoriesUseCase
-  listInstructorCourseUseCase : (dependencies:IDependencies)=>IListInstructorCourseUseCase
   editCourseUseCase : (dependencies:IDependencies)=>IEditCourseUseCase
   blockCourseUseCase : (dependencies:IDependencies)=>IBlockCourseUseCase
 
+  // Student Use Case
+  coursePaymentUseCase :(dependency:IDependencies)=>ICoursePaymentUseCase
+  enrolCourseUseCases :(dependency:IDependencies)=>IEnrolCourseUseCases
 }
 

@@ -7,6 +7,8 @@ import {
 import { categoryEntity } from "../../domain/entities/categoryEntity";
 import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
 import { CourseEntity } from "../../domain/entities/courseEntity";
+import { PaymentEntity } from "../../domain/entities/paymentEntity";
+import { EnrolmentEntity } from "../../domain/entities/enrolmentEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -94,4 +96,6 @@ export interface IRepositories {
 
 
   // => student
+  coursePaymentRepository:(data:PaymentEntity)=>Promise<PaymentEntity|null>
+  enrolCourseRepository : (data:EnrolmentEntity )=>Promise<EnrolmentEntity|null>
 }

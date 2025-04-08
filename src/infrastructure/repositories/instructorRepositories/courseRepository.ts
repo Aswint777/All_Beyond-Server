@@ -156,15 +156,7 @@ export class CourseRepository
       throw new Error("An unexpected error occurred");
     }
   }
-  
 
-  // async listInstructorRepository(id: string): Promise<CourseEntity[] | null> {
-  //   try {
-  //     return await Course.find({ user: new mongoose.Types.ObjectId(id) });
-  //   } catch (error: constant) {
-  //     throw new Error("An unexpected error is occurred");
-  //   }
-  // }
 
   async editCourseRepository(
     courseData: Partial<CourseEntity>

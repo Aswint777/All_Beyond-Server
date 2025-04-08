@@ -13,6 +13,8 @@ export class CourseRepository
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
   }
+   
+  // all course
   async allCoursesRepo(page: number, limit: number, search?:string, category?:string): Promise<CourseEntity[] | null> {
     try {
       const pipeline: any[] = [
@@ -48,6 +50,7 @@ export class CourseRepository
       throw new Error("An unexpected error occurred: " + error.message);
     }
   }
+
   
   async getCoursesCountRepo(): Promise<number> {
     try {
@@ -77,33 +80,7 @@ export class CourseRepository
     }
   }
   
-  // // list all courses
-  // async allCoursesRepo(): Promise<CourseEntity[] | null> {
-  //   try {
-  //     const data = await Course.aggregate([
-  //       {
-  //         $lookup: {
-  //           from: "categories", // Ensure the collection name matches the actual DB collection
-  //           localField: "categoryName", // The field in Course referencing Category
-  //           foreignField: "_id", // The field in Category that matches
-  //           as: "categoryDetails",
-  //         },
-  //       },
-  //       { $unwind: "$categoryDetails" }, // Unwind the category array (since $lookup returns an array)
-  //       {
-  //         $match: {
-  //           "isBlocked": false, // Course should not be blocked
-  //           "categoryDetails.isBlocked": false, // Category should not be blocked
-  //         },
-  //       },
-  //     ]);
-  
-  //     return data as CourseEntity[];
-  //   } catch (error: any) {
-  //     throw new Error("An unexpected error occurred: " + error.message);
-  //   }
-  // }
-  
+ 
 
    // course details page 
    async courseDetailsRepo(courseId: string): Promise<CourseEntity | null> {

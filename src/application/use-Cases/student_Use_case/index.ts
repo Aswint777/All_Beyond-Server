@@ -12,6 +12,9 @@ export const studentUseCase = (dependencies: IDependencies) => {
     }),
     enrolCourseUseCases:()=>({
       execute:(data:EnrolmentEntity)=>enrolmentUseCase.enrolCourseUseCases(data)
+    }),
+    studentCoursesUseCase:()=>({
+      execute:(userId:string,safeSearch:string,skip:number,limitNum:number)=>enrolmentUseCase.studentCoursesUseCase(userId,safeSearch,skip,limitNum)
     })
   };
 };

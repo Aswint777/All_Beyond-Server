@@ -160,7 +160,6 @@ export class CourseController {
   async listInstructorCourse(req: Request, res: Response): Promise<void> {
     const { listInstructorCourseUseCase } = this.dependencies.useCases;
     try {
-      console.log("Listing the courses...");
       const user = getUserFromToken(req, res);
       if (!user) {
         res.status(401).json({ success: false, message: "Unauthorized" });
@@ -181,12 +180,7 @@ export class CourseController {
 
       const result = await listInstructorCourseUseCase(
         this.dependencies
-      ).execute(
-        id,
-        safeSearch, // Pass safeSearch instead of search as string
-        skip,
-        limitNum
-      );
+      ).execute(id, safeSearch, skip, limitNum);
 
       if (!result) {
         res.status(404).json({

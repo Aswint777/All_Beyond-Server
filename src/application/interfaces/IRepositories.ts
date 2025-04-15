@@ -98,4 +98,5 @@ export interface IRepositories {
   // => student
   coursePaymentRepository:(data:PaymentEntity)=>Promise<PaymentEntity|null>
   enrolCourseRepository : (data:EnrolmentEntity )=>Promise<EnrolmentEntity|null>
+  studentCoursesRepository :(userId:string,safeSearch:string,skip:number,limitNum:number)=>Promise<{ courses: CourseEntity[]; totalCourses: number }|null>
 }

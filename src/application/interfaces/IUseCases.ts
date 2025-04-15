@@ -43,7 +43,7 @@ import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCa
 import { IDependencies } from "./IDependencies";
 import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
 import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
-import { ICoursePaymentUseCase, IEnrolCourseUseCases } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
+import { ICoursePaymentUseCase, IEnrolCourseUseCases, IStudentCoursesUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -94,5 +94,6 @@ export interface IUseCases {
   // Student Use Case
   coursePaymentUseCase :(dependency:IDependencies)=>ICoursePaymentUseCase
   enrolCourseUseCases :(dependency:IDependencies)=>IEnrolCourseUseCases
+  studentCoursesUseCase :(dependency:IDependencies)=>IStudentCoursesUseCase
 }
 

@@ -5,17 +5,14 @@ import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
 import { verifyStudent } from "../middlewares/verifyStudent";
 
 export const studentRoutes = (dependencies: IDependencies) => {
-    const {
-      enrollCourse,
-      coursePayment,
-    } = studentController(dependencies);
-  
-    const router = Router();
-    router.route('/coursePayment').post(jwtMiddleware,verifyStudent, coursePayment)
+  const { enrollCourse, coursePayment, studentCourses } =
+    studentController(dependencies);
 
-
-    router.route('/enroll').post(jwtMiddleware,verifyStudent, enrollCourse)
-
-     return router;
-  };
-  
+  const router = Router();
+  router
+    .route("/coursePayment")
+    .post(jwtMiddleware, verifyStudent, coursePayment);
+  router.route("/enroll").post(jwtMiddleware, verifyStudent, enrollCourse);
+  router.route("/courses").get(jwtMiddleware, verifyStudent, studentCourses);
+  return router;
+};

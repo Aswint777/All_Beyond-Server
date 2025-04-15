@@ -10,5 +10,7 @@ export const studentRepositories = (dependencies: IDependencies) => {
       enrolmentRepository.coursePaymentRepository(data),
     enrolCourseRepository: (data: EnrolmentEntity) =>
       enrolmentRepository.enrolCourseRepository(data),
+
+    studentCoursesRepository:(userId:string,safeSearch:string,skip:number,limitNum:number)=> enrolmentRepository.studentCoursesRepository(userId,safeSearch,skip,limitNum)
   };
 };

@@ -5,7 +5,8 @@ export const studentController = (dependencies: IDependencies) => {
     const enrolment = new EnrolmentController(dependencies)
     return {
       enrollCourse : enrolment.enrollCourse.bind(enrolment),
-      coursePayment : enrolment.coursePayment.bind(enrolment)
+      coursePayment : enrolment.coursePayment.bind(enrolment),
+      studentCourses : enrolment.studentCourses.bind(enrolment),
   
     };
   };

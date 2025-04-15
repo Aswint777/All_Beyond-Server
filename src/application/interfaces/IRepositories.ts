@@ -7,8 +7,8 @@ import {
 import { categoryEntity } from "../../domain/entities/categoryEntity";
 import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
 import { CourseEntity } from "../../domain/entities/courseEntity";
-import { PaymentEntity } from "../../domain/entities/paymentEntity";
-import { EnrolmentEntity } from "../../domain/entities/enrolmentEntity";
+import { PaymentEntity, TransactionOutput } from "../../domain/entities/paymentEntity";
+import { DashboardData, EnrolmentEntity } from "../../domain/entities/enrolmentEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -35,14 +35,16 @@ export interface IRepositories {
   switchRole: (id: string) => Promise<UserEntity | null>;
 
   // course Repository
-  allCoursesRepo :(page: number, limit: number, search?:string, category?:string)=>Promise<CourseEntity[]|null>
-   getCoursesCountRepo:()=> Promise<number> 
+  allCoursesRepo: (
+    page: number,
+    limit: number,
+    search?: string,
+    category?: string
+  ) => Promise<CourseEntity[] | null>;
+  getCoursesCountRepo: () => Promise<number>;
 
-  courseDetailsRepo:(courseId:string)=>Promise<CourseEntity|null>
-  similarCourseRepo:(courseId:string)=>Promise<CourseEntity[]|null>
-  
-
-
+  courseDetailsRepo: (courseId: string) => Promise<CourseEntity | null>;
+  similarCourseRepo: (courseId: string) => Promise<CourseEntity[] | null>;
 
   // => Admin Repository
 
@@ -54,6 +56,10 @@ export interface IRepositories {
   ) => Promise<boolean | null>;
 
   findByUserId: (userId: string) => Promise<UserEntity | null>;
+  transactionHistoryRepository: (
+    skip: number,
+    limit: number
+  ) => Promise<{ transactions: TransactionOutput[]; totalTransactions: number } | null>;
 
   // category repository
   addCategory: (data: categoryEntity) => Promise<categoryEntity | null>;
@@ -65,12 +71,16 @@ export interface IRepositories {
   categoryEdit: (
     id: string,
     name: string,
-    description: string,
+    description: string
   ) => Promise<categoryEntity | null>;
   duplicateCategory: (
     name: string,
     id?: string
   ) => Promise<categoryEntity[] | null>;
+
+  //overview repo
+
+  dashboardRepository:()=> Promise<DashboardData|null>
 
   // adminInstructorRepository
   getInstructorApplication: () => Promise<UserEntity[] | boolean | null>;
@@ -89,14 +99,27 @@ export interface IRepositories {
   ) => Promise<CourseEntity | null>;
   getAllCategoryRepository: () => Promise<categoryEntity[] | null>;
   // listInstructorRepository:(id:string)=> Promise <CourseEntity[]|null>
-  listInstructorRepository:(id: string,search: string,skip: number,limit: number)=> Promise<{ courses: CourseEntity[]; totalCourses: number } | null>
+  listInstructorRepository: (
+    id: string,
+    search: string,
+    skip: number,
+    limit: number
+  ) => Promise<{ courses: CourseEntity[]; totalCourses: number } | null>;
 
-  editCourseRepository:(data:CourseEntity)=>Promise<CourseEntity|null>
-  blockCourseRepository:(courseId:string)=>Promise<CourseEntity|null>
-
+  editCourseRepository: (data: CourseEntity) => Promise<CourseEntity | null>;
+  blockCourseRepository: (courseId: string) => Promise<CourseEntity | null>;
 
   // => student
-  coursePaymentRepository:(data:PaymentEntity)=>Promise<PaymentEntity|null>
-  enrolCourseRepository : (data:EnrolmentEntity )=>Promise<EnrolmentEntity|null>
-  studentCoursesRepository :(userId:string,safeSearch:string,skip:number,limitNum:number)=>Promise<{ courses: CourseEntity[]; totalCourses: number }|null>
+  coursePaymentRepository: (
+    data: PaymentEntity
+  ) => Promise<PaymentEntity | null>;
+  enrolCourseRepository: (
+    data: EnrolmentEntity
+  ) => Promise<EnrolmentEntity | null>;
+  studentCoursesRepository: (
+    userId: string,
+    safeSearch: string,
+    skip: number,
+    limitNum: number
+  ) => Promise<{ courses: CourseEntity[]; totalCourses: number } | null>;
 }

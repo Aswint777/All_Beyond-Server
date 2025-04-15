@@ -1,5 +1,6 @@
 import { constant } from "../../../_lib/common/constant";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
+import { TransactionOutput } from "../../../domain/entities/paymentEntity";
 import { UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../interfaces/IDependencies";
 
@@ -58,6 +59,24 @@ export class AdminUserUseCase {
     } catch (error:constant) {
       throw new Error(error?.message || "Error in user Details use case");
 
+    }
+  }
+  async transactionHistoryUseCase(
+    skip: number,
+    limit: number
+  ): Promise<{ transactions: TransactionOutput[]; totalTransactions: number } | null> {
+    const { transactionHistoryRepository } = this.dependencies.repositories;
+    try {
+      const result = await transactionHistoryRepository(skip, limit);
+      if (!result || result.transactions.length === 0) {
+        return null;
+      }
+      console.log(result,"📌 Step 1 complete");
+      
+      return result;
+    } catch (error: any) {
+      console.error("Error in transactionHistoryUseCase:", error);
+      throw new Error("An unexpected error occurred");
     }
   }
 

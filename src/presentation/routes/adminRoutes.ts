@@ -14,7 +14,9 @@ export const adminRouters = (dependencies: IDependencies) => {
     editCategory,
     adminInstructorApplicationList,
     updateInstructorStatus,
-    userDetailsController
+    userDetailsController,
+    transactionHistory,
+    dashboard
   } = adminController(dependencies);
   const router = Router();
 
@@ -30,6 +32,10 @@ export const adminRouters = (dependencies: IDependencies) => {
   router.route("/updateInstructorStatus").put(jwtMiddleware,verifyAdmin,updateInstructorStatus);
 
   router.route("/user-details/:userId").get(userDetailsController)
+
+  router.route('/transactions').get(transactionHistory)
+
+  router.route("/overview").get(dashboard)
 
   return router;
 };

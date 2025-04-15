@@ -17,6 +17,13 @@ export class EnrolmentUseCase {
     const { coursePaymentRepository } = this.dependencies.repositories;
     try {
       console.log("payment UseCase");
+      const total = data.amount
+      if(total){
+        const instructorShare = (total*70)/100
+        const adminShare = (total*30)/100
+        data.instructorShare = instructorShare;
+        data.adminShare = adminShare;
+      }
       const payment = await coursePaymentRepository(data);
       if (!payment) {
         return null;

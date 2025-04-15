@@ -31,6 +31,7 @@ import {
 import {
   IBlock_UnBlockUserUseCase,
   IGetStudentsListUseCase,
+  ITransactionHistoryUseCase,
   IUserDetailsUseCase,
 } from "../../domain/IUseCases/IAdminuseCases/IAdminUserUseCase";
 
@@ -44,6 +45,7 @@ import { IDependencies } from "./IDependencies";
 import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
 import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
 import { ICoursePaymentUseCase, IEnrolCourseUseCases, IStudentCoursesUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
+import { IDashboardUseCase } from "../../domain/IUseCases/IAdminuseCases/IOverviewUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -73,6 +75,7 @@ export interface IUseCases {
   getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;
   blockUnblockUserUseCase:(dependencies: IDependencies)=> IBlock_UnBlockUserUseCase;
   userDetailsUseCase:(dependency:IDependencies)=>IUserDetailsUseCase
+  transactionHistoryUseCase:(dependency:IDependencies)=>ITransactionHistoryUseCase
   
   addCategoryUseCase:(dependencies: IDependencies)=> IAddCategoryUseCase;
   getCategoryListUseCase: (dependencies: IDependencies)=>IGetCategoryListUseCase;
@@ -81,6 +84,8 @@ export interface IUseCases {
 
   getInstructorApplicationUseCase:(dependencies: IDependencies)=> IGetInstructorApplicationUseCase;
   updateInstructorStatusUseCase: (dependencies: IDependencies)=>IUpdateInstructorStatusUseCase;
+
+  dashboardUseCase:(dependencies: IDependencies)=>IDashboardUseCase
 
   // Instructor Use Cases
   applyInstructorUseCase: (dependencies: IDependencies)=>IApplyInstructorUseCase;

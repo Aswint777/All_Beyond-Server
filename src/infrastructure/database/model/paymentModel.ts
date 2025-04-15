@@ -15,6 +15,14 @@ const paymentSchema = new Schema(
         type:Number,
         default:0
     },
+    instructorShare:{
+      type:Number,
+      default :0
+    },
+    adminShare:{
+      type:Number,
+      default:0
+    }
   },
   {
     timestamps: true,

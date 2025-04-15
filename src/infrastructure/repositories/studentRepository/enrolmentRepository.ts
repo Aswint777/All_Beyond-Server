@@ -10,7 +10,7 @@ import { CourseEntity } from "../../../domain/entities/courseEntity";
 import { Course } from "../../database/model";
 
 export class EnrolmentRepository
-  implements Pick<IRepositories, "coursePaymentRepository">
+  implements Pick<IRepositories, "coursePaymentRepository"|"enrolCourseRepository" | "studentCoursesRepository">
 {
   private dependencies: IDependencies;
   constructor(dependencies: IDependencies) {

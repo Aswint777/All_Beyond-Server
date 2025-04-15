@@ -3,11 +3,13 @@ import { IDependencies } from "../../interfaces/IDependencies";
 import { AdminInstructorUseCase } from "./adminInstructorUseCase";
 import { AdminUserUseCase } from "./adminUserUseCase";
 import { CategoryUseCase } from "./categoryUseCase";
+import { OverviewUseCase } from "./overviewUsecase";
 
 export const adminUseCases = (dependencies: IDependencies) => {
   const adminInstructorUseCase = new AdminInstructorUseCase(dependencies);
   const adminUserUseCase = new AdminUserUseCase(dependencies);
   const categoryUseCase = new CategoryUseCase(dependencies);
+  const overviewUseCase = new OverviewUseCase(dependencies)
   return {
     // instructor useCase in admin side 
     getInstructorApplicationUseCase: () => ({
@@ -32,6 +34,10 @@ export const adminUseCases = (dependencies: IDependencies) => {
       execute:(userId:string)=>adminUserUseCase.userDetailsUseCase(userId)
     }),
 
+    transactionHistoryUseCase:()=>({
+      execute:(skip: number,limit: number)=>adminUserUseCase.transactionHistoryUseCase(skip,limit)
+    }),
+
     // category usecase
     getCategoryListUseCase: () => ({
       execute: () => categoryUseCase.getCategoryListUseCase(),
@@ -47,6 +53,10 @@ export const adminUseCases = (dependencies: IDependencies) => {
     categoryEditUseCase: () => ({
       execute: (id: string, name: string, description: string) =>
         categoryUseCase.categoryEditUseCase(id, name, description),
+    }),
+
+    dashboardUseCase:()=>({
+      execute:()=>overviewUseCase.dashboardUseCase()
     }),
 
   };

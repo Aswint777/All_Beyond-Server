@@ -2,11 +2,13 @@ import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { AdminInstructorController } from "./adminInstructorController";
 import { AdminUserController } from "./adminUserController";
 import { CategoryController } from "./categoryController";
+import { OverviewController } from "./overviewController";
 
 export const adminController = (dependencies: IDependencies) => {
   const adminUserController = new AdminUserController(dependencies);
   const adminInstructorController = new AdminInstructorController(dependencies);
   const categoryController = new CategoryController(dependencies);
+  const overviewController = new OverviewController(dependencies);
 
   return {
     getAdminStudentsList:
@@ -16,6 +18,8 @@ export const adminController = (dependencies: IDependencies) => {
 
     userDetailsController:
       adminUserController.userDetailsController.bind(adminUserController),
+    transactionHistory:
+      adminUserController.transactionHistory.bind(adminUserController),
 
     createCategory:
       categoryController.createCategoryController.bind(categoryController),
@@ -34,5 +38,7 @@ export const adminController = (dependencies: IDependencies) => {
       adminInstructorController.updateInstructorStatus.bind(
         adminInstructorController
       ),
+
+    dashboard: overviewController.dashboard.bind(overviewController),
   };
 };

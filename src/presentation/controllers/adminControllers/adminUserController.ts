@@ -73,4 +73,51 @@ export class AdminUserController {
       return;
     }
   }
+  async transactionHistory(req: Request, res: Response): Promise<void> {
+    const { transactionHistoryUseCase } = this.dependencies.useCases;
+    try {
+      const { page = "1", limit = "10" } = req.query;
+      const pageNum = parseInt(page as string, 10) || 1;
+      const limitNum = parseInt(limit as string, 10) || 10;
+      const skip = (pageNum - 1) * limitNum;
+  
+      console.log("Query params:", { page: pageNum, limit: limitNum, skip });
+  
+      const result = await transactionHistoryUseCase(this.dependencies).execute(skip, limitNum);
+  
+      if (!result || result.transactions.length === 0) {
+        res.status(httpStatusCode.OK).json({
+          success: true,
+          message: "No transactions found",
+          data: {
+            transactions: [],
+            totalPages: 0,
+            currentPage: pageNum,
+            totalTransactions: 0,
+          },
+        });
+        return;
+      }
+  
+      const { transactions, totalTransactions } = result;
+      const totalPages = Math.ceil(totalTransactions / limitNum);
+  
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        message: "Transactions fetched successfully",
+        data: {
+          transactions,
+          totalPages,
+          currentPage: pageNum,
+          totalTransactions,
+        },
+      });
+    } catch (error: any) {
+      console.error("Error in transactionHistory:", error);
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal Server Error",
+      });
+    }
+  }
 }

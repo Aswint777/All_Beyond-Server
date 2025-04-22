@@ -17,7 +17,8 @@ export const instructorRoutes = (dependencies: IDependencies) => {
     listInstructorCourse,
     viewCourses,
     editCourse,
-    blockCourse
+    blockCourse,
+    instructorDashboard,
   } = instructorController(dependencies);
 
   const router = Router();
@@ -40,5 +41,7 @@ export const instructorRoutes = (dependencies: IDependencies) => {
   router.route("/editCourse/:courseId").put(jwtMiddleware, uploadS3.any(), editCourse); 
 
   router.route("/blockCourse/:courseId").put(jwtMiddleware,blockCourse)
+
+  router.route('/overview').get(jwtMiddleware,instructorDashboard)
    return router;
 };

@@ -21,6 +21,7 @@ export const InstructorRepositories = (dependencies: IDependencies) => {
       limit: number = 6
     )=>courseRepository.listInstructorRepository(id,search,skip,limit),
     editCourseRepository:(courseData: CourseEntity)=>courseRepository.editCourseRepository(courseData),
-    blockCourseRepository:(courseId: string)=>courseRepository.blockCourseRepository(courseId)
+    blockCourseRepository:(courseId: string)=>courseRepository.blockCourseRepository(courseId),
+    instructorDashboardRepository:(userId:string)=>applyInstructorInstance.instructorDashboardRepository(userId)
   };
 };

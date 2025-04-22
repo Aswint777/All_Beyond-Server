@@ -40,11 +40,11 @@ import {
   IUpdateInstructorStatusUseCase,
 } from "../../domain/IUseCases/IAdminuseCases/IAdminInstructorUseCase";
 
-import { IApplyInstructorUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
+import { IApplyInstructorUseCase, IInstructorDashboardUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
 import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
 import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
-import { ICoursePaymentUseCase, IEnrolCourseUseCases, IStudentCoursesUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
+import { IAlreadyEnrolledUseCase, ICoursePaymentUseCase, IEnrolCourseUseCases, IStudentCoursesUseCase, IWatchCourseUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
 import { IDashboardUseCase } from "../../domain/IUseCases/IAdminuseCases/IOverviewUseCase";
 
 export interface IUseCases {
@@ -96,9 +96,15 @@ export interface IUseCases {
   editCourseUseCase : (dependencies:IDependencies)=>IEditCourseUseCase
   blockCourseUseCase : (dependencies:IDependencies)=>IBlockCourseUseCase
 
+  instructorDashboardUseCase:(dependency:IDependencies)=>IInstructorDashboardUseCase
+
+
   // Student Use Case
   coursePaymentUseCase :(dependency:IDependencies)=>ICoursePaymentUseCase
   enrolCourseUseCases :(dependency:IDependencies)=>IEnrolCourseUseCases
   studentCoursesUseCase :(dependency:IDependencies)=>IStudentCoursesUseCase
+  watchCourseUseCase:(dependency:IDependencies)=>IWatchCourseUseCase
+  alreadyEnrolledUseCase:(dependency:IDependencies)=>IAlreadyEnrolledUseCase
+
 }
 

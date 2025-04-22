@@ -75,7 +75,7 @@ export class AdminUserRepository
   ): Promise<{ transactions: TransactionOutput[]; totalTransactions: number } | null> {
     try {
       // Fetch payments with pagination
-      const transactions = await Payment.find()
+      const transactions = await Payment.find().sort({createdAt:-1})
         .populate({
           path: "userId",
           select: "username", // Student name

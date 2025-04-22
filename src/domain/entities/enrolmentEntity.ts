@@ -1,5 +1,5 @@
 import exp from "constants";
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 export interface EnrolmentEntity {
   _id?: string | ObjectId;
@@ -60,5 +60,77 @@ export interface MonthlySignup {
     totalRevenue: number;
     totalProfit: number;
     monthlySignups: MonthlySignup[];
+    courseEnrollments: CourseEnrollment[];
+  }
+
+
+  export interface LessonOutput {
+    lessonTitle: string;
+    lessonDescription?: string;
+    videoUrl?: string;
+    thumbnailUrl?: string;
+
+  }
+  
+  export interface ModuleOutput {
+    moduleTitle: string;
+    lessons: LessonOutput[];
+  }
+
+  interface LessonDocument {
+    lessonTitle: string;
+    lessonDescription?: string;
+    video?: string;
+    thumbnailUrl?: string;
+  }
+  
+interface ModuleDocument {
+  moduleTitle: string;
+  lessons: LessonDocument[];
+}
+
+  export interface CourseOutput {
+    _id: string;
+    courseTitle: string;
+    courseDescription?: string;
+    instructorName: string;
+    aboutInstructor?: string;
+    thumbnailUrl?: string;
+    pricingOption?: "Premium" | "Free";
+    price?: number;
+    content: ModuleOutput[];
+    isEnrolled: boolean;
+  }
+
+  export interface CourseDocument {
+    _id: mongoose.Types.ObjectId;
+    courseTitle: string;
+    courseDescription?: string;
+    instructor?: string;
+    user?: { username: string };
+    aboutInstructor?: string;
+    thumbnailUrl?: string;
+    pricingOption?: "Premium" | "Free";
+    price?: number;
+    content: ModuleDocument[];
+    isBlocked: boolean;
+  }
+
+
+  export interface MonthlyEnrollments {
+    month: string;
+    users: number;
+  }
+  
+//  export interface CourseEnrollment {
+//     courseName: string;
+//     enrollments: number;
+//   }
+  
+  export interface InstructorDashboardData {
+    totalUsers: number;
+    totalRevenue: number;
+    totalCourses: number;
+    monthlyEnrollments: MonthlyEnrollments[];
     courseEnrollments: CourseEnrollment[];
   }

@@ -11,6 +11,20 @@ export const studentRepositories = (dependencies: IDependencies) => {
     enrolCourseRepository: (data: EnrolmentEntity) =>
       enrolmentRepository.enrolCourseRepository(data),
 
-    studentCoursesRepository:(userId:string,safeSearch:string,skip:number,limitNum:number)=> enrolmentRepository.studentCoursesRepository(userId,safeSearch,skip,limitNum)
+    studentCoursesRepository: (
+      userId: string,
+      safeSearch: string,
+      skip: number,
+      limitNum: number
+    ) =>
+      enrolmentRepository.studentCoursesRepository(
+        userId,
+        safeSearch,
+        skip,
+        limitNum
+      ),
+      watchCourseRepository:(courseId: string, userId: string)=>enrolmentRepository.watchCourseRepository(courseId, userId),
+
+      alreadyEnrolledRepository:(courseId: string, userId: string)=>enrolmentRepository.alreadyEnrolledRepository(courseId,userId)
   };
 };

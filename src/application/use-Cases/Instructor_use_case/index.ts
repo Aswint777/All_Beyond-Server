@@ -31,6 +31,9 @@ export const instructorUseCase = (dependencies: IDependencies) => {
     }),
     blockCourseUseCase:()=>({
       execute:(courseId:string)=>courseUseCase.blockCourseUseCase(courseId)
+    }),
+    instructorDashboardUseCase:()=>({
+      execute:(userId:string)=>instructorApplyUseCase.instructorDashboardUseCase(userId)
     })
   };
 };

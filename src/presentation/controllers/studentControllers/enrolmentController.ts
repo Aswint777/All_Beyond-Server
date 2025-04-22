@@ -6,9 +6,20 @@ import Stripe from "stripe";
 import { constant } from "../../../_lib/common/constant";
 import { CourseEntity } from "../../../domain/entities/courseEntity";
 import { getSignedUrlForS3thumbnails } from "../../../_boot/getSignedUrl";
+import { S3 } from "aws-sdk";
+import { GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "your-stripe-secret-key", {
-  apiVersion: "2025-03-31.basil", // Latest version as of April 2025
+const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY || "your-stripe-secret-key",
+  {
+    apiVersion: "2025-03-31.basil", // Latest version as of April 2025
+  }
+);
+
+const s3 = new S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
 });
 
 export class EnrolmentController {
@@ -19,7 +30,7 @@ export class EnrolmentController {
   }
   // student course payment controller
   async coursePayment(req: Request, res: Response): Promise<void> {
-    const {coursePaymentUseCase} = this.dependencies.useCases
+    const { coursePaymentUseCase } = this.dependencies.useCases;
     try {
       const user = getUserFromToken(req, res);
       if (!user) {
@@ -31,12 +42,16 @@ export class EnrolmentController {
       const { courseId, price } = req.body;
 
       if (!courseId) {
-        res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: "Course ID is required" });
+        res
+          .status(httpStatusCode.BAD_REQUEST)
+          .json({ success: false, message: "Course ID is required" });
         return;
       }
 
       if (typeof price !== "number" || price <= 0) {
-        res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: "Valid price is required" });
+        res
+          .status(httpStatusCode.BAD_REQUEST)
+          .json({ success: false, message: "Valid price is required" });
         return;
       }
 
@@ -51,12 +66,22 @@ export class EnrolmentController {
       console.log("ClientSecret:", paymentIntent.client_secret);
 
       const data = {
-        courseId:courseId,
-        userId:userId,
-        amount:price
-      }
+        courseId: courseId,
+        userId: userId,
+        amount: price,
+      };
 
-      const payment = await coursePaymentUseCase(this.dependencies).execute(data)
+      const payment = await coursePaymentUseCase(this.dependencies).execute(
+        data
+      );
+
+      if (!payment) {
+        res.status(httpStatusCode.NOT_ACCEPTABLE).json({
+          success: false,
+          message: "Internal Server Error",
+        });
+        return;
+      }
 
       res.status(httpStatusCode.OK).json({
         success: true,
@@ -70,9 +95,9 @@ export class EnrolmentController {
       });
     }
   }
-   // controller for enroll course 
+  // controller for enroll course
   async enrollCourse(req: Request, res: Response): Promise<void> {
-    const {  enrolCourseUseCases } = this.dependencies.useCases;
+    const { enrolCourseUseCases } = this.dependencies.useCases;
     try {
       console.log("Data in the enroll controller:", req.body);
 
@@ -85,17 +110,27 @@ export class EnrolmentController {
       const { courseId } = req.body;
 
       if (!courseId) {
-        res.status(httpStatusCode.BAD_REQUEST).json({ success: false, message: "Course ID is required" });
+        res
+          .status(httpStatusCode.BAD_REQUEST)
+          .json({ success: false, message: "Course ID is required" });
         return;
       }
       const data = {
-        courseId:courseId,
-        userId:userId,
-      }
+        courseId: courseId,
+        userId: userId,
+      };
       // Enroll user (for both free and verified premium courses)
       const course = await enrolCourseUseCases(this.dependencies).execute(data);
+      if (!course) {
+        res.status(httpStatusCode.NOT_ACCEPTABLE).json({
+          success: false,
+          message: "Internal Server Error",
+        });
+        return;
+      }
+
       res.status(httpStatusCode.OK).json({
-        data : course,
+        data: course,
         success: true,
         message: `Successfully enrolled in course`,
       });
@@ -108,7 +143,7 @@ export class EnrolmentController {
     }
   }
 
-  // listing the student enrolled courses in student side 
+  // listing the student enrolled courses in student side
   async studentCourses(req: Request, res: Response): Promise<void> {
     const { studentCoursesUseCase } = this.dependencies.useCases;
     try {
@@ -119,48 +154,59 @@ export class EnrolmentController {
         return;
       }
       const userId = user._id;
-  
+
       const { search = "", page = "1", limit = "6" } = req.query;
       const pageNum = parseInt(page as string, 10) || 1;
       const limitNum = parseInt(limit as string, 10) || 6;
       const skip = (pageNum - 1) * limitNum;
-  
+
       const safeSearch = typeof search === "string" ? search : "";
-  
-      console.log("Query params:", { userId, search: safeSearch, skip, limitNum });
-  
+
+      console.log("Query params:", {
+        userId,
+        search: safeSearch,
+        skip,
+        limitNum,
+      });
+
       const result = await studentCoursesUseCase(this.dependencies).execute(
         userId,
         safeSearch,
         skip,
         limitNum
       );
-      console.log("result :",result);
-      
-  
+      console.log("result :", result);
+
       if (!result || result.courses.length === 0) {
         res.status(200).json({
           success: true,
           message: "No enrolled courses found",
-          data: { courses: [], totalPages: 0, currentPage: pageNum, totalCourses: 0 },
+          data: {
+            courses: [],
+            totalPages: 0,
+            currentPage: pageNum,
+            totalCourses: 0,
+          },
         });
         return;
       }
-  
+
       const { courses, totalCourses } = result;
-  
+
       const coursesWithSignedUrls = await Promise.all(
         courses.map(async (course: CourseEntity) => {
           if (course.thumbnailUrl) {
-            const fileKey = course.thumbnailUrl.split("/course_assets/thumbnails/")[1];
+            const fileKey = course.thumbnailUrl.split(
+              "/course_assets/thumbnails/"
+            )[1];
             course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
           }
           return course;
         })
       );
-  
+
       const totalPages = Math.ceil(totalCourses / limitNum);
-  
+
       res.status(200).json({
         success: true,
         message: "Enrolled courses listed successfully",
@@ -174,6 +220,80 @@ export class EnrolmentController {
     } catch (error: any) {
       console.error("Error in studentCourses:", error);
       res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+      });
+    }
+  }
+
+  async watchCourse(req: Request, res: Response): Promise<void> {
+    const { watchCourseUseCase } = this.dependencies.useCases;
+    try {
+      const { courseId } = req.params;
+      const userId = req.user?._id;
+
+      if (!userId) {
+        res.status(httpStatusCode.UNAUTHORIZED).json({
+          success: false,
+          message: "User not authenticated",
+        });
+        return;
+      }
+
+      const result = await watchCourseUseCase(this.dependencies).execute(
+        courseId,
+        userId
+      );
+
+      if (!result) {
+        res.status(httpStatusCode.NOT_FOUND).json({
+          success: false,
+          message: "Course not found",
+        });
+        return;
+      }
+
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        message: "Course details fetched successfully",
+        data: result,
+      });
+    } catch (error: any) {
+      console.error("Error in watchCourse:", error);
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal Server Error",
+      });
+    }
+  }
+
+  async alreadyEnrolledCourses(req: Request, res: Response): Promise<void> {
+    const {alreadyEnrolledUseCase} = this.dependencies.useCases
+    try {
+      console.log('llllllllllllllllllllllllllllll controller');
+      
+      const { courseId } = req.params;
+        const userId = req.user?._id;
+  
+        console.log('llllllllllllllllllllllllllllll controller',courseId,userId);
+
+        if (!userId) {
+          res.status(httpStatusCode.UNAUTHORIZED).json({
+            success: false,
+            message: "User not authenticated",
+          });
+          return;
+        }
+        const result = await alreadyEnrolledUseCase(this.dependencies).execute(courseId,userId)
+        console.log(result);
+        
+        res.status(httpStatusCode.OK).json({
+          success: true,
+          message: "Course fetched successfully",
+          data: result,
+        });
+    } catch (error:constant) {
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: "Internal Server Error",
       });

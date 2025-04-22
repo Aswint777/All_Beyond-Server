@@ -8,7 +8,7 @@ import { categoryEntity } from "../../domain/entities/categoryEntity";
 import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
 import { CourseEntity } from "../../domain/entities/courseEntity";
 import { PaymentEntity, TransactionOutput } from "../../domain/entities/paymentEntity";
-import { DashboardData, EnrolmentEntity } from "../../domain/entities/enrolmentEntity";
+import { CourseOutput, DashboardData, EnrolmentEntity, InstructorDashboardData } from "../../domain/entities/enrolmentEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -108,6 +108,11 @@ export interface IRepositories {
 
   editCourseRepository: (data: CourseEntity) => Promise<CourseEntity | null>;
   blockCourseRepository: (courseId: string) => Promise<CourseEntity | null>;
+  instructorDashboardRepository:(userId:string)=>Promise<InstructorDashboardData|null>
+
+
+  
+
 
   // => student
   coursePaymentRepository: (
@@ -122,4 +127,8 @@ export interface IRepositories {
     skip: number,
     limitNum: number
   ) => Promise<{ courses: CourseEntity[]; totalCourses: number } | null>;
+
+  watchCourseRepository:(courseId: string, userId: string)=> Promise<CourseOutput| null>
+
+  alreadyEnrolledRepository:(courseId:string,userId:string)=>Promise<boolean|null>
 }

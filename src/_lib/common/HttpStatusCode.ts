@@ -4,6 +4,7 @@ export enum httpStatusCode {
     CREATED = 201,
     ACCEPTED = 202,
     NO_CONTENT = 204,
+    PARTIAL_CONTENT=206,
   
     MOVED_PERMANENTLY = 301,
     FOUND = 302,
@@ -20,6 +21,7 @@ export enum httpStatusCode {
     NOT_ACCEPTABLE = 406,
     CONFLICT = 409,
     GONE = 410,
+    RANGE_NOT_SATISFIABLE= 416,
     UNPROCESSABLE_ENTITY = 422,
     TOO_MANY_REQUESTS = 429,
   

@@ -137,7 +137,7 @@ export class CourseController {
     const { similarCourseUseCase } = this.dependencies.useCases;
     try {
       const { courseId } = req.params;
-      console.log(courseId, "similar courses ");
+      // console.log(courseId, "similar courses ");
       let courses = await similarCourseUseCase(this.dependencies).execute(
         courseId
       );
@@ -160,7 +160,7 @@ export class CourseController {
           return course;
         })
       );
-      console.log("samplw data :", courses);
+      // console.log("samplw data :", courses);
 
       res.status(200).json({
         success: true,

@@ -1,4 +1,3 @@
-import { Account } from "aws-sdk";
 import { model, Schema, Types } from "mongoose";
 import { CourseEntity } from "../../../domain/entities/courseEntity";
 
@@ -15,14 +14,14 @@ const courseSchema = new Schema({
     type: Types.ObjectId,
     ref: "category",
   },
-  instructor:{
-    type:String
+  instructor: {
+    type: String,
   },
   aboutInstructor: {
     type: String,
   },
-  thumbnailUrl:{
-    type:String
+  thumbnailUrl: {
+    type: String,
   },
   content: [
     {
@@ -32,6 +31,10 @@ const courseSchema = new Schema({
       },
       lessons: [
         {
+          _id: {
+            type: Types.ObjectId,
+            auto: true, // Auto-generate ObjectId
+          },
           lessonTitle: {
             type: String,
             required: true,
@@ -47,9 +50,8 @@ const courseSchema = new Schema({
     },
   ],
   pricingOption: {
-    type:String,
+    type: String,
     enum: ["Premium", "Free"],
-    // default: "Free",
   },
   price: {
     type: Number,
@@ -63,13 +65,94 @@ const courseSchema = new Schema({
   additionalContactNumber: {
     type: String,
   },
-  user:{
+  user: {
     type: Types.ObjectId,
-    ref:"users"
+    ref: "users",
   },
-  isBlocked :{
-    type:Boolean,
-    default:false
+  isBlocked: {
+    type: Boolean,
+    default: false,
   },
 });
+
 export const Course = model<CourseEntity>("Course", courseSchema);
+
+
+
+
+
+// import { Account } from "aws-sdk";
+// import { model, Schema, Types } from "mongoose";
+// import { CourseEntity } from "../../../domain/entities/courseEntity";
+
+// const courseSchema = new Schema({
+//   courseTitle: {
+//     type: String,
+//     required: true,
+//     unique: true,
+//   },
+//   courseDescription: {
+//     type: String,
+//   },
+//   categoryName: {
+//     type: Types.ObjectId,
+//     ref: "category",
+//   },
+//   instructor:{
+//     type:String
+//   },
+//   aboutInstructor: {
+//     type: String,
+//   },
+//   thumbnailUrl:{
+//     type:String
+//   },
+//   content: [
+//     {
+//       moduleTitle: {
+//         type: String,
+//         required: true,
+//       },
+//       lessons: [
+//         {
+//           lessonTitle: {
+//             type: String,
+//             required: true,
+//           },
+//           lessonDescription: {
+//             type: String,
+//           },
+//           video: {
+//             type: String,
+//           },
+//         },
+//       ],
+//     },
+//   ],
+//   pricingOption: {
+//     type:String,
+//     enum: ["Premium", "Free"],
+//     // default: "Free",
+//   },
+//   price: {
+//     type: Number,
+//   },
+//   accountNumber: {
+//     type: Number,
+//   },
+//   additionalEmail: {
+//     type: String,
+//   },
+//   additionalContactNumber: {
+//     type: String,
+//   },
+//   user:{
+//     type: Types.ObjectId,
+//     ref:"users"
+//   },
+//   isBlocked :{
+//     type:Boolean,
+//     default:false
+//   },
+// });
+// export const Course = model<CourseEntity>("Course", courseSchema);

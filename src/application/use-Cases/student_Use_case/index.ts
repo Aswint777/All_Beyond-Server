@@ -10,11 +10,31 @@ export const studentUseCase = (dependencies: IDependencies) => {
       execute: (data: PaymentEntity) =>
         enrolmentUseCase.coursePaymentUseCase(data),
     }),
-    enrolCourseUseCases:()=>({
-      execute:(data:EnrolmentEntity)=>enrolmentUseCase.enrolCourseUseCases(data)
+    enrolCourseUseCases: () => ({
+      execute: (data: EnrolmentEntity) =>
+        enrolmentUseCase.enrolCourseUseCases(data),
     }),
-    studentCoursesUseCase:()=>({
-      execute:(userId:string,safeSearch:string,skip:number,limitNum:number)=>enrolmentUseCase.studentCoursesUseCase(userId,safeSearch,skip,limitNum)
-    })
+    studentCoursesUseCase: () => ({
+      execute: (
+        userId: string,
+        safeSearch: string,
+        skip: number,
+        limitNum: number
+      ) =>
+        enrolmentUseCase.studentCoursesUseCase(
+          userId,
+          safeSearch,
+          skip,
+          limitNum
+        ),
+    }),
+    watchCourseUseCase: () => ({
+      execute: (courseId: string, userId: string) =>
+        enrolmentUseCase.watchCourseUseCase(courseId, userId),
+    }),
+    alreadyEnrolledUseCase: () => ({
+      execute: (courseId: string, userId: string) =>
+        enrolmentUseCase.alreadyEnrolledUseCase(courseId, userId),
+    }),
   };
 };

@@ -2,9 +2,11 @@ import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { EnrolmentUseCase } from "./enrolmentUseCase";
+import { ProgressUseCase } from "./progressUseCase";
 
 export const studentUseCase = (dependencies: IDependencies) => {
   const enrolmentUseCase = new EnrolmentUseCase(dependencies);
+  const progressUseCase = new ProgressUseCase(dependencies)
   return {
     coursePaymentUseCase: () => ({
       execute: (data: PaymentEntity) =>
@@ -35,6 +37,15 @@ export const studentUseCase = (dependencies: IDependencies) => {
     alreadyEnrolledUseCase: () => ({
       execute: (courseId: string, userId: string) =>
         enrolmentUseCase.alreadyEnrolledUseCase(courseId, userId),
+    }),
+    initializeProgressUseCase:()=>({
+      execute:(courseId: string, userId: string)=> progressUseCase.initializeProgressUseCase(courseId,userId)
+    }),
+    getProgressUseCase:()=>({
+      execute:(courseId: string, userId: string)=> progressUseCase.getProgressUseCase(courseId,userId)
+    }),
+    updateProgressUseCase:()=>({
+      execute:(courseId: string, userId: string,  lessonId: string)=> progressUseCase.updateProgressUseCase(courseId,userId,lessonId)
     }),
   };
 };

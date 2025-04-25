@@ -44,16 +44,16 @@ export class EnrolmentUseCase {
   ): Promise<EnrolmentEntity | null> {
     const { enrolCourseRepository } = this.dependencies.repositories;
     try {
-      console.log(
-        data,
-        "lllllllllllllllllllllllllllllllllllllllllllllllll repo "
-      );
+      // console.log(
+      //   data,
+      //   "lllllllllllllllllllllllllllllllllllllllllllllllll repo "
+      // );
 
       const course = await enrolCourseRepository(data);
       if (!course) return null;
-      console.log(
-        "data is here kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-      );
+      // console.log(
+      //   "data is here kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+      // );
 
       return course;
     } catch (error: constant) {

@@ -5,8 +5,16 @@ import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
 import { verifyStudent } from "../middlewares/verifyStudent";
 
 export const studentRoutes = (dependencies: IDependencies) => {
-  const { enrollCourse, coursePayment, studentCourses,watchCourse,alreadyEnrolledCourses } =
-    studentController(dependencies);
+  const {
+    enrollCourse,
+    coursePayment,
+    studentCourses,
+    watchCourse,
+    alreadyEnrolledCourses,
+    initializeProgress,
+    getProgress,
+    updateProgress,
+  } = studentController(dependencies);
 
   const router = Router();
   router
@@ -14,8 +22,19 @@ export const studentRoutes = (dependencies: IDependencies) => {
     .post(jwtMiddleware, verifyStudent, coursePayment);
   router.route("/enroll").post(jwtMiddleware, verifyStudent, enrollCourse);
   router.route("/courses").get(jwtMiddleware, verifyStudent, studentCourses);
-  router.route('/WatchCourses/:courseId').get(jwtMiddleware,verifyStudent,watchCourse)
-  router.route('/alreadyEnrolledCourses/:courseId').get(jwtMiddleware,alreadyEnrolledCourses)
+  router
+    .route("/WatchCourses/:courseId")
+    .get(jwtMiddleware, verifyStudent, watchCourse);
+  router
+    .route("/alreadyEnrolledCourses/:courseId")
+    .get(jwtMiddleware, alreadyEnrolledCourses);
+  router
+    .route("/initializeProgress")
+    .post(jwtMiddleware, verifyStudent, initializeProgress);
+  router.route("/progress/:courseId").get(jwtMiddleware, verifyStudent, getProgress);
+  router.route("/updateProgress/:courseId").post(jwtMiddleware, verifyStudent, updateProgress);
+
+
   // router.get("/stream/:videoKey", streamVideo);
   return router;
 };

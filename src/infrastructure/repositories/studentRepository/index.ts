@@ -2,9 +2,11 @@ import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { EnrolmentRepository } from "./enrolmentRepository";
+import { ProgressRepository } from "./progressRepository";
 
 export const studentRepositories = (dependencies: IDependencies) => {
   const enrolmentRepository = new EnrolmentRepository(dependencies);
+  const progressRepository = new ProgressRepository(dependencies)
   return {
     coursePaymentRepository: (data: PaymentEntity) =>
       enrolmentRepository.coursePaymentRepository(data),
@@ -25,6 +27,11 @@ export const studentRepositories = (dependencies: IDependencies) => {
       ),
       watchCourseRepository:(courseId: string, userId: string)=>enrolmentRepository.watchCourseRepository(courseId, userId),
 
-      alreadyEnrolledRepository:(courseId: string, userId: string)=>enrolmentRepository.alreadyEnrolledRepository(courseId,userId)
+      alreadyEnrolledRepository:(courseId: string, userId: string)=>enrolmentRepository.alreadyEnrolledRepository(courseId,userId),
+      initializeProgressRepository:(courseId: string, userId: string)=>progressRepository.initializeProgressRepository(courseId,userId),
+      getProgressRepository:(courseId: string, userId: string)=>progressRepository.getProgressRepository(courseId,userId),
+      updateProgressRepository:(courseId: string, userId: string,  lessonId: string)=>progressRepository.updateProgressRepository(courseId,userId,lessonId)
+
+
   };
 };

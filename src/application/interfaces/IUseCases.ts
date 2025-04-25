@@ -44,7 +44,7 @@ import { IApplyInstructorUseCase, IInstructorDashboardUseCase } from "../../doma
 import { IDependencies } from "./IDependencies";
 import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
 import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
-import { IAlreadyEnrolledUseCase, ICoursePaymentUseCase, IEnrolCourseUseCases, IStudentCoursesUseCase, IWatchCourseUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
+import { IAlreadyEnrolledUseCase, ICoursePaymentUseCase, IEnrolCourseUseCases, IGetProgressUseCase, IInitializeProgressUseCase, IStudentCoursesUseCase, IUpdateProgressUseCase, IWatchCourseUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
 import { IDashboardUseCase } from "../../domain/IUseCases/IAdminuseCases/IOverviewUseCase";
 
 export interface IUseCases {
@@ -105,6 +105,11 @@ export interface IUseCases {
   studentCoursesUseCase :(dependency:IDependencies)=>IStudentCoursesUseCase
   watchCourseUseCase:(dependency:IDependencies)=>IWatchCourseUseCase
   alreadyEnrolledUseCase:(dependency:IDependencies)=>IAlreadyEnrolledUseCase
+
+  initializeProgressUseCase:(dependency:IDependencies)=>IInitializeProgressUseCase
+  getProgressUseCase:(dependency:IDependencies)=>IGetProgressUseCase
+  updateProgressUseCase:(dependency:IDependencies)=>IUpdateProgressUseCase
+
 
 }
 

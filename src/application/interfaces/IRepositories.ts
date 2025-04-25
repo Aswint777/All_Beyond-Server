@@ -9,6 +9,7 @@ import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/IUserUs
 import { CourseEntity } from "../../domain/entities/courseEntity";
 import { PaymentEntity, TransactionOutput } from "../../domain/entities/paymentEntity";
 import { CourseOutput, DashboardData, EnrolmentEntity, InstructorDashboardData } from "../../domain/entities/enrolmentEntity";
+import { ProgressEntity } from "../../domain/entities/progressEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -131,4 +132,9 @@ export interface IRepositories {
   watchCourseRepository:(courseId: string, userId: string)=> Promise<CourseOutput| null>
 
   alreadyEnrolledRepository:(courseId:string,userId:string)=>Promise<boolean|null>
+
+  initializeProgressRepository:(courseId: string, userId: string)=>Promise<ProgressEntity|null>
+  getProgressRepository:(courseId: string, userId: string)=>Promise<ProgressEntity|null>
+  updateProgressRepository:(courseId: string, userId: string,  lessonId: string )=>Promise<ProgressEntity|null>
+
 }

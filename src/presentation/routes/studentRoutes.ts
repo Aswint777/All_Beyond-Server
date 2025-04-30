@@ -14,6 +14,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     initializeProgress,
     getProgress,
     updateProgress,
+    studentDashboard,
   } = studentController(dependencies);
 
   const router = Router();
@@ -31,10 +32,16 @@ export const studentRoutes = (dependencies: IDependencies) => {
   router
     .route("/initializeProgress")
     .post(jwtMiddleware, verifyStudent, initializeProgress);
-  router.route("/progress/:courseId").get(jwtMiddleware, verifyStudent, getProgress);
-  router.route("/updateProgress/:courseId").post(jwtMiddleware, verifyStudent, updateProgress);
+  router
+    .route("/progress/:courseId")
+    .get(jwtMiddleware, verifyStudent, getProgress);
+  router
+    .route("/updateProgress/:courseId")
+    .post(jwtMiddleware, verifyStudent, updateProgress);
 
-
+  router
+    .route("/dashboard")
+    .get(jwtMiddleware, verifyStudent, studentDashboard);
   // router.get("/stream/:videoKey", streamVideo);
   return router;
 };

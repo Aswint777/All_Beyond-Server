@@ -7,8 +7,17 @@ import {
 import { categoryEntity } from "../../domain/entities/categoryEntity";
 import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
 import { CourseEntity } from "../../domain/entities/courseEntity";
-import { PaymentEntity, TransactionOutput } from "../../domain/entities/paymentEntity";
-import { CourseOutput, DashboardData, EnrolmentEntity, InstructorDashboardData } from "../../domain/entities/enrolmentEntity";
+import {
+  PaymentEntity,
+  TransactionOutput,
+} from "../../domain/entities/paymentEntity";
+import {
+  CourseOutput,
+  DashboardData,
+  EnrolmentEntity,
+  InstructorDashboardData,
+  StudentDashboardData,
+} from "../../domain/entities/enrolmentEntity";
 import { ProgressEntity } from "../../domain/entities/progressEntity";
 
 export interface IRepositories {
@@ -60,7 +69,10 @@ export interface IRepositories {
   transactionHistoryRepository: (
     skip: number,
     limit: number
-  ) => Promise<{ transactions: TransactionOutput[]; totalTransactions: number } | null>;
+  ) => Promise<{
+    transactions: TransactionOutput[];
+    totalTransactions: number;
+  } | null>;
 
   // category repository
   addCategory: (data: categoryEntity) => Promise<categoryEntity | null>;
@@ -81,7 +93,7 @@ export interface IRepositories {
 
   //overview repo
 
-  dashboardRepository:()=> Promise<DashboardData|null>
+  dashboardRepository: () => Promise<DashboardData | null>;
 
   // adminInstructorRepository
   getInstructorApplication: () => Promise<UserEntity[] | boolean | null>;
@@ -109,11 +121,9 @@ export interface IRepositories {
 
   editCourseRepository: (data: CourseEntity) => Promise<CourseEntity | null>;
   blockCourseRepository: (courseId: string) => Promise<CourseEntity | null>;
-  instructorDashboardRepository:(userId:string)=>Promise<InstructorDashboardData|null>
-
-
-  
-
+  instructorDashboardRepository: (
+    userId: string
+  ) => Promise<InstructorDashboardData | null>;
 
   // => student
   coursePaymentRepository: (
@@ -129,12 +139,28 @@ export interface IRepositories {
     limitNum: number
   ) => Promise<{ courses: CourseEntity[]; totalCourses: number } | null>;
 
-  watchCourseRepository:(courseId: string, userId: string)=> Promise<CourseOutput| null>
+  watchCourseRepository: (
+    courseId: string,
+    userId: string
+  ) => Promise<CourseOutput | null>;
 
-  alreadyEnrolledRepository:(courseId:string,userId:string)=>Promise<boolean|null>
+  alreadyEnrolledRepository: (
+    courseId: string,
+    userId: string
+  ) => Promise<boolean | null>;
 
-  initializeProgressRepository:(courseId: string, userId: string)=>Promise<ProgressEntity|null>
-  getProgressRepository:(courseId: string, userId: string)=>Promise<ProgressEntity|null>
-  updateProgressRepository:(courseId: string, userId: string,  lessonId: string )=>Promise<ProgressEntity|null>
-
+  initializeProgressRepository: (
+    courseId: string,
+    userId: string
+  ) => Promise<ProgressEntity | null>;
+  getProgressRepository: (
+    courseId: string,
+    userId: string
+  ) => Promise<ProgressEntity | null>;
+  updateProgressRepository: (
+    courseId: string,
+    userId: string,
+    lessonId: string
+  ) => Promise<ProgressEntity | null>;
+  studentDashboardRepository: (userId: string) => Promise<StudentDashboardData|null>;
 }

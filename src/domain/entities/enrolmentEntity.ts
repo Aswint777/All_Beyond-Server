@@ -134,3 +134,23 @@ interface ModuleDocument {
     monthlyEnrollments: MonthlyEnrollments[];
     courseEnrollments: CourseEnrollment[];
   }
+
+  export interface StudentDashboardData {
+    totalCoursesEnrolled: number;
+    enrolledCourses: { courseName: string; count: number }[];
+    recentEnrollments: StudentEnrollment[];
+  }
+  
+  export interface StudentEnrollment {
+    courseName: string;
+    enrollmentDate: string;
+    courseId: string;
+  }
+  
+  // Type for lean enrollment document after population
+  export interface LeanEnrollment {
+    _id: string;
+    courseId: { _id: string; courseTitle: string } | null; // Populated course, null if not found
+    userId: string;
+    createdAt: string; // ISO string from lean()
+  }

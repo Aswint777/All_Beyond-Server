@@ -1,0 +1,39 @@
+import mongoose, { model, Schema } from "mongoose";
+import { Message } from "../../../domain/entities/chatEntity";
+// import { Message } from "../../../domain/entities/Message";
+
+const MessageSchema = new Schema({
+  id: { 
+    type: String,
+     required: true, 
+     unique: true 
+    },
+  chatGroupId: {
+     type: String,
+      required: true
+     },
+  senderId: { 
+    type: String,
+     required: true
+     },
+  content: { 
+    type: String,
+     required: true 
+    },
+  fileUrl: { 
+    type: String 
+},
+  createdAt: { 
+    type: Date,
+     default: Date.now 
+    },
+  readBy: [
+    { 
+        type: String
+     }
+    ],
+});
+
+MessageSchema.index({ chatGroupId: 1, createdAt: 1 });
+
+export const MessageModel = model<Message>("Message", MessageSchema);

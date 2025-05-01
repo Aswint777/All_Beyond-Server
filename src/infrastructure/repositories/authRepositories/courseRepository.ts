@@ -86,6 +86,7 @@ export class CourseRepository
    async courseDetailsRepo(courseId: string): Promise<CourseEntity | null> {
     try {  
       return await Course.findOne({ _id: new mongoose.Types.ObjectId(courseId) });
+      
     } catch (error) {
       throw new Error("An unexpected error occurred");
     }

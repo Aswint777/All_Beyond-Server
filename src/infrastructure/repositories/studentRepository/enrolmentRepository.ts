@@ -144,9 +144,6 @@ export class EnrolmentRepository
       const enrolmentQuery = {
         userId: new mongoose.Types.ObjectId(userId),
       };
-
-      console.log("Enrolment query:", enrolmentQuery);
-
       // Fetch enrolments with pagination
       const enrolments = await Enrolment.find(enrolmentQuery)
         .select("courseId") // Only select courseId to optimize
@@ -155,15 +152,11 @@ export class EnrolmentRepository
         .lean();
 
       if (!enrolments.length) {
-        console.log("No enrolments found for user:", userId);
         return { courses: [], totalCourses: 0 };
       }
 
       // Extract course IDs
       const courseIds = enrolments.map((enrolment) => enrolment.courseId);
-
-      console.log("Enrolled course IDs:", courseIds);
-
       // Step 2: Query Course collection using course IDs
       const courseQuery = {
         _id: { $in: courseIds },
@@ -195,9 +188,7 @@ export class EnrolmentRepository
     courseId: string,
     userId: string
   ): Promise<CourseOutput | null> {
-    try {
-      console.log(`watchCourseRepository: courseId=${courseId}, userId=${userId}`);
-  
+    try {  
       if (!mongoose.Types.ObjectId.isValid(courseId)) {
         throw new Error("Invalid course ID");
       }
@@ -217,9 +208,7 @@ export class EnrolmentRepository
       const isEnrolled = await Enrolment.exists({
         courseId: new mongoose.Types.ObjectId(courseId),
         userId: new mongoose.Types.ObjectId(userId),
-      });
-      console.log(`Is enrolled: ${isEnrolled}`);
-  
+      });  
       const progress = await Progress.findOne({
         courseId: new mongoose.Types.ObjectId(courseId),
         userId: new mongoose.Types.ObjectId(userId),
@@ -250,13 +239,11 @@ export class EnrolmentRepository
                   } else if (videoKey.includes("/")) {
                     videoKey = videoKey.split("/").pop() || videoKey;
                   }
-                  console.log(`Processing videoKey: ${videoKey} for lesson: ${lesson.lessonTitle}`);
                   if (videoKey.endsWith(".m3u8")) {
                     videoUrl = await getSignedUrlForCloudFront(videoKey, userId);
                   } else {
                     videoUrl = await getSignedUrlForS3Videos(videoKey);
                   }
-                  console.log(`Generated videoUrl: ${videoUrl}`);
                 } catch (error: any) {
                   console.error(`Failed to generate URL for lesson ${lesson.lessonTitle}:`, error);
                   videoUrl = undefined;

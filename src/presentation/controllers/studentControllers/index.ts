@@ -20,5 +20,8 @@ export const studentController = (dependencies: IDependencies) => {
     updateProgress: progress.updateProgress.bind(progress),
 
     studentDashboard:overview.studentDashboard.bind(overview),
+    addReview:overview.addReview.bind(overview),
+    getReviews:overview.getReviews.bind(overview),
+
   };
 };

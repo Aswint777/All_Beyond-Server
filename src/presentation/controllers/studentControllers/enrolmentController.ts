@@ -62,9 +62,6 @@ export class EnrolmentController {
         metadata: { userId, courseId },
       });
 
-      console.log("PaymentIntent created:", paymentIntent.id);
-      console.log("ClientSecret:", paymentIntent.client_secret);
-
       const data = {
         courseId: courseId,
         userId: userId,
@@ -99,7 +96,6 @@ export class EnrolmentController {
   async enrollCourse(req: Request, res: Response): Promise<void> {
     const { enrolCourseUseCases } = this.dependencies.useCases;
     try {
-      console.log("Data in the enroll controller:", req.body);
 
       const user = getUserFromToken(req, res);
       if (!user) {
@@ -147,7 +143,6 @@ export class EnrolmentController {
   async studentCourses(req: Request, res: Response): Promise<void> {
     const { studentCoursesUseCase } = this.dependencies.useCases;
     try {
-      console.log("Listing the student's enrolled courses...");
       const user = getUserFromToken(req, res);
       if (!user) {
         res.status(401).json({ success: false, message: "Unauthorized" });
@@ -175,8 +170,6 @@ export class EnrolmentController {
         skip,
         limitNum
       );
-      console.log("result :", result);
-
       if (!result || result.courses.length === 0) {
         res.status(200).json({
           success: true,
@@ -270,13 +263,9 @@ export class EnrolmentController {
   async alreadyEnrolledCourses(req: Request, res: Response): Promise<void> {
     const {alreadyEnrolledUseCase} = this.dependencies.useCases
     try {
-      console.log('llllllllllllllllllllllllllllll controller');
       
       const { courseId } = req.params;
         const userId = req.user?._id;
-  
-        console.log('llllllllllllllllllllllllllllll controller',courseId,userId);
-
         if (!userId) {
           res.status(httpStatusCode.UNAUTHORIZED).json({
             success: false,

@@ -1,4 +1,5 @@
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
+import { ReviewData } from "../../../domain/entities/overviewEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { EnrolmentUseCase } from "./enrolmentUseCase";
@@ -55,6 +56,16 @@ export const studentUseCase = (dependencies: IDependencies) => {
 
     studentDashboardUseCase:()=>({
       execute:(userId:string)=>studentOverviewUseCase.studentDashboardUseCase(userId)
-    })
+    }),
+
+    addReviewUseCase:()=>({
+      execute:(data:ReviewData)=>studentOverviewUseCase.addReviewUseCase(data)
+    }),
+    getReviewUseCase:()=>({
+      execute:(courseId:string)=>studentOverviewUseCase.getReviewUseCase(courseId)
+    }),
+    averageReviewUseCase:()=>({
+      execute:(courseId:string)=>studentOverviewUseCase.averageReviewUseCase(courseId)
+    }),
   };
 };

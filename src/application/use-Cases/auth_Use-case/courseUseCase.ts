@@ -54,6 +54,8 @@ export class CourseUseCase {
         try {
             
             const details = await courseDetailsRepo(courseId)
+            console.log(details,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssss');
+            
             if(!details) return null
             return details
         } catch (error:constant) {

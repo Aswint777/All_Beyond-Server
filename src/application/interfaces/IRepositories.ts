@@ -19,6 +19,7 @@ import {
   StudentDashboardData,
 } from "../../domain/entities/enrolmentEntity";
 import { ProgressEntity } from "../../domain/entities/progressEntity";
+import { AverageReview, ReviewData } from "../../domain/entities/overviewEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -163,4 +164,9 @@ export interface IRepositories {
     lessonId: string
   ) => Promise<ProgressEntity | null>;
   studentDashboardRepository: (userId: string) => Promise<StudentDashboardData|null>;
+  addReviewRepository: (data: ReviewData) => Promise<ReviewData|null>;
+  getReviewRepository: (courseId:string) => Promise<ReviewData[]|null>;
+  averageReviewRepository: (courseId:string) => Promise<AverageReview|null>;
+
+
 }

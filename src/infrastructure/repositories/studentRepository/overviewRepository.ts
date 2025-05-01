@@ -1,7 +1,11 @@
+import mongoose from "mongoose";
+import { constant } from "../../../_lib/common/constant";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { IRepositories } from "../../../application/interfaces/IRepositories";
 import { DashboardData, LeanEnrollment, StudentDashboardData } from "../../../domain/entities/enrolmentEntity";
+import { AverageReview, ReviewData } from "../../../domain/entities/overviewEntity";
 import { Course, Enrolment } from "../../database/model";
+import { Review } from "../../database/model/reviewModel";
 
 export class OverViewRepository
   implements Pick <IRepositories,'studentDashboardRepository'>
@@ -63,11 +67,77 @@ export class OverViewRepository
           enrolledCourses,
           recentEnrollments,
         };
-      } catch (error) {
+      } catch (error:constant) {
         console.error("Error in studentDashboardRepository:", error);
-        return null;
+        throw new Error(error.message || "An unexpected error occurred");    
       }
     }
 
+
+    async addReviewRepository(data: ReviewData): Promise<ReviewData | null> {
+      try {
+        console.log("data");
+        const duplicate = await Review.exists({
+                courseId: new mongoose.Types.ObjectId(data.courseId),
+                userId: new mongoose.Types.ObjectId(data.userId),
+              });
+              if(duplicate){
+                return null
+              }
+        const courseReview = await Review.create(data)
+        if(!courseReview) return null
+        return courseReview
+      } catch (error:constant) {
+        throw new Error(error.message || "An unexpected error occurred");    
+
+      }
+    }
+
+    async getReviewRepository(courseId:string): Promise<ReviewData[] | null> {
+      try {
+        console.log("data");
+        
+        const courseReview = await Review.find({courseId:courseId})
+        
+        if(!courseReview) return null
+        return courseReview
+      } catch (error:constant) {
+        throw new Error(error.message || "An unexpected error occurred");    
+
+      }
+    }
+
+    async averageReviewRepository(courseId:string): Promise<AverageReview| null> {
+      try {
+        // Validate courseId
+        if (!mongoose.Types.ObjectId.isValid(courseId)) {
+          throw new Error("Invalid course ID");
+        }
     
+        // Aggregate to calculate count and average rating
+        const result = await Review.aggregate([
+          { $match: { courseId: new mongoose.Types.ObjectId(courseId) } },
+          {
+            $group: {
+              _id: null,
+              count: { $sum: 1 },
+              average: { $avg: "$rating" },
+            },
+          },
+        ]);
+    
+        // If no reviews found, return null
+        if (!result || result.length === 0) {
+          return null;
+        }
+    
+        // Return the count and average
+        return {
+          count: result[0].count,
+          average: result[0].average ? Number(result[0].average.toFixed(1)) : 0, // Round to 1 decimal
+        };
+      } catch (error: any) {
+        throw new Error(`Failed to fetch average review: ${error.message || "An unexpected error occurred"}`);
+      }
+    }
 }

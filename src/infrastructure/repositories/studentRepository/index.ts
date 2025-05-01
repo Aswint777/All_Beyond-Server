@@ -1,5 +1,6 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
+import { ReviewData } from "../../../domain/entities/overviewEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { EnrolmentRepository } from "./enrolmentRepository";
 import { OverViewRepository } from "./overviewRepository";
@@ -42,6 +43,11 @@ export const studentRepositories = (dependencies: IDependencies) => {
       lessonId: string
     ) =>
       progressRepository.updateProgressRepository(courseId, userId, lessonId),
-      studentDashboardRepository:(userId:string)=>overViewRepository.studentDashboardRepository(userId)
+      studentDashboardRepository:(userId:string)=>overViewRepository.studentDashboardRepository(userId),
+      addReviewRepository:(data:ReviewData)=>overViewRepository.addReviewRepository(data),
+
+      getReviewRepository:(courseId:string)=>overViewRepository.getReviewRepository(courseId),
+      averageReviewRepository:(courseId:string)=>overViewRepository.averageReviewRepository(courseId),
+
   };
 };

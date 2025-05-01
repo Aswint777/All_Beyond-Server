@@ -15,6 +15,8 @@ export const studentRoutes = (dependencies: IDependencies) => {
     getProgress,
     updateProgress,
     studentDashboard,
+    addReview,
+    getReviews,
   } = studentController(dependencies);
 
   const router = Router();
@@ -42,6 +44,13 @@ export const studentRoutes = (dependencies: IDependencies) => {
   router
     .route("/dashboard")
     .get(jwtMiddleware, verifyStudent, studentDashboard);
+
+    router
+    .route("/addReviews/:courseId")
+    .post(jwtMiddleware, verifyStudent, addReview);
+    router
+    .route("/reviews/:courseId")
+    .get( getReviews);
   // router.get("/stream/:videoKey", streamVideo);
   return router;
 };

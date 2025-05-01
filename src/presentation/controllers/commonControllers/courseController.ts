@@ -55,6 +55,7 @@ export class CourseController {
 
       const totalCourses = await getTotalCount(this.dependencies).execute();
 
+
       // Remove S3 URL generation for now - add it back when properly implemented
       res.status(200).json({
         success: true,
@@ -78,7 +79,7 @@ export class CourseController {
 
   // course details page
   async courseDetailsController(req: Request, res: Response): Promise<void> {
-    const { courseDetailsUseCase } = this.dependencies.useCases;
+    const { courseDetailsUseCase, averageReviewUseCase } = this.dependencies.useCases;
     try {
       const { courseId } = req.params;
 
@@ -94,6 +95,11 @@ export class CourseController {
         });
         return;
       }
+       console.log(course,'////////////////////////////////////////////////');
+       
+      const reviewStatus = await averageReviewUseCase(this.dependencies).execute(courseId)
+      console.log(reviewStatus,"reviewStatus....................................................................................................");
+       
       // Process only if `thumbnailUrl` exists
       if (course.thumbnailUrl) {
         const fileKey = course.thumbnailUrl.split(
@@ -123,7 +129,7 @@ export class CourseController {
       res.status(200).json({
         success: true,
         message: "Course Listing successful",
-        data: course,
+        data: {course,reviewStatus}
       });
     } catch (error) {
       res.status(500).json({
@@ -148,6 +154,9 @@ export class CourseController {
         });
         return;
       }
+
+      
+
       // ✅ Generate Signed URL for Thumbnails
       courses = await Promise.all(
         courses.map(async (course) => {

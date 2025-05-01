@@ -19,7 +19,6 @@ export class EnrolmentUseCase {
   ): Promise<PaymentEntity | null> {
     const { coursePaymentRepository } = this.dependencies.repositories;
     try {
-      console.log("payment UseCase");
       const total = data.amount;
       if (total) {
         const instructorShare = (total * 70) / 100;
@@ -94,10 +93,6 @@ export class EnrolmentUseCase {
       if (!result) {
         throw new Error("Course not found");
       }
-      console.log(
-        result,
-        "llllllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
-      );
 
       return result;
     } catch (error: any) {

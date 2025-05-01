@@ -46,7 +46,7 @@ import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEdit
 import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
 import { IAlreadyEnrolledUseCase, ICoursePaymentUseCase, IEnrolCourseUseCases, IGetProgressUseCase, IInitializeProgressUseCase, IStudentCoursesUseCase, IUpdateProgressUseCase, IWatchCourseUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
 import { IDashboardUseCase } from "../../domain/IUseCases/IAdminuseCases/IOverviewUseCase";
-import { IStudentDashboardUseCase } from "../../domain/IUseCases/IStudentUseCases/IStudentOverviewUseCase";
+import { IAddReviewUseCase, IAverageReviewUseCase, IGetReviewUseCase, IStudentDashboardUseCase } from "../../domain/IUseCases/IStudentUseCases/IStudentOverviewUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -112,6 +112,10 @@ export interface IUseCases {
   updateProgressUseCase:(dependency:IDependencies)=>IUpdateProgressUseCase
   
   studentDashboardUseCase:(dependency:IDependencies)=>IStudentDashboardUseCase
+  addReviewUseCase:(dependency:IDependencies)=>IAddReviewUseCase
+  getReviewUseCase:(dependency:IDependencies)=>IGetReviewUseCase
+  averageReviewUseCase:(dependency:IDependencies)=>IAverageReviewUseCase
+
 
 }
 

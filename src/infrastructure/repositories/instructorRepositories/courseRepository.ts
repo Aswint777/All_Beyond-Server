@@ -29,7 +29,7 @@ export class CourseRepository
   ): Promise<CourseEntity | null> {
     try {
       console.log(
-        "🔹 createCourseRepository called with data:",
+        "createCourseRepository called with data:",
         JSON.stringify(courseData, null, 2)
       );
 
@@ -57,20 +57,20 @@ export class CourseRepository
       courseData.content.forEach((module, moduleIndex) => {
         if (!module.moduleTitle) {
           throw new Error(
-            `❌ Module ${moduleIndex + 1} is missing a moduleTitle.`
+            ` Module ${moduleIndex + 1} is missing a moduleTitle.`
           );
         }
 
         if (!Array.isArray(module.lessons) || module.lessons.length === 0) {
           throw new Error(
-            `❌ Module ${moduleIndex + 1} must have at least one lesson.`
+            ` Module ${moduleIndex + 1} must have at least one lesson.`
           );
         }
 
         module.lessons.forEach((lesson, lessonIndex) => {
           if (!lesson.lessonTitle) {
             throw new Error(
-              `❌ Lesson ${lessonIndex + 1} in Module ${
+              ` Lesson ${lessonIndex + 1} in Module ${
                 moduleIndex + 1
               } is missing a lessonTitle.`
             );
@@ -95,7 +95,7 @@ export class CourseRepository
           : 0;
 
       console.log(
-        "📌 Final Course Data Before Saving:",
+        " Final Course Data Before Saving:",
         JSON.stringify(courseData, null, 2)
       );
 

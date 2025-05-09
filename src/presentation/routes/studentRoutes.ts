@@ -3,6 +3,7 @@ import { IDependencies } from "../../application/interfaces/IDependencies";
 import { studentController } from "../controllers/studentControllers";
 import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
 import { verifyStudent } from "../middlewares/verifyStudent";
+import { verifyUser } from "../middlewares/verifyUser";
 
 export const studentRoutes = (dependencies: IDependencies) => {
   const {
@@ -17,6 +18,9 @@ export const studentRoutes = (dependencies: IDependencies) => {
     studentDashboard,
     addReview,
     getReviews,
+    getUserChats,
+    getChatMessages,
+    sendMessages,
   } = studentController(dependencies);
 
   const router = Router();
@@ -52,5 +56,13 @@ export const studentRoutes = (dependencies: IDependencies) => {
     .route("/reviews/:courseId")
     .get( getReviews);
   // router.get("/stream/:videoKey", streamVideo);
+
+  router.route("/chatList").get(jwtMiddleware,verifyUser,getUserChats)
+  router.route("/messages/:chatId").get(jwtMiddleware,verifyUser,getChatMessages)
+  router.route("/messages/:chatId").post(jwtMiddleware,verifyUser,sendMessages)
+
+
+
+
   return router;
 };

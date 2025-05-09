@@ -20,6 +20,7 @@ import {
 } from "../../domain/entities/enrolmentEntity";
 import { ProgressEntity } from "../../domain/entities/progressEntity";
 import { AverageReview, ReviewData } from "../../domain/entities/overviewEntity";
+import { AddMemberData, ChatGroup, Message, TextMessage, UserChatList } from "../../domain/entities/chatEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -167,6 +168,13 @@ export interface IRepositories {
   addReviewRepository: (data: ReviewData) => Promise<ReviewData|null>;
   getReviewRepository: (courseId:string) => Promise<ReviewData[]|null>;
   averageReviewRepository: (courseId:string) => Promise<AverageReview|null>;
+
+  createChatRepository: (data: ChatGroup) => Promise<ChatGroup|null>;
+  addMemberRepository: (data: AddMemberData) => Promise<AddMemberData|null>;
+
+  getUserChatsRepository:(userId:string)=>Promise<UserChatList[]|null>
+  getChatMessagesRepository:(chatId:string)=>Promise<Message[]|null>
+  sendMessagesRepository:(data:TextMessage)=>Promise<Message|null>
 
 
 }

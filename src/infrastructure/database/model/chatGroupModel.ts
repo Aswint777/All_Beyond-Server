@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { model, Schema, Types } from "mongoose";
 import { ChatGroup } from "../../../domain/entities/chatEntity";
 // import { ChatGroup } from "../../../domain/entities/ChatGroup";
 
@@ -8,17 +8,18 @@ const ChatGroupSchema = new Schema({
     required: true,
     unique: true,
   },
-  courseId: {
-    type: String,
-    required: true,
-  },
+    courseId: {
+      type: Types.ObjectId,
+      ref: "Course",
+    },
   adminId: {
-    type: String,
-    required: true,
+    type: Types.ObjectId,
+    ref: "users",
   },
   members: [
     {
-      type: String,
+      type: Types.ObjectId,
+      ref: "users",
     },
   ],
   createdAt: {

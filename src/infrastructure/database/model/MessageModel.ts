@@ -3,35 +3,35 @@ import { Message } from "../../../domain/entities/chatEntity";
 // import { Message } from "../../../domain/entities/Message";
 
 const MessageSchema = new Schema({
-  id: { 
+  id: {
     type: String,
-     required: true, 
-     unique: true 
-    },
+  },
   chatGroupId: {
-     type: String,
-      required: true
-     },
-  senderId: { 
     type: String,
-     required: true
-     },
-  content: { 
+    required: true,
+  },
+  senderId: {
     type: String,
-     required: true 
-    },
-  fileUrl: { 
-    type: String 
-},
-  createdAt: { 
+    required: true,
+  },
+  content: {
+    type: String,
+  },
+  username: {
+    type: String,
+  },
+  fileUrl: {
+    type: String,
+  },
+  createdAt: {
     type: Date,
-     default: Date.now 
-    },
+    default: Date.now,
+  },
   readBy: [
-    { 
-        type: String
-     }
-    ],
+    {
+      type: String,
+    },
+  ],
 });
 
 MessageSchema.index({ chatGroupId: 1, createdAt: 1 });

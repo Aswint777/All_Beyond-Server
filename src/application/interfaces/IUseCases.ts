@@ -47,6 +47,7 @@ import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCours
 import { IAlreadyEnrolledUseCase, ICoursePaymentUseCase, IEnrolCourseUseCases, IGetProgressUseCase, IInitializeProgressUseCase, IStudentCoursesUseCase, IUpdateProgressUseCase, IWatchCourseUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
 import { IDashboardUseCase } from "../../domain/IUseCases/IAdminuseCases/IOverviewUseCase";
 import { IAddReviewUseCase, IAverageReviewUseCase, IGetReviewUseCase, IStudentDashboardUseCase } from "../../domain/IUseCases/IStudentUseCases/IStudentOverviewUseCase";
+import { IAddMemberUseCase, ICreateChatUseCase, IGetChatMessagesUseCase, IGetUserChatsUseCase, ISendMessagesUseCase } from "../../domain/IUseCases/IStudentUseCases/IChatUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -115,6 +116,12 @@ export interface IUseCases {
   addReviewUseCase:(dependency:IDependencies)=>IAddReviewUseCase
   getReviewUseCase:(dependency:IDependencies)=>IGetReviewUseCase
   averageReviewUseCase:(dependency:IDependencies)=>IAverageReviewUseCase
+
+  createChatUseCase:(dependency:IDependencies)=>ICreateChatUseCase
+  addMemberUseCase:(dependency:IDependencies)=>IAddMemberUseCase
+  getUserChatsUseCase:(dependency:IDependencies)=>IGetUserChatsUseCase
+  getChatMessagesUseCase:(dependency:IDependencies)=>IGetChatMessagesUseCase
+  sendMessagesUseCase:(dependency:IDependencies)=>ISendMessagesUseCase
 
 
 }

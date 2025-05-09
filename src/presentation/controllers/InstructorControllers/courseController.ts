@@ -9,7 +9,7 @@ import {
   getSignedUrlForS3Videos,
 } from "../../../_boot/getSignedUrl";
 import { CourseEntity } from "../../../domain/entities/courseEntity";
-import { dependencies } from "../../../_boot/dependency/dependencies";
+import { ChatGroup } from "../../../domain/entities/chatEntity";
 
 interface S3File extends Express.Multer.File {
   location: string; // S3 adds 'location' property with the file URL
@@ -42,7 +42,7 @@ export class CourseController {
   }
   // create new Course
   async createCourse(req: Request, res: Response): Promise<void> {
-    const { createCourseUseCase } = this.dependencies.useCases;
+    const { createCourseUseCase,createChatUseCase } = this.dependencies.useCases;
 
     try {
       if (!req.user) {
@@ -125,6 +125,20 @@ export class CourseController {
         courseData,
         id
       );
+      if (!savedCourse || !savedCourse._id) {
+        throw new Error("Failed to create course");
+      }
+
+      const data: ChatGroup = {
+        title:savedCourse.courseTitle,
+        courseId: savedCourse._id.toString(), 
+        adminId: id,
+        members: [id],
+      };
+      console.log(data,'dddddddddddd');        
+      
+      const createGroupChat = await createChatUseCase(this.dependencies).execute(data)
+
       res
         .status(httpStatusCode.CREATED)
         .json({ message: "Course created successfully", course: savedCourse });

@@ -3,16 +3,23 @@ import dotenv from "dotenv";
 import { routers } from "./presentation/routes/authRoutes";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
-import { dependencies } from "./_boot/dependency/dependencies";
+import { dependencies, initializeSocketService } from "./_boot/dependency/dependencies";
 import { connectMongoDB } from "./infrastructure/database/dbConnection";
 import { instructorRoutes } from "./presentation/routes/instructorRoutes";
 import { adminRouters } from "./presentation/routes/adminRoutes";
 import { studentRoutes } from "./presentation/routes/studentRoutes";
+import { createServer } from "http";
+import { SocketManager } from "./_lib/socket/socketManager";
 
 dotenv.config();
 
 const app: Application = express();
+
+const httpServer = createServer(app); // Create HTTP server
+const socketManager = new SocketManager(httpServer); // Initialize Socket.IO with HTTP server
+
 // ✅ Remove or Adjust COOP Headers to Fix Google OAuth Issues
+
 app.use((req, res, next) => {
   res.removeHeader("Cross-Origin-Opener-Policy"); // ✅ Remove COOP to allow OAuth
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups"); // ✅ Allow OAuth popups
@@ -34,12 +41,20 @@ const corsOptions: CorsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow required headers
 };
 
+
+initializeSocketService(httpServer);
+
 // Use CORS middleware with the options
 app.use(cors(corsOptions));
 app.use("/auth", routers(dependencies));
 app.use("/admin", adminRouters(dependencies));
 app.use("/instructor", instructorRoutes(dependencies));
 app.use("/student",studentRoutes(dependencies));
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "Server is running" });
+});
 
 (async () => {
   try {
@@ -48,8 +63,14 @@ app.use("/student",studentRoutes(dependencies));
 
     // Start the Express server
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
+
+    // app.listen(PORT, () => { 
+    //   console.log(`Server is running on port ${PORT}`);
+    // });
+
+    httpServer.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
+      console.log(`Socket.IO initialized and listening on http://localhost:${PORT}/socket.io`);
     });
   } catch (error) {
     console.error(

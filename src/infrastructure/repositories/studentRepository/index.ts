@@ -1,7 +1,9 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
+import { AddMemberData, ChatGroup, TextMessage } from "../../../domain/entities/chatEntity";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
 import { ReviewData } from "../../../domain/entities/overviewEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
+import { ChatRepository } from "./chatRepository";
 import { EnrolmentRepository } from "./enrolmentRepository";
 import { OverViewRepository } from "./overviewRepository";
 import { ProgressRepository } from "./progressRepository";
@@ -10,6 +12,7 @@ export const studentRepositories = (dependencies: IDependencies) => {
   const enrolmentRepository = new EnrolmentRepository(dependencies);
   const progressRepository = new ProgressRepository(dependencies);
   const overViewRepository = new OverViewRepository(dependencies);
+  const chatRepository = new ChatRepository(dependencies)
   return {
     coursePaymentRepository: (data: PaymentEntity) =>
       enrolmentRepository.coursePaymentRepository(data),
@@ -48,6 +51,14 @@ export const studentRepositories = (dependencies: IDependencies) => {
 
       getReviewRepository:(courseId:string)=>overViewRepository.getReviewRepository(courseId),
       averageReviewRepository:(courseId:string)=>overViewRepository.averageReviewRepository(courseId),
+
+      createChatRepository:(data:ChatGroup)=>chatRepository.createChatRepository(data),
+      addMemberRepository:(data:AddMemberData)=>chatRepository.addMemberRepository(data),
+      getUserChatsRepository:(userId:string)=>chatRepository.getUserChatsRepository(userId),
+      getChatMessagesRepository:(chatId:string)=>chatRepository.getChatMessagesRepository(chatId),
+      sendMessagesRepository:(data:TextMessage)=>chatRepository.sendMessagesRepository(data),
+
+
 
   };
 };

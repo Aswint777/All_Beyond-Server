@@ -1,7 +1,9 @@
+import { AddMemberData, ChatGroup, TextMessage } from "../../../domain/entities/chatEntity";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
 import { ReviewData } from "../../../domain/entities/overviewEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
+import { ChatUseCase } from "./chatUseCase";
 import { EnrolmentUseCase } from "./enrolmentUseCase";
 import { StudentOverviewUseCase } from "./overviewUseCase";
 import { ProgressUseCase } from "./progressUseCase";
@@ -10,6 +12,7 @@ export const studentUseCase = (dependencies: IDependencies) => {
   const enrolmentUseCase = new EnrolmentUseCase(dependencies);
   const progressUseCase = new ProgressUseCase(dependencies);
   const studentOverviewUseCase = new StudentOverviewUseCase(dependencies);
+  const chatUseCase = new ChatUseCase(dependencies)
   return {
     coursePaymentUseCase: () => ({
       execute: (data: PaymentEntity) =>
@@ -66,6 +69,23 @@ export const studentUseCase = (dependencies: IDependencies) => {
     }),
     averageReviewUseCase:()=>({
       execute:(courseId:string)=>studentOverviewUseCase.averageReviewUseCase(courseId)
+    }),
+
+    createChatUseCase:()=>({
+      execute:(data:ChatGroup)=>chatUseCase.createChatUseCase(data)
+    }),
+
+    addMemberUseCase:()=>({
+      execute:(data:AddMemberData)=>chatUseCase.addMemberUseCase(data)
+    }),
+    getUserChatsUseCase:()=>({
+      execute:(userId:string)=>chatUseCase.getUserChatsUseCase(userId)
+    }),
+    getChatMessagesUseCase:()=>({
+      execute:(chatId:string)=>chatUseCase.getChatMessagesUseCase(chatId)
+    }),
+    sendMessagesUseCase:()=>({
+      execute:(data:TextMessage)=>chatUseCase.sendMessagesUseCase(data)
     }),
   };
 };

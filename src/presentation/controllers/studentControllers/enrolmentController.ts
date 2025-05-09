@@ -94,7 +94,7 @@ export class EnrolmentController {
   }
   // controller for enroll course
   async enrollCourse(req: Request, res: Response): Promise<void> {
-    const { enrolCourseUseCases } = this.dependencies.useCases;
+    const { enrolCourseUseCases,addMemberUseCase } = this.dependencies.useCases;
     try {
 
       const user = getUserFromToken(req, res);
@@ -117,6 +117,7 @@ export class EnrolmentController {
       };
       // Enroll user (for both free and verified premium courses)
       const course = await enrolCourseUseCases(this.dependencies).execute(data);
+      const addMember = await addMemberUseCase(this.dependencies).execute(data)
       if (!course) {
         res.status(httpStatusCode.NOT_ACCEPTABLE).json({
           success: false,

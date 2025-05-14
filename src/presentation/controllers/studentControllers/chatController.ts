@@ -108,8 +108,6 @@ export class ChatController {
   
      socketService.emitToRoom(chatId, "message", messageData);
 
-
-
       res.status(httpStatusCode.OK).json({
         success: true,
         message: "Chats listed successfully",
@@ -119,6 +117,5 @@ export class ChatController {
       res.status(500).json({ error: error.message });
     }
   }
-
 
 }

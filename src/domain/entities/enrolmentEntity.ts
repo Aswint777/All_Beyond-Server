@@ -122,10 +122,6 @@ interface ModuleDocument {
     users: number;
   }
   
-//  export interface CourseEnrollment {
-//     courseName: string;
-//     enrollments: number;
-//   }
   
   export interface InstructorDashboardData {
     totalUsers: number;
@@ -147,10 +143,9 @@ interface ModuleDocument {
     courseId: string;
   }
   
-  // Type for lean enrollment document after population
   export interface LeanEnrollment {
     _id: string;
-    courseId: { _id: string; courseTitle: string } | null; // Populated course, null if not found
+    courseId: { _id: string; courseTitle: string } | null; 
     userId: string;
-    createdAt: string; // ISO string from lean()
+    createdAt: string; 
   }

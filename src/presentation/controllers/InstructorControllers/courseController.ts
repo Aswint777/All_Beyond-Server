@@ -54,7 +54,7 @@ export class CourseController {
         return;
       }
 
-      // 🛑 Verify JWT
+      //  Verify JWT
       const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
       const decoded = jwt.verify(token, secretKey) as {
         _id: string;

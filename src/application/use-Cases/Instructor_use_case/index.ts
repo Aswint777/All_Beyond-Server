@@ -1,12 +1,15 @@
+import { AssessmentEntity } from "../../../domain/entities/assessmentEntity";
 import { CourseEntity } from "../../../domain/entities/courseEntity";
 import { UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { InstructorApplyUseCase } from "./applyInstructorUseCase";
+import { AssessmentUseCase } from "./assessmentUseCase";
 import { CourseUseCase } from "./courseUseCase";
 
 export const instructorUseCase = (dependencies: IDependencies) => {
   const instructorApplyUseCase = new InstructorApplyUseCase(dependencies);
   const courseUseCase = new CourseUseCase(dependencies)
+  const assessmentUseCase = new AssessmentUseCase(dependencies)
   return {
     applyInstructorUseCase: () => ({
       execute: (courseData: UserEntity) =>
@@ -21,9 +24,9 @@ export const instructorUseCase = (dependencies: IDependencies) => {
     listInstructorCourseUseCase:()=>({
       execute:(
         id: string,
-        search: string = "", // Default to empty string
-        skip: number = 0,   // Default to 0
-        limit: number = 6   // Default to 6
+        search: string = "", 
+        skip: number = 0,  
+        limit: number = 6   
       )=>courseUseCase.listInstructorCourseUseCase(id,search,skip,limit)
     }),
     editCourseUseCase:()=>({
@@ -34,6 +37,12 @@ export const instructorUseCase = (dependencies: IDependencies) => {
     }),
     instructorDashboardUseCase:()=>({
       execute:(userId:string)=>instructorApplyUseCase.instructorDashboardUseCase(userId)
-    })
+    }),
+        assessmentCoursesUseCase:()=>({
+      execute:(userId:string,page:number, limit:number, search:string)=>assessmentUseCase.assessmentCoursesUseCase(userId,page,limit,search)
+    }),
+            createAssessmentsUseCase:()=>({
+      execute:(data:AssessmentEntity)=>assessmentUseCase.createAssessmentsUseCase(data)
+    }),
   };
 };

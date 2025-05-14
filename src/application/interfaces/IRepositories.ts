@@ -21,6 +21,7 @@ import {
 import { ProgressEntity } from "../../domain/entities/progressEntity";
 import { AverageReview, ReviewData } from "../../domain/entities/overviewEntity";
 import { AddMemberData, ChatGroup, Message, TextMessage, UserChatList } from "../../domain/entities/chatEntity";
+import { assessmentCourses, AssessmentEntity } from "../../domain/entities/assessmentEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -126,6 +127,9 @@ export interface IRepositories {
   instructorDashboardRepository: (
     userId: string
   ) => Promise<InstructorDashboardData | null>;
+
+  assessmentCoursesRepository : (userId:string,page:number, limit:number, search:string) => Promise<{ courses: assessmentCourses[]; totalPages: number }  | null>;
+  createAssessmentsRepository : (data:AssessmentEntity) => Promise< AssessmentEntity | null>;
 
   // => student
   coursePaymentRepository: (

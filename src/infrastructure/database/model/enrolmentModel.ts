@@ -7,10 +7,19 @@ const enrolmentSchema = new Schema(
       type: Types.ObjectId,
       ref: "Course",
     },
-    userId:{
-        type: Types.ObjectId,
-        ref: "users",
+    userId: {
+      type: Types.ObjectId,
+      ref: "users",
     },
+    mark: [
+      {
+        type: Number,
+      },
+    ],
+    passed:{
+      type:Boolean,
+      default:false
+    }
   },
   {
     timestamps: true,

@@ -21,6 +21,8 @@ export const instructorRoutes = (dependencies: IDependencies) => {
     instructorDashboard,
     assessmentCourses,
     createAssessments,
+    getAssessment,
+    updateAssessment,
   } = instructorController(dependencies);
 
   const router = Router();
@@ -36,20 +38,26 @@ export const instructorRoutes = (dependencies: IDependencies) => {
 
   router.route("/courseCategories").get(getCourseCategories);
 
-  router.route("/courses").get(jwtMiddleware,listInstructorCourse);
+  router.route("/courses").get(jwtMiddleware, listInstructorCourse);
 
-  router.route('/viewCourses/:courseId').get(jwtMiddleware,viewCourses)
+  router.route("/viewCourses/:courseId").get(jwtMiddleware, viewCourses);
 
-  router.route("/editCourse/:courseId").put(jwtMiddleware, uploadS3.any(), editCourse); 
+  router
+    .route("/editCourse/:courseId")
+    .put(jwtMiddleware, uploadS3.any(), editCourse);
 
-  router.route("/blockCourse/:courseId").put(jwtMiddleware,blockCourse)
+  router.route("/blockCourse/:courseId").put(jwtMiddleware, blockCourse);
 
-  router.route('/overview').get(jwtMiddleware,instructorDashboard)
+  router.route("/overview").get(jwtMiddleware, instructorDashboard);
 
+  router
+    .route("/courses-with-assessments")
+    .get(jwtMiddleware, assessmentCourses);
+  router.route("/createAssessments").post(jwtMiddleware, createAssessments);
 
-    router.route('/courses-with-assessments').get(jwtMiddleware,assessmentCourses)
-        router.route('/createAssessments').post(jwtMiddleware,createAssessments)
+    router.route("/getAssessment/:assessmentId").get(jwtMiddleware, getAssessment);
 
+    router.route("/updateAssessment/:assessmentId").put(jwtMiddleware, updateAssessment);
 
-   return router;
+  return router;
 };

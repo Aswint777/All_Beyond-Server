@@ -13,10 +13,11 @@ export class AssessmentController {
   async assessmentCourses(req: Request, res: Response): Promise<void> {
     const { assessmentCoursesUseCase } = this.dependencies.useCases;
     try {
-      
       const user = getUserFromToken(req, res);
       if (!user) {
-        res.status(httpStatusCode.UNAUTHORIZED).json({ success: false, message: "Unauthorized" });
+        res
+          .status(httpStatusCode.UNAUTHORIZED)
+          .json({ success: false, message: "Unauthorized" });
         return;
       }
       const userId = user._id;
@@ -41,7 +42,10 @@ export class AssessmentController {
         return;
       }
 
-      console.log("Response data:", { courses: result.courses.length, totalPages: result.totalPages });
+      console.log("Response data:", {
+        courses: result.courses.length,
+        totalPages: result.totalPages,
+      });
 
       res.status(httpStatusCode.OK).json({
         success: true,
@@ -59,25 +63,23 @@ export class AssessmentController {
     }
   }
 
-
-
-
-   async createAssessments(req: Request, res: Response): Promise<void> {
+  async createAssessments(req: Request, res: Response): Promise<void> {
     const { createAssessmentsUseCase } = this.dependencies.useCases;
     try {
-      
       const user = getUserFromToken(req, res);
       if (!user) {
-        res.status(httpStatusCode.UNAUTHORIZED).json({ success: false, message: "Unauthorized" });
+        res
+          .status(httpStatusCode.UNAUTHORIZED)
+          .json({ success: false, message: "Unauthorized" });
         return;
       }
       const userId = user._id;
 
-      console.log("Request params:", { userId});
-      const data = req.body
-      console.log(data,'<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+      const data = req.body;
 
-      const result = await createAssessmentsUseCase(this.dependencies).execute(data);
+      const result = await createAssessmentsUseCase(this.dependencies).execute(
+        data
+      );
 
       if (!result) {
         res.status(httpStatusCode.NOT_FOUND).json({
@@ -87,10 +89,74 @@ export class AssessmentController {
         return;
       }
 
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        data: result,
+      });
+    } catch (error: constant) {
+      console.error("Error in createAssessments:", error);
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: error.message || "Internal Server Error",
+      });
+    }
+  }
+
+  async getAssessment(req: Request, res: Response): Promise<void> {
+    const { getAssessmentUseCase } = this.dependencies.useCases;
+    try {
+      const { assessmentId } = req.params;
+
+      const result = await getAssessmentUseCase(this.dependencies).execute(
+        assessmentId
+      );
+
+      if (!result) {
+        res.status(httpStatusCode.NOT_FOUND).json({
+          success: false,
+          message: "Failed get Assessment",
+        });
+        return;
+      }
+      console.log(result);
 
       res.status(httpStatusCode.OK).json({
         success: true,
-        data: result
+        data: result,
+      });
+    } catch (error: constant) {
+      console.error("Error in createAssessments:", error);
+      res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: error.message || "Internal Server Error",
+      });
+    }
+  }
+
+  async updateAssessment(req: Request, res: Response): Promise<void> {
+    const { updateAssessmentUseCase } = this.dependencies.useCases;
+    try {
+      const { assessmentId } = req.params;
+      console.log(req.body);
+      const data = req.body
+
+      const result = await updateAssessmentUseCase(this.dependencies).execute(
+        assessmentId,
+        data
+      );
+
+      if (!result) {
+        res.status(httpStatusCode.NOT_FOUND).json({
+          success: false,
+          message: "Failed get Assessment",
+        });
+        return;
+      }
+      console.log(result);
+
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        data: result,
       });
     } catch (error: constant) {
       console.error("Error in createAssessments:", error);

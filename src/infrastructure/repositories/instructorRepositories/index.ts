@@ -1,7 +1,7 @@
 // export * from "./applyInstructor"
 
 import { IDependencies } from "../../../application/interfaces/IDependencies";
-import { AssessmentEntity } from "../../../domain/entities/assessmentEntity";
+import { AssessmentEntity, QuestionEntity } from "../../../domain/entities/assessmentEntity";
 import { CourseEntity } from "../../../domain/entities/courseEntity";
 import { UserEntity } from "../../../domain/entities/User";
 import { ApplyInstructor } from "./applyInstructor";
@@ -44,5 +44,11 @@ export const InstructorRepositories = (dependencies: IDependencies) => {
       ),
     createAssessmentsRepository: (data: AssessmentEntity) =>
       assessmentRepository.createAssessmentsRepository(data),
+
+        getAssessmentRepository: (assessmentId:string) =>
+      assessmentRepository.getAssessmentRepository(assessmentId),
+        
+        updateAssessmentRepository: (assessmentId:string,data:{ questions: QuestionEntity[]}) =>
+      assessmentRepository.updateAssessmentRepository(assessmentId,data),
   };
 };

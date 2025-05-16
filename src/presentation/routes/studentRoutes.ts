@@ -21,6 +21,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     getUserChats,
     getChatMessages,
     sendMessages,
+    studentAssessments,
   } = studentController(dependencies);
 
   const router = Router();
@@ -61,6 +62,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
   router.route("/messages/:chatId").get(jwtMiddleware,verifyUser,getChatMessages)
   router.route("/messages/:chatId").post(jwtMiddleware,verifyUser,sendMessages)
 
+  router.route("/studentAssessments").get(jwtMiddleware,verifyUser,studentAssessments)
 
 
 

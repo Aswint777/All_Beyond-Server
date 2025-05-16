@@ -19,9 +19,23 @@ import {
   StudentDashboardData,
 } from "../../domain/entities/enrolmentEntity";
 import { ProgressEntity } from "../../domain/entities/progressEntity";
-import { AverageReview, ReviewData } from "../../domain/entities/overviewEntity";
-import { AddMemberData, ChatGroup, Message, TextMessage, UserChatList } from "../../domain/entities/chatEntity";
-import { assessmentCourses, AssessmentEntity } from "../../domain/entities/assessmentEntity";
+import {
+  AverageReview,
+  ReviewData,
+} from "../../domain/entities/overviewEntity";
+import {
+  AddMemberData,
+  ChatGroup,
+  Message,
+  TextMessage,
+  UserChatList,
+} from "../../domain/entities/chatEntity";
+import {
+  assessmentCourses,
+  AssessmentEntity,
+  AssessmentResponse,
+  QuestionEntity,
+} from "../../domain/entities/assessmentEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -128,8 +142,22 @@ export interface IRepositories {
     userId: string
   ) => Promise<InstructorDashboardData | null>;
 
-  assessmentCoursesRepository : (userId:string,page:number, limit:number, search:string) => Promise<{ courses: assessmentCourses[]; totalPages: number }  | null>;
-  createAssessmentsRepository : (data:AssessmentEntity) => Promise< AssessmentEntity | null>;
+  assessmentCoursesRepository: (
+    userId: string,
+    page: number,
+    limit: number,
+    search: string
+  ) => Promise<{ courses: assessmentCourses[]; totalPages: number } | null>;
+  createAssessmentsRepository: (
+    data: AssessmentEntity
+  ) => Promise<AssessmentEntity | null>;
+  getAssessmentRepository: (
+    assessmentId: string
+  ) => Promise<AssessmentEntity | null>;
+
+    updateAssessmentRepository: (
+    assessmentId: string,data:QuestionEntity[]
+  ) => Promise<AssessmentEntity | null>;
 
   // => student
   coursePaymentRepository: (
@@ -168,17 +196,25 @@ export interface IRepositories {
     userId: string,
     lessonId: string
   ) => Promise<ProgressEntity | null>;
-  studentDashboardRepository: (userId: string) => Promise<StudentDashboardData|null>;
-  addReviewRepository: (data: ReviewData) => Promise<ReviewData|null>;
-  getReviewRepository: (courseId:string) => Promise<ReviewData[]|null>;
-  averageReviewRepository: (courseId:string) => Promise<AverageReview|null>;
+  studentDashboardRepository: (
+    userId: string
+  ) => Promise<StudentDashboardData | null>;
+  addReviewRepository: (data: ReviewData) => Promise<ReviewData | null>;
+  getReviewRepository: (courseId: string) => Promise<ReviewData[] | null>;
+  averageReviewRepository: (courseId: string) => Promise<AverageReview | null>;
 
-  createChatRepository: (data: ChatGroup) => Promise<ChatGroup|null>;
-  addMemberRepository: (data: AddMemberData) => Promise<AddMemberData|null>;
+  createChatRepository: (data: ChatGroup) => Promise<ChatGroup | null>;
+  addMemberRepository: (data: AddMemberData) => Promise<AddMemberData | null>;
 
-  getUserChatsRepository:(userId:string)=>Promise<UserChatList[]|null>
-  getChatMessagesRepository:(chatId:string)=>Promise<Message[]|null>
-  sendMessagesRepository:(data:TextMessage)=>Promise<Message|null>
+  getUserChatsRepository: (userId: string) => Promise<UserChatList[] | null>;
+  getChatMessagesRepository: (chatId: string) => Promise<Message[] | null>;
+  sendMessagesRepository: (data: TextMessage) => Promise<Message | null>;
 
-
+  
+  studentAssessmentsRepository: (
+    userId: string,
+    page: number,
+    limit: number,
+    search: string
+  ) => Promise<AssessmentResponse | null>;
 }

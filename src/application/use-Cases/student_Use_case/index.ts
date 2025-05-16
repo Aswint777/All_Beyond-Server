@@ -1,10 +1,15 @@
-import { AddMemberData, ChatGroup, TextMessage } from "../../../domain/entities/chatEntity";
+import {
+  AddMemberData,
+  ChatGroup,
+  TextMessage,
+} from "../../../domain/entities/chatEntity";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
 import { ReviewData } from "../../../domain/entities/overviewEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { ChatUseCase } from "./chatUseCase";
 import { EnrolmentUseCase } from "./enrolmentUseCase";
+import { ExamUseCase } from "./examUseCase";
 import { StudentOverviewUseCase } from "./overviewUseCase";
 import { ProgressUseCase } from "./progressUseCase";
 
@@ -12,7 +17,9 @@ export const studentUseCase = (dependencies: IDependencies) => {
   const enrolmentUseCase = new EnrolmentUseCase(dependencies);
   const progressUseCase = new ProgressUseCase(dependencies);
   const studentOverviewUseCase = new StudentOverviewUseCase(dependencies);
-  const chatUseCase = new ChatUseCase(dependencies)
+  const chatUseCase = new ChatUseCase(dependencies);
+  const examUseCase = new ExamUseCase(dependencies);
+
   return {
     coursePaymentUseCase: () => ({
       execute: (data: PaymentEntity) =>
@@ -57,35 +64,44 @@ export const studentUseCase = (dependencies: IDependencies) => {
         progressUseCase.updateProgressUseCase(courseId, userId, lessonId),
     }),
 
-    studentDashboardUseCase:()=>({
-      execute:(userId:string)=>studentOverviewUseCase.studentDashboardUseCase(userId)
+    studentDashboardUseCase: () => ({
+      execute: (userId: string) =>
+        studentOverviewUseCase.studentDashboardUseCase(userId),
     }),
 
-    addReviewUseCase:()=>({
-      execute:(data:ReviewData)=>studentOverviewUseCase.addReviewUseCase(data)
+    addReviewUseCase: () => ({
+      execute: (data: ReviewData) =>
+        studentOverviewUseCase.addReviewUseCase(data),
     }),
-    getReviewUseCase:()=>({
-      execute:(courseId:string)=>studentOverviewUseCase.getReviewUseCase(courseId)
+    getReviewUseCase: () => ({
+      execute: (courseId: string) =>
+        studentOverviewUseCase.getReviewUseCase(courseId),
     }),
-    averageReviewUseCase:()=>({
-      execute:(courseId:string)=>studentOverviewUseCase.averageReviewUseCase(courseId)
+    averageReviewUseCase: () => ({
+      execute: (courseId: string) =>
+        studentOverviewUseCase.averageReviewUseCase(courseId),
     }),
 
-    createChatUseCase:()=>({
-      execute:(data:ChatGroup)=>chatUseCase.createChatUseCase(data)
+    createChatUseCase: () => ({
+      execute: (data: ChatGroup) => chatUseCase.createChatUseCase(data),
     }),
 
-    addMemberUseCase:()=>({
-      execute:(data:AddMemberData)=>chatUseCase.addMemberUseCase(data)
+    addMemberUseCase: () => ({
+      execute: (data: AddMemberData) => chatUseCase.addMemberUseCase(data),
     }),
-    getUserChatsUseCase:()=>({
-      execute:(userId:string)=>chatUseCase.getUserChatsUseCase(userId)
+    getUserChatsUseCase: () => ({
+      execute: (userId: string) => chatUseCase.getUserChatsUseCase(userId),
     }),
-    getChatMessagesUseCase:()=>({
-      execute:(chatId:string)=>chatUseCase.getChatMessagesUseCase(chatId)
+    getChatMessagesUseCase: () => ({
+      execute: (chatId: string) => chatUseCase.getChatMessagesUseCase(chatId),
     }),
-    sendMessagesUseCase:()=>({
-      execute:(data:TextMessage)=>chatUseCase.sendMessagesUseCase(data)
+    sendMessagesUseCase: () => ({
+      execute: (data: TextMessage) => chatUseCase.sendMessagesUseCase(data),
+    }),
+
+    studentAssessmentsUseCase: () => ({
+      execute: (userId: string, page: number, limit: number, search: string) =>
+        examUseCase.studentAssessmentsUseCase(userId, page, limit, search),
     }),
   };
 };

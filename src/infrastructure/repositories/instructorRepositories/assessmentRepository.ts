@@ -7,7 +7,8 @@ import {
   LeanAssessment,
   LeanEnrolment,
   AssessmentEntity,
-} from "../../../domain/entities/assessmentEntity"; 
+  QuestionEntity,
+} from "../../../domain/entities/assessmentEntity";
 import { Course, Enrolment, Assessment } from "../../database/model";
 
 export class AssessmentRepository
@@ -102,10 +103,15 @@ export class AssessmentRepository
                 ),
                 createdAt: assessment.createdAt.toISOString(),
                 results: courseEnrolments.map((enrolment: LeanEnrolment) => {
-                  const markArray = Array.isArray(enrolment.mark) ? enrolment.mark : [];
+                  const markArray = Array.isArray(enrolment.mark)
+                    ? enrolment.mark
+                    : [];
                   return {
                     studentName: enrolment.userId?.username || "Unknown",
-                    marks: markArray.length > 0 ? markArray[markArray.length - 1] : 0,
+                    marks:
+                      markArray.length > 0
+                        ? markArray[markArray.length - 1]
+                        : 0,
                     attempts: markArray.length,
                     passed: enrolment.passed || false,
                   };
@@ -135,6 +141,48 @@ export class AssessmentRepository
     } catch (error) {
       console.error("Error in create assessment:", error);
       return null;
+    }
+  }
+
+  async getAssessmentRepository(
+    assessmentId: string
+  ): Promise<AssessmentEntity | null> {
+    try {
+      console.log(assessmentId, "here");
+
+      const getAssessment = await Assessment.findOne({
+        _id: new Types.ObjectId(assessmentId),
+      });
+      if (!getAssessment) return null;
+      return getAssessment;
+    } catch (error) {
+      console.error("Error in create assessment:", error);
+      return null;
+    }
+  }
+
+  async updateAssessmentRepository(
+    assessmentId: string,
+    data: { questions: QuestionEntity[] }
+  ): Promise<AssessmentEntity | null> {
+    try {
+      console.log(data,"ooooooooooo");
+      
+ const updatedAssessment = await Assessment.findByIdAndUpdate(
+      new Types.ObjectId(assessmentId),
+      { $set: { questions: data.questions } },
+      { new: true } 
+    );
+      if (!updatedAssessment) return null;
+      return updatedAssessment;
+
+    } catch (error: any) {
+      console.error(
+        "Error in updateAssessmentRepository:",
+        error.message,
+        error.stack
+      );
+      throw error;
     }
   }
 }

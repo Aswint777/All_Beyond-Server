@@ -1,6 +1,7 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { ChatController } from "./chatController";
 import { EnrolmentController } from "./enrolmentController";
+import { ExamController } from "./ExamController";
 import { StudentOverviewController } from "./overviewController";
 import { ProgressController } from "./progressController";
 
@@ -9,6 +10,7 @@ export const studentController = (dependencies: IDependencies) => {
   const progress = new ProgressController(dependencies);
   const overview = new StudentOverviewController(dependencies)
   const chat = new ChatController(dependencies)
+  const exam = new ExamController(dependencies)
 
   return {
     enrollCourse: enrolment.enrollCourse.bind(enrolment),
@@ -28,6 +30,8 @@ export const studentController = (dependencies: IDependencies) => {
     getUserChats:chat.getUserChats.bind(chat),
     getChatMessages:chat.getChatMessages.bind(chat),
     sendMessages:chat.sendMessages.bind(chat),
+
+    studentAssessments:exam.studentAssessments.bind(exam)
 
 
   };

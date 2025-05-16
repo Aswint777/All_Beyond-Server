@@ -32,15 +32,18 @@ export interface LeanAssessment {
     correctOption: number;
   }[];
   createdAt: Date;
+  updatedAt: Date;
 }
+
 
 export interface LeanEnrolment {
   _id: string;
   courseId: string;
-  userId: { _id: string; username: string };
+  userId: string;
   mark: number[];
   passed: boolean;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Question {
@@ -50,12 +53,7 @@ export interface Question {
   correctOption: number;
 }
 
-export interface AssessmentResult {
-  studentName: string;
-  marks: number;
-  attempts: number;
-  passed: boolean | undefined;
-}
+
 
 export interface assessmentCourses {
   id: string;
@@ -67,4 +65,25 @@ export interface assessmentCourses {
     createdAt: string;
     results?: AssessmentResult[];
   };
+}
+
+export interface AssessmentResult {
+  marks: number;
+  attempts: number;
+  passed: boolean 
+}
+
+export interface AssessmentDetails {
+  _id?: string;
+  courseId?: string;
+  courseTitle?: string;
+  results?: AssessmentResult[];
+  createdAt?: string;
+}
+
+export interface AssessmentResponse {
+  assessments: AssessmentDetails[];
+  totalPages: number;
+  currentPage: number;
+  totalAssessments: number;
 }

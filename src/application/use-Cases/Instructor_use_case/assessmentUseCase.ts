@@ -1,5 +1,5 @@
 import { constant } from "../../../_lib/common/constant";
-import { assessmentCourses, AssessmentEntity } from "../../../domain/entities/assessmentEntity";
+import { assessmentCourses, AssessmentEntity, QuestionEntity } from "../../../domain/entities/assessmentEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 
 export class AssessmentUseCase {
@@ -39,6 +39,34 @@ export class AssessmentUseCase {
       return allCourses;
     } catch (error: constant) {
       console.error("Error in create assessment:", error);
+      throw new Error("An unexpected error occurred: " + (error.message || "Unknown error"));
+    }
+  }
+
+     async getAssessmentUseCase(assessmentId:string): Promise<AssessmentEntity | null> {
+    const { getAssessmentRepository } = this.dependencies.repositories;
+    try {
+      const allCourses = await getAssessmentRepository(assessmentId);
+      if (!allCourses) {
+        return null;
+      }
+      return allCourses;
+    } catch (error: constant) {
+      console.error("Error in get assessment:", error);
+      throw new Error("An unexpected error occurred: " + (error.message || "Unknown error"));
+    }
+  }
+
+       async updateAssessmentUseCase(assessmentId:string,data:QuestionEntity[]): Promise<AssessmentEntity | null> {
+    const { updateAssessmentRepository } = this.dependencies.repositories;
+    try {
+      const allCourses = await updateAssessmentRepository(assessmentId,data);
+      if (!allCourses) {
+        return null;
+      }
+      return allCourses;
+    } catch (error: constant) {
+      console.error("Error in update assessment:", error);
       throw new Error("An unexpected error occurred: " + (error.message || "Unknown error"));
     }
   }

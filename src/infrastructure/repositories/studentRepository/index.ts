@@ -1,10 +1,15 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
-import { AddMemberData, ChatGroup, TextMessage } from "../../../domain/entities/chatEntity";
+import {
+  AddMemberData,
+  ChatGroup,
+  TextMessage,
+} from "../../../domain/entities/chatEntity";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
 import { ReviewData } from "../../../domain/entities/overviewEntity";
 import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { ChatRepository } from "./chatRepository";
 import { EnrolmentRepository } from "./enrolmentRepository";
+import { ExamRepository } from "./examRepository";
 import { OverViewRepository } from "./overviewRepository";
 import { ProgressRepository } from "./progressRepository";
 
@@ -12,7 +17,8 @@ export const studentRepositories = (dependencies: IDependencies) => {
   const enrolmentRepository = new EnrolmentRepository(dependencies);
   const progressRepository = new ProgressRepository(dependencies);
   const overViewRepository = new OverViewRepository(dependencies);
-  const chatRepository = new ChatRepository(dependencies)
+  const chatRepository = new ChatRepository(dependencies);
+  const examRepository = new ExamRepository(dependencies);
   return {
     coursePaymentRepository: (data: PaymentEntity) =>
       enrolmentRepository.coursePaymentRepository(data),
@@ -46,19 +52,33 @@ export const studentRepositories = (dependencies: IDependencies) => {
       lessonId: string
     ) =>
       progressRepository.updateProgressRepository(courseId, userId, lessonId),
-      studentDashboardRepository:(userId:string)=>overViewRepository.studentDashboardRepository(userId),
-      addReviewRepository:(data:ReviewData)=>overViewRepository.addReviewRepository(data),
+    studentDashboardRepository: (userId: string) =>
+      overViewRepository.studentDashboardRepository(userId),
+    addReviewRepository: (data: ReviewData) =>
+      overViewRepository.addReviewRepository(data),
 
-      getReviewRepository:(courseId:string)=>overViewRepository.getReviewRepository(courseId),
-      averageReviewRepository:(courseId:string)=>overViewRepository.averageReviewRepository(courseId),
+    getReviewRepository: (courseId: string) =>
+      overViewRepository.getReviewRepository(courseId),
+    averageReviewRepository: (courseId: string) =>
+      overViewRepository.averageReviewRepository(courseId),
 
-      createChatRepository:(data:ChatGroup)=>chatRepository.createChatRepository(data),
-      addMemberRepository:(data:AddMemberData)=>chatRepository.addMemberRepository(data),
-      getUserChatsRepository:(userId:string)=>chatRepository.getUserChatsRepository(userId),
-      getChatMessagesRepository:(chatId:string)=>chatRepository.getChatMessagesRepository(chatId),
-      sendMessagesRepository:(data:TextMessage)=>chatRepository.sendMessagesRepository(data),
+    createChatRepository: (data: ChatGroup) =>
+      chatRepository.createChatRepository(data),
+    addMemberRepository: (data: AddMemberData) =>
+      chatRepository.addMemberRepository(data),
+    getUserChatsRepository: (userId: string) =>
+      chatRepository.getUserChatsRepository(userId),
+    getChatMessagesRepository: (chatId: string) =>
+      chatRepository.getChatMessagesRepository(chatId),
+    sendMessagesRepository: (data: TextMessage) =>
+      chatRepository.sendMessagesRepository(data),
 
-
-
+    studentAssessmentsRepository: (
+      userId: string,
+      page: number,
+      limit: number,
+      search: string
+    ) =>
+      examRepository.studentAssessmentsRepository(userId, page, limit, search),
   };
 };

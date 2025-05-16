@@ -1,4 +1,3 @@
-
 import {
   ICheckByEmailUseCase,
   ICheckByNameUseCase,
@@ -40,94 +39,177 @@ import {
   IUpdateInstructorStatusUseCase,
 } from "../../domain/IUseCases/IAdminuseCases/IAdminInstructorUseCase";
 
-import { IApplyInstructorUseCase, IInstructorDashboardUseCase } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
+import {
+  IApplyInstructorUseCase,
+  IInstructorDashboardUseCase,
+} from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
-import { IAllCategoriesUseCase, IBlockCourseUseCase, ICreateCourseUseCase, IEditCourseUseCase, IListInstructorCourseUseCase,} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
-import { allCoursesUseCase, ICourseDetailsUseCase, IGetTotalCount, ISimilarCourseUseCase } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
-import { IAlreadyEnrolledUseCase, ICoursePaymentUseCase, IEnrolCourseUseCases, IGetProgressUseCase, IInitializeProgressUseCase, IStudentCoursesUseCase, IUpdateProgressUseCase, IWatchCourseUseCase } from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
+import {
+  IAllCategoriesUseCase,
+  IBlockCourseUseCase,
+  ICreateCourseUseCase,
+  IEditCourseUseCase,
+  IListInstructorCourseUseCase,
+} from "../../domain/IUseCases/IInstructorUseCases/ICourseUseCase";
+import {
+  allCoursesUseCase,
+  ICourseDetailsUseCase,
+  IGetTotalCount,
+  ISimilarCourseUseCase,
+} from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
+import {
+  IAlreadyEnrolledUseCase,
+  ICoursePaymentUseCase,
+  IEnrolCourseUseCases,
+  IGetProgressUseCase,
+  IInitializeProgressUseCase,
+  IStudentCoursesUseCase,
+  IUpdateProgressUseCase,
+  IWatchCourseUseCase,
+} from "../../domain/IUseCases/IStudentUseCases/IEnrolmentUseCase";
 import { IDashboardUseCase } from "../../domain/IUseCases/IAdminuseCases/IOverviewUseCase";
-import { IAddReviewUseCase, IAverageReviewUseCase, IGetReviewUseCase, IStudentDashboardUseCase } from "../../domain/IUseCases/IStudentUseCases/IStudentOverviewUseCase";
-import { IAddMemberUseCase, ICreateChatUseCase, IGetChatMessagesUseCase, IGetUserChatsUseCase, ISendMessagesUseCase } from "../../domain/IUseCases/IStudentUseCases/IChatUseCase";
-import { IAssessmentCoursesUseCase, ICreateAssessmentsUseCase } from "../../domain/IUseCases/IInstructorUseCases/IAssessmentUseCase";
+import {
+  IAddReviewUseCase,
+  IAverageReviewUseCase,
+  IGetReviewUseCase,
+  IStudentDashboardUseCase,
+} from "../../domain/IUseCases/IStudentUseCases/IStudentOverviewUseCase";
+import {
+  IAddMemberUseCase,
+  ICreateChatUseCase,
+  IGetChatMessagesUseCase,
+  IGetUserChatsUseCase,
+  ISendMessagesUseCase,
+} from "../../domain/IUseCases/IStudentUseCases/IChatUseCase";
+import {
+  IAssessmentCoursesUseCase,
+  ICreateAssessmentsUseCase,
+  IGetAssessmentUseCase,
+  IUpdateAssessmentUseCase,
+} from "../../domain/IUseCases/IInstructorUseCases/IAssessmentUseCase";
+import { IStudentAssessmentsUseCase } from "../../domain/IUseCases/IStudentUseCases/IExamUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
 
-  checkByNameUseCase:(dependencies: IDependencies)=> ICheckByNameUseCase;
-  checkByEmailUseCase:(dependencies: IDependencies)=> ICheckByEmailUseCase;
-  createUserUseCase:(dependencies: IDependencies)=> ICreateUserUseCase;
-  loginUseCase:(dependencies: IDependencies)=> ILoginUseCase;
-  getUserDetailsUseCase:(dependencies: IDependencies)=> IGetUserDetailsUseCase;
-  googleAuthUseCase:(dependencies: IDependencies)=> IGoogleAuthUseCase;
+  checkByNameUseCase: (dependencies: IDependencies) => ICheckByNameUseCase;
+  checkByEmailUseCase: (dependencies: IDependencies) => ICheckByEmailUseCase;
+  createUserUseCase: (dependencies: IDependencies) => ICreateUserUseCase;
+  loginUseCase: (dependencies: IDependencies) => ILoginUseCase;
+  getUserDetailsUseCase: (
+    dependencies: IDependencies
+  ) => IGetUserDetailsUseCase;
+  googleAuthUseCase: (dependencies: IDependencies) => IGoogleAuthUseCase;
 
-  verifyOtpUseCase:(dependencies: IDependencies)=> IVerifyOtpUseCase;
-  otpMatchCheckingUseCase:(dependencies: IDependencies)=> IOtpMatchCheckingUseCase;
-  verifyOtpTrueUseCase:(dependencies: IDependencies)=> IVerifyOtpTrueUseCase;
+  verifyOtpUseCase: (dependencies: IDependencies) => IVerifyOtpUseCase;
+  otpMatchCheckingUseCase: (
+    dependencies: IDependencies
+  ) => IOtpMatchCheckingUseCase;
+  verifyOtpTrueUseCase: (dependencies: IDependencies) => IVerifyOtpTrueUseCase;
 
-  allCoursesUseCase:(dependencies:IDependencies)=>allCoursesUseCase
-  getTotalCount :(dependencies:IDependencies)=>IGetTotalCount
-  courseDetailsUseCase:(dependencies:IDependencies)=>ICourseDetailsUseCase
-  similarCourseUseCase:(dependencies:IDependencies)=>ISimilarCourseUseCase
-  
-  profileEditUseCase: (dependencies: IDependencies)=>IProfileEditUseCase;
-  changePasswordUseCase:(dependencies: IDependencies)=> IChangePasswordUseCase;
-  uploadPhotoUseCase:(dependencies: IDependencies)=> IUploadPhotoUseCase;
-  switchUserRoleUseCase:(dependencies:IDependencies)=>ISwitchUserRoleUseCase
+  allCoursesUseCase: (dependencies: IDependencies) => allCoursesUseCase;
+  getTotalCount: (dependencies: IDependencies) => IGetTotalCount;
+  courseDetailsUseCase: (dependencies: IDependencies) => ICourseDetailsUseCase;
+  similarCourseUseCase: (dependencies: IDependencies) => ISimilarCourseUseCase;
+
+  profileEditUseCase: (dependencies: IDependencies) => IProfileEditUseCase;
+  changePasswordUseCase: (
+    dependencies: IDependencies
+  ) => IChangePasswordUseCase;
+  uploadPhotoUseCase: (dependencies: IDependencies) => IUploadPhotoUseCase;
+  switchUserRoleUseCase: (
+    dependencies: IDependencies
+  ) => ISwitchUserRoleUseCase;
 
   // Admin Use Cases
-  getStudentsListUseCase:(dependencies: IDependencies)=> IGetStudentsListUseCase;
-  blockUnblockUserUseCase:(dependencies: IDependencies)=> IBlock_UnBlockUserUseCase;
-  userDetailsUseCase:(dependency:IDependencies)=>IUserDetailsUseCase
-  transactionHistoryUseCase:(dependency:IDependencies)=>ITransactionHistoryUseCase 
-  
-  addCategoryUseCase:(dependencies: IDependencies)=> IAddCategoryUseCase;
-  getCategoryListUseCase: (dependencies: IDependencies)=>IGetCategoryListUseCase;
-  blockUnblockCategoryUseCase:(dependencies: IDependencies)=> IBlock_UnblockCategoryUseCase;
-  categoryEditUseCase:(dependencies: IDependencies)=> ICategoryEditUseCase;
+  getStudentsListUseCase: (
+    dependencies: IDependencies
+  ) => IGetStudentsListUseCase;
+  blockUnblockUserUseCase: (
+    dependencies: IDependencies
+  ) => IBlock_UnBlockUserUseCase;
+  userDetailsUseCase: (dependency: IDependencies) => IUserDetailsUseCase;
+  transactionHistoryUseCase: (
+    dependency: IDependencies
+  ) => ITransactionHistoryUseCase;
 
-  getInstructorApplicationUseCase:(dependencies: IDependencies)=> IGetInstructorApplicationUseCase;
-  updateInstructorStatusUseCase: (dependencies: IDependencies)=>IUpdateInstructorStatusUseCase;
+  addCategoryUseCase: (dependencies: IDependencies) => IAddCategoryUseCase;
+  getCategoryListUseCase: (
+    dependencies: IDependencies
+  ) => IGetCategoryListUseCase;
+  blockUnblockCategoryUseCase: (
+    dependencies: IDependencies
+  ) => IBlock_UnblockCategoryUseCase;
+  categoryEditUseCase: (dependencies: IDependencies) => ICategoryEditUseCase;
 
-  dashboardUseCase:(dependencies: IDependencies)=>IDashboardUseCase
+  getInstructorApplicationUseCase: (
+    dependencies: IDependencies
+  ) => IGetInstructorApplicationUseCase;
+  updateInstructorStatusUseCase: (
+    dependencies: IDependencies
+  ) => IUpdateInstructorStatusUseCase;
+
+  dashboardUseCase: (dependencies: IDependencies) => IDashboardUseCase;
 
   // Instructor Use Cases
-  applyInstructorUseCase: (dependencies: IDependencies)=>IApplyInstructorUseCase;
-  listInstructorCourseUseCase : (dependencies:IDependencies)=>IListInstructorCourseUseCase
+  applyInstructorUseCase: (
+    dependencies: IDependencies
+  ) => IApplyInstructorUseCase;
+  listInstructorCourseUseCase: (
+    dependencies: IDependencies
+  ) => IListInstructorCourseUseCase;
 
-  createCourseUseCase : (dependencies:IDependencies)=>ICreateCourseUseCase
-  allCategoriesUseCase : (dependencies:IDependencies)=>IAllCategoriesUseCase
-  editCourseUseCase : (dependencies:IDependencies)=>IEditCourseUseCase
-  blockCourseUseCase : (dependencies:IDependencies)=>IBlockCourseUseCase
+  createCourseUseCase: (dependencies: IDependencies) => ICreateCourseUseCase;
+  allCategoriesUseCase: (dependencies: IDependencies) => IAllCategoriesUseCase;
+  editCourseUseCase: (dependencies: IDependencies) => IEditCourseUseCase;
+  blockCourseUseCase: (dependencies: IDependencies) => IBlockCourseUseCase;
 
-  instructorDashboardUseCase:(dependency:IDependencies)=>IInstructorDashboardUseCase
+  instructorDashboardUseCase: (
+    dependency: IDependencies
+  ) => IInstructorDashboardUseCase;
 
-    assessmentCoursesUseCase : (dependencies:IDependencies)=>IAssessmentCoursesUseCase
-    createAssessmentsUseCase : (dependencies:IDependencies)=>ICreateAssessmentsUseCase
-
-
+  assessmentCoursesUseCase: (
+    dependencies: IDependencies
+  ) => IAssessmentCoursesUseCase;
+  createAssessmentsUseCase: (
+    dependencies: IDependencies
+  ) => ICreateAssessmentsUseCase;
+  getAssessmentUseCase: (dependencies: IDependencies) => IGetAssessmentUseCase;
+  updateAssessmentUseCase: (
+    dependencies: IDependencies
+  ) => IUpdateAssessmentUseCase;
 
   // Student Use Case
-  coursePaymentUseCase :(dependency:IDependencies)=>ICoursePaymentUseCase
-  enrolCourseUseCases :(dependency:IDependencies)=>IEnrolCourseUseCases
-  studentCoursesUseCase :(dependency:IDependencies)=>IStudentCoursesUseCase
-  watchCourseUseCase:(dependency:IDependencies)=>IWatchCourseUseCase
-  alreadyEnrolledUseCase:(dependency:IDependencies)=>IAlreadyEnrolledUseCase
+  coursePaymentUseCase: (dependency: IDependencies) => ICoursePaymentUseCase;
+  enrolCourseUseCases: (dependency: IDependencies) => IEnrolCourseUseCases;
+  studentCoursesUseCase: (dependency: IDependencies) => IStudentCoursesUseCase;
+  watchCourseUseCase: (dependency: IDependencies) => IWatchCourseUseCase;
+  alreadyEnrolledUseCase: (
+    dependency: IDependencies
+  ) => IAlreadyEnrolledUseCase;
 
-  initializeProgressUseCase:(dependency:IDependencies)=>IInitializeProgressUseCase
-  getProgressUseCase:(dependency:IDependencies)=>IGetProgressUseCase
-  updateProgressUseCase:(dependency:IDependencies)=>IUpdateProgressUseCase
-  
-  studentDashboardUseCase:(dependency:IDependencies)=>IStudentDashboardUseCase
-  addReviewUseCase:(dependency:IDependencies)=>IAddReviewUseCase
-  getReviewUseCase:(dependency:IDependencies)=>IGetReviewUseCase
-  averageReviewUseCase:(dependency:IDependencies)=>IAverageReviewUseCase
+  initializeProgressUseCase: (
+    dependency: IDependencies
+  ) => IInitializeProgressUseCase;
+  getProgressUseCase: (dependency: IDependencies) => IGetProgressUseCase;
+  updateProgressUseCase: (dependency: IDependencies) => IUpdateProgressUseCase;
 
-  createChatUseCase:(dependency:IDependencies)=>ICreateChatUseCase
-  addMemberUseCase:(dependency:IDependencies)=>IAddMemberUseCase
-  getUserChatsUseCase:(dependency:IDependencies)=>IGetUserChatsUseCase
-  getChatMessagesUseCase:(dependency:IDependencies)=>IGetChatMessagesUseCase
-  sendMessagesUseCase:(dependency:IDependencies)=>ISendMessagesUseCase
+  studentDashboardUseCase: (
+    dependency: IDependencies
+  ) => IStudentDashboardUseCase;
+  addReviewUseCase: (dependency: IDependencies) => IAddReviewUseCase;
+  getReviewUseCase: (dependency: IDependencies) => IGetReviewUseCase;
+  averageReviewUseCase: (dependency: IDependencies) => IAverageReviewUseCase;
 
+  createChatUseCase: (dependency: IDependencies) => ICreateChatUseCase;
+  addMemberUseCase: (dependency: IDependencies) => IAddMemberUseCase;
+  getUserChatsUseCase: (dependency: IDependencies) => IGetUserChatsUseCase;
+  getChatMessagesUseCase: (
+    dependency: IDependencies
+  ) => IGetChatMessagesUseCase;
+  sendMessagesUseCase: (dependency: IDependencies) => ISendMessagesUseCase;
 
+  studentAssessmentsUseCase: (
+    dependencies: IDependencies
+  ) => IStudentAssessmentsUseCase;
 }
-

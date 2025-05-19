@@ -87,7 +87,7 @@ import {
   IGetAssessmentUseCase,
   IUpdateAssessmentUseCase,
 } from "../../domain/IUseCases/IInstructorUseCases/IAssessmentUseCase";
-import { IStudentAssessmentsUseCase } from "../../domain/IUseCases/IStudentUseCases/IExamUseCase";
+import { ICertificateUseCase, IGetQuestionsUseCase, IStudentAssessmentsUseCase, ISubmitAssessmentUseCase } from "../../domain/IUseCases/IStudentUseCases/IExamUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -212,4 +212,10 @@ export interface IUseCases {
   studentAssessmentsUseCase: (
     dependencies: IDependencies
   ) => IStudentAssessmentsUseCase;
+
+    getQuestionsUseCase: (dependency: IDependencies) => IGetQuestionsUseCase;
+    submitAssessmentUseCase: (dependency: IDependencies) =>ISubmitAssessmentUseCase
+    certificateUseCase: (dependency: IDependencies) =>ICertificateUseCase
+
+
 }

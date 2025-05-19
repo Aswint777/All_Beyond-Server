@@ -22,6 +22,9 @@ export const studentRoutes = (dependencies: IDependencies) => {
     getChatMessages,
     sendMessages,
     studentAssessments,
+    getQuestions,
+    submitAssessment,
+    courseCertificate,
   } = studentController(dependencies);
 
   const router = Router();
@@ -50,21 +53,36 @@ export const studentRoutes = (dependencies: IDependencies) => {
     .route("/dashboard")
     .get(jwtMiddleware, verifyStudent, studentDashboard);
 
-    router
+  router
     .route("/addReviews/:courseId")
     .post(jwtMiddleware, verifyStudent, addReview);
-    router
-    .route("/reviews/:courseId")
-    .get( getReviews);
+  router.route("/reviews/:courseId").get(getReviews);
   // router.get("/stream/:videoKey", streamVideo);
 
-  router.route("/chatList").get(jwtMiddleware,verifyUser,getUserChats)
-  router.route("/messages/:chatId").get(jwtMiddleware,verifyUser,getChatMessages)
-  router.route("/messages/:chatId").post(jwtMiddleware,verifyUser,sendMessages)
+  router.route("/chatList").get(jwtMiddleware, verifyUser, getUserChats);
+  router
+    .route("/messages/:chatId")
+    .get(jwtMiddleware, verifyUser, getChatMessages);
+  router
+    .route("/messages/:chatId")
+    .post(jwtMiddleware, verifyUser, sendMessages);
 
-  router.route("/studentAssessments").get(jwtMiddleware,verifyUser,studentAssessments)
+  router
+    .route("/studentAssessments")
+    .get(jwtMiddleware, verifyUser, studentAssessments);
 
+     router
+    .route("/getQuestions/:assessmentId")
+    .get(jwtMiddleware, verifyUser, getQuestions);
 
+         router
+    .route("/submit-assessment/:assessmentId")
+    .post(jwtMiddleware, verifyUser, submitAssessment);
+
+    
+    router
+    .route("/Download_Certificate/:assessmentId")
+    .get(jwtMiddleware, verifyUser, courseCertificate);
 
   return router;
 };

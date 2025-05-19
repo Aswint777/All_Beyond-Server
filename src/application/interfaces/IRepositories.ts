@@ -31,9 +31,12 @@ import {
   UserChatList,
 } from "../../domain/entities/chatEntity";
 import {
+  Answers,
   assessmentCourses,
   AssessmentEntity,
   AssessmentResponse,
+  CertificateDetails,
+  ExamAssessment,
   QuestionEntity,
 } from "../../domain/entities/assessmentEntity";
 
@@ -217,4 +220,13 @@ export interface IRepositories {
     limit: number,
     search: string
   ) => Promise<AssessmentResponse | null>;
+
+    getQuestionsRepository: (assessmentId:string) => Promise<ExamAssessment | null>;
+
+    submitAssessmentRepository:(assessmentId: string,userId:string, answers:{answers: Answers[]}
+    )=>Promise<ExamAssessment | null>;
+
+      certificateRepository:(assessmentId: string,userId:string)=>Promise<CertificateDetails | null>;
+
+
 }

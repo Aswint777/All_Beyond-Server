@@ -1,3 +1,4 @@
+import { Answers } from "../../../domain/entities/assessmentEntity";
 import {
   AddMemberData,
   ChatGroup,
@@ -102,6 +103,22 @@ export const studentUseCase = (dependencies: IDependencies) => {
     studentAssessmentsUseCase: () => ({
       execute: (userId: string, page: number, limit: number, search: string) =>
         examUseCase.studentAssessmentsUseCase(userId, page, limit, search),
+    }),
+
+    getQuestionsUseCase: () => ({
+      execute: (assessmentId: string) =>
+        examUseCase.getQuestionsUseCase(assessmentId),
+    }),
+
+    submitAssessmentUseCase: () => ({
+      execute: (assessmentId: string,userId:string,    answers:{answers: Answers[]}
+      ) =>
+        examUseCase.submitAssessmentUseCase(assessmentId,userId,answers),
+    }),
+
+        certificateUseCase: () => ({
+      execute: (assessmentId: string,userId:string,) =>
+        examUseCase.certificateUseCase(assessmentId,userId),
     }),
   };
 };

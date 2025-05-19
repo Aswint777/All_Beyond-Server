@@ -1,4 +1,5 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
+import { Answers } from "../../../domain/entities/assessmentEntity";
 import {
   AddMemberData,
   ChatGroup,
@@ -80,5 +81,24 @@ export const studentRepositories = (dependencies: IDependencies) => {
       search: string
     ) =>
       examRepository.studentAssessmentsRepository(userId, page, limit, search),
+
+    getQuestionsRepository: (assessmentId: string) =>
+      examRepository.getQuestionsRepository(assessmentId),
+
+    submitAssessmentRepository: (
+      assessmentId: string,
+      userId: string,
+      answers:{answers: Answers[]}
+    ) =>
+      examRepository.submitAssessmentRepository(assessmentId, userId, answers),
+
+          certificateRepository: (
+      assessmentId: string,
+      userId: string,
+    ) =>
+      examRepository.certificateRepository(assessmentId, userId),
+
+      
   };
+
 };

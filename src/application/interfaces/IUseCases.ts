@@ -55,6 +55,7 @@ import {
   allCoursesUseCase,
   ICourseDetailsUseCase,
   IGetTotalCount,
+  ILatestCoursesUseCase,
   ISimilarCourseUseCase,
 } from "../../domain/IUseCases/IAuthUseCases/ICourseUseCase";
 import {
@@ -120,6 +121,9 @@ export interface IUseCases {
   switchUserRoleUseCase: (
     dependencies: IDependencies
   ) => ISwitchUserRoleUseCase;
+
+    latestCoursesUseCase: (dependencies: IDependencies) => ILatestCoursesUseCase;
+
 
   // Admin Use Cases
   getStudentsListUseCase: (

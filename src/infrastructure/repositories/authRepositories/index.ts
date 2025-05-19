@@ -50,5 +50,7 @@ export const AuthRepositories = (dependencies: IDependencies) => {
 
     courseDetailsRepo:(courseId:string)=>courseRepositoryInstance.courseDetailsRepo(courseId),
     similarCourseRepo:(courseId:string)=>courseRepositoryInstance.similarCourseRepo(courseId),
+        latestCoursesRepo:()=>courseRepositoryInstance.latestCoursesRepo(),
+
   };
 };

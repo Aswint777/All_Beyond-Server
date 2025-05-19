@@ -75,6 +75,7 @@ export interface IRepositories {
 
   courseDetailsRepo: (courseId: string) => Promise<CourseEntity | null>;
   similarCourseRepo: (courseId: string) => Promise<CourseEntity[] | null>;
+  latestCoursesRepo: () => Promise<CourseEntity[] | null>;
 
   // => Admin Repository
 

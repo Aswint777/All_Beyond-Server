@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { constant } from "../../../_lib/common/constant";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { IRepositories } from "../../../application/interfaces/IRepositories";
-import { DashboardData, LeanEnrollment, StudentDashboardData } from "../../../domain/entities/enrolmentEntity";
+import { DashboardData, LeanEnrollment, StudentDashboardData, StudentEnrollment } from "../../../domain/entities/enrolmentEntity";
 import { AverageReview, ReviewData } from "../../../domain/entities/overviewEntity";
-import { Course, Enrolment } from "../../database/model";
+import { Assessment, Course, Enrolment } from "../../database/model";
 import { Review } from "../../database/model/reviewModel";
 
 export class OverViewRepository
@@ -15,62 +15,93 @@ export class OverViewRepository
     this.dependencies = dependencies;
   }
   async studentDashboardRepository(userId: string): Promise<StudentDashboardData | null> {
-    try {
-        console.log("studentDashboardRepository called for userId:", userId);
-  
-        // Fetch enrollments with lean()
-        const enrollmentsRaw = await Enrolment.find({ userId })
-          .populate({
-            path: "courseId",
-            select: "courseTitle",
-            model: Course,
-          })
-          .sort({ createdAt: -1 }) // Most recent first
-          .lean()
-          .exec();
-  
-        // Cast to LeanEnrollment[] safely
-        const enrollments = enrollmentsRaw as unknown as LeanEnrollment[];
-  
-        // If no enrollments, return empty data
-        if (!enrollments || enrollments.length === 0) {
-          return {
-            totalCoursesEnrolled: 0,
-            enrolledCourses: [],
-            recentEnrollments: [],
-          };
-        }
-  
-        // Aggregate data
-        const totalCoursesEnrolled = enrollments.length;
-  
-        // Map enrolled courses for bar chart
-        const enrolledCourses = enrollments
-          .filter((enrollment) => enrollment.courseId !== null && enrollment.courseId !== undefined) // Ensure courseId exists
-          .map((enrollment) => ({
-            courseName: enrollment.courseId!.courseTitle,
-            count: 1, // One enrollment per course
-          }));
-  
-        // Map recent enrollments (up to 5) for table
-        const recentEnrollments = enrollments
-          .slice(0, 5)
-          .filter((enrollment) => enrollment.courseId !== null && enrollment.courseId !== undefined) // Ensure courseId exists
-          .map((enrollment) => ({
-            courseName: enrollment.courseId!.courseTitle,
-            enrollmentDate: enrollment.createdAt,
-            courseId: enrollment.courseId!._id,
-          }));
-  
-        return {
-          totalCoursesEnrolled,
-          enrolledCourses,
-          recentEnrollments,
-        };
-      } catch (error:constant) {
-        console.error("Error in studentDashboardRepository:", error);
-        throw new Error(error.message || "An unexpected error occurred");    
-      }
+ try {
+    console.log("studentDashboardRepository called for userId:", userId);
+
+    // Validate userId
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new Error("Invalid user ID");
+    }
+
+    // Fetch enrollments with course details
+    const enrollmentsRaw = await Enrolment.find({ userId: new Types.ObjectId(userId) })
+      .populate({
+        path: "courseId",
+        select: "courseTitle price",
+        model: Course,
+      })
+      .sort({ createdAt: -1 }) // Most recent first
+      .lean()
+      .exec();
+
+    const enrollments = enrollmentsRaw as unknown as LeanEnrollment[];
+
+    // If no enrollments, return empty data
+    if (!enrollments || enrollments.length === 0) {
+      return {
+        totalCoursesEnrolled: 0,
+        totalPaidCourses: 0,
+        totalFreeCourses: 0,
+        completedAssessments: 0,
+        pendingAssessments: 0,
+        recentEnrollments: [],
+      };
+    }
+
+    // Compute total courses enrolled
+    const totalCoursesEnrolled = enrollments.length;
+
+    // Compute paid and free courses
+    const totalPaidCourses = enrollments.filter(
+      (enrollment) =>
+        enrollment.courseId &&
+        typeof enrollment.courseId === "object" &&
+        "price" in enrollment.courseId &&
+        (enrollment.courseId as any).price > 0
+    ).length;
+
+    const totalFreeCourses = enrollments.filter(
+      (enrollment) =>
+        enrollment.courseId &&
+        typeof enrollment.courseId === "object" &&
+        "price" in enrollment.courseId &&
+        (enrollment.courseId as any).price === 0
+    ).length;
+
+    // Compute completed and pending assessments using the 'passed' field in Enrolment
+    const completedAssessments = enrollments.filter(
+      (enrollment) => enrollment.passed === true
+    ).length;
+
+    const pendingAssessments = enrollments.filter(
+      (enrollment) => enrollment.passed === false
+    ).length;
+
+    // Map recent enrollments (up to 5)
+    const recentEnrollments: StudentEnrollment[] = enrollments
+      .slice(0, 5)
+      .filter((enrollment) => enrollment.courseId !== null && enrollment.courseId !== undefined)
+      .map((enrollment) => ({
+        courseName: (enrollment.courseId as any).courseTitle,
+        enrollmentDate: enrollment.createdAt.toString(),
+        courseId: (enrollment.courseId as any)._id.toString(),
+      }));
+
+      console.log( totalCoursesEnrolled,totalPaidCourses,totalFreeCourses,completedAssessments,pendingAssessments,recentEnrollments,);
+      
+
+    return {
+      totalCoursesEnrolled,
+      totalPaidCourses,
+      totalFreeCourses,
+      completedAssessments,
+      pendingAssessments,
+      recentEnrollments,
+    };
+  } catch (error: any) {
+    console.error("Error in studentDashboardRepository:", error);
+    throw new Error(error.message || "An unexpected error occurred");
+  }
     }
 
 

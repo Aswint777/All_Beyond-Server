@@ -96,9 +96,9 @@ export class CourseController {
         return;
       }
        console.log(course,'////////////////////////////////////////////////');
-       
+      //  
       const reviewStatus = await averageReviewUseCase(this.dependencies).execute(courseId)
-      console.log(reviewStatus,"reviewStatus....................................................................................................");
+      // console.log(reviewStatus,"reviewStatus....................................................................................................");
        
       // Process only if `thumbnailUrl` exists
       if (course.thumbnailUrl) {
@@ -169,7 +169,7 @@ export class CourseController {
           return course;
         })
       );
-      // console.log("samplw data :", courses);
+      console.log("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddsamplw data :", courses);
 
       res.status(200).json({
         success: true,
@@ -197,4 +197,47 @@ export class CourseController {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+ async latestCourses(req: Request, res: Response): Promise<void> {
+    try {
+      const { latestCoursesUseCase } = this.dependencies.useCases;
+      
+      let courses = await latestCoursesUseCase(
+        this.dependencies
+      ).execute();
+       if (!courses) {
+        res.status(404).json({
+          success: false,
+          message: "No courses found",
+        });
+        return;
+      }
+
+      
+
+      // ✅ Generate Signed URL for Thumbnails
+      courses = await Promise.all(
+        courses.map(async (course) => {
+          if (course.thumbnailUrl) {
+            const fileKey = course.thumbnailUrl.split(
+              "/course_assets/thumbnails/"
+            )[1]; // Extract filename
+            course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
+          }
+          return course;
+        })
+      );
+      console.log(courses,'kkkk');
+      
+      res.status(httpStatusCode.CREATED).json({
+        success: true,
+        message: "success",
+        data: courses,
+      });
+    } catch (error: constant) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+
 }

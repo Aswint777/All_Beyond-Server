@@ -1,81 +1,83 @@
 import { model, Schema, Types } from "mongoose";
 import { CourseEntity } from "../../../domain/entities/courseEntity";
 
-const courseSchema = new Schema({
-  courseTitle: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  courseDescription: {
-    type: String,
-  },
-  categoryName: {
-    type: Types.ObjectId,
-    ref: "category",
-  },
-  instructor: {
-    type: String,
-  },
-  aboutInstructor: {
-    type: String,
-  },
-  thumbnailUrl: {
-    type: String,
-  },
-  content: [
-    {
-      moduleTitle: {
-        type: String,
-        required: true,
-      },
-      lessons: [
-        {
-          _id: {
-            type: Types.ObjectId,
-            auto: true, // Auto-generate ObjectId
-          },
-          lessonTitle: {
-            type: String,
-            required: true,
-          },
-          lessonDescription: {
-            type: String,
-          },
-          video: {
-            type: String,
-          },
-        },
-      ],
+const courseSchema = new Schema(
+  {
+    courseTitle: {
+      type: String,
+      required: true,
+      unique: true,
     },
-  ],
-  pricingOption: {
-    type: String,
-    enum: ["Premium", "Free"],
+    courseDescription: {
+      type: String,
+    },
+    categoryName: {
+      type: Types.ObjectId,
+      ref: "category",
+    },
+    instructor: {
+      type: String,
+    },
+    aboutInstructor: {
+      type: String,
+    },
+    thumbnailUrl: {
+      type: String,
+    },
+    content: [
+      {
+        moduleTitle: {
+          type: String,
+          required: true,
+        },
+        lessons: [
+          {
+            _id: {
+              type: Types.ObjectId,
+              auto: true, // Auto-generate ObjectId
+            },
+            lessonTitle: {
+              type: String,
+              required: true,
+            },
+            lessonDescription: {
+              type: String,
+            },
+            video: {
+              type: String,
+            },
+          },
+        ],
+      },
+    ],
+    pricingOption: {
+      type: String,
+      enum: ["Premium", "Free"],
+    },
+    price: {
+      type: Number,
+    },
+    accountNumber: {
+      type: Number,
+    },
+    additionalEmail: {
+      type: String,
+    },
+    additionalContactNumber: {
+      type: String,
+    },
+    user: {
+      type: Types.ObjectId,
+      ref: "users",
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
   },
-  price: {
-    type: Number,
-  },
-  accountNumber: {
-    type: Number,
-  },
-  additionalEmail: {
-    type: String,
-  },
-  additionalContactNumber: {
-    type: String,
-  },
-  user: {
-    type: Types.ObjectId,
-    ref: "users",
-  },
-  isBlocked: {
-    type: Boolean,
-    default: false,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 export const Course = model<CourseEntity>("Course", courseSchema);
-
-
-

@@ -12,10 +12,10 @@ export class UserUseCase {
   // ✅ Check if username exists
   async checkByNameUseCase(name: string): Promise<boolean | null> {
     try {
-      console.log("checkByNameUseCase   /////");
-      console.log(this.dependencies, "");
+      // console.log("checkByNameUseCase   /////");
+      // console.log(this.dependencies, "");
       const result = await this.dependencies.repositories.checkByName(name);
-      console.log(result, "result");
+      // console.log(result, "result");
 
       if (!result) {
         return false;
@@ -41,7 +41,7 @@ export class UserUseCase {
   // // ✅ Create a new user
   async createUserUseCase(data: createUserEntity): Promise<UserEntity | null> {
     try {
-      console.log(data, "createUserUseCase");
+      // console.log(data, "createUserUseCase");
 
       return await this.dependencies.repositories.createUser(data);
     } catch (error: any) {
@@ -62,12 +62,12 @@ export class UserUseCase {
       const user = await checkByEmail(email);
       if (!user?.password) return null;
 
-      console.log("ℹ️ User found. Verifying password...");
+      // console.log("ℹ️ User found. Verifying password...");
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return null;
       }
-      console.log("bingo");
+      // console.log("bingo");
       // ✅ Check if user is not blocked
       return await checkNotBlocked(email);
     } catch (error: any) {

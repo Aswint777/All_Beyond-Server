@@ -75,7 +75,7 @@ export class UserRepository
   async getUserDetails(_id: string): Promise<UserEntity | null> {
     try {
       const d =  await User.findOne({ _id });
-      console.log(' D   :',d);
+      // console.log(' D   :',d);
       
       if(!d) return null
       return d

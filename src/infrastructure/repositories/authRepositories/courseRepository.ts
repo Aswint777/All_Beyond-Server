@@ -104,4 +104,18 @@ export class CourseRepository
       throw new Error("An unexpected error occurred");
     }
   }
+
+    async latestCoursesRepo():Promise<CourseEntity[]|null>{
+    try {
+        console.log('looooooooooooooooooooooooooooooooooooooooooooooooooooooooo');
+
+      const latest = await Course.find().sort({createdAt:1}).limit(6);
+      console.log(latest,'vvvvvvv');
+      
+      if(!latest) return null
+       return latest
+    } catch (error:constant) {
+      throw new Error("An unexpected error occurred");
+    }
+  }
 }

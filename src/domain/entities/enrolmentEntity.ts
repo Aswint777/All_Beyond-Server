@@ -131,21 +131,39 @@ interface ModuleDocument {
     courseEnrollments: CourseEnrollment[];
   }
 
-  export interface StudentDashboardData {
-    totalCoursesEnrolled: number;
-    enrolledCourses: { courseName: string; count: number }[];
-    recentEnrollments: StudentEnrollment[];
-  }
+  // export interface StudentDashboardData {
+  //   totalCoursesEnrolled: number;
+  //   enrolledCourses: { courseName: string; count: number }[];
+  //   recentEnrollments: StudentEnrollment[];
+  // }
   
-  export interface StudentEnrollment {
-    courseName: string;
-    enrollmentDate: string;
-    courseId: string;
-  }
+  // export interface StudentEnrollment {
+  //   courseName: string;
+  //   enrollmentDate: string;
+  //   courseId: string;
+  // }
   
   export interface LeanEnrollment {
     _id: string;
     courseId: { _id: string; courseTitle: string } | null; 
     userId: string;
+    passed?:boolean
     createdAt: string; 
   }
+
+
+
+  export interface StudentEnrollment {
+  courseName: string;
+  enrollmentDate: string;
+  courseId: string;
+}
+
+export interface StudentDashboardData {
+  totalCoursesEnrolled: number;
+  totalPaidCourses: number;
+  totalFreeCourses: number;
+  completedAssessments: number;
+  pendingAssessments: number;
+  recentEnrollments: StudentEnrollment[];
+}

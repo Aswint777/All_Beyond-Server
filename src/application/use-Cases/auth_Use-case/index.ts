@@ -10,7 +10,7 @@ export const authUseCases = (dependencies: IDependencies) => {
   const userUseCaseInstance = new UserUseCase(dependencies);
   const otpUseCaseInstance = new OtpUseCase(dependencies);
   const profileUseCaseInstance = new ProfileUseCase(dependencies);
-  const courseUseCase = new CourseUseCase(dependencies)
+  const courseUseCase = new CourseUseCase(dependencies);
 
   return {
     // userUseCaseInstance
@@ -76,27 +76,34 @@ export const authUseCases = (dependencies: IDependencies) => {
         profileUseCaseInstance.uploadPhotoUseCase(userId, profilePhoto),
     }),
 
-    switchUserRoleUseCase:()=>({
-      execute:(id:string)=>profileUseCaseInstance.switchUserRoleUseCase(id)
+    switchUserRoleUseCase: () => ({
+      execute: (id: string) => profileUseCaseInstance.switchUserRoleUseCase(id),
     }),
 
-    // course 
+    // course
 
-    allCoursesUseCase:()=>({
-      execute:(page:number,limit:number, search?:string, category?:string)=>courseUseCase.allCoursesUseCase(page,limit, search, category)
+    allCoursesUseCase: () => ({
+      execute: (
+        page: number,
+        limit: number,
+        search?: string,
+        category?: string
+      ) => courseUseCase.allCoursesUseCase(page, limit, search, category),
     }),
-    courseDetailsUseCase:()=>({
-      execute:(courseId:string)=>courseUseCase.courseDetailsUseCase(courseId)
+    courseDetailsUseCase: () => ({
+      execute: (courseId: string) =>
+        courseUseCase.courseDetailsUseCase(courseId),
     }),
-    similarCourseUseCase:()=>({
-      execute:(courseId:string)=>courseUseCase.similarCourseUseCase(courseId)
-
+    similarCourseUseCase: () => ({
+      execute: (courseId: string) =>
+        courseUseCase.similarCourseUseCase(courseId),
     }),
-    getTotalCount:()=>({
-      execute:()=>courseUseCase.getTotalCount()
+    getTotalCount: () => ({
+      execute: () => courseUseCase.getTotalCount(),
+    }),
 
-    })
-
-
+    latestCoursesUseCase: () => ({
+      execute: () => courseUseCase.latestCoursesUseCase(),
+    }),
   };
 };

@@ -17,3 +17,9 @@ export interface ISimilarCourseUseCase{
     execute(courseId:string):Promise<CourseEntity[]|null>
 
 }
+
+
+export interface ILatestCoursesUseCase{
+    execute():Promise<CourseEntity[]|null>
+
+}

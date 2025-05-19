@@ -12,9 +12,9 @@ export class CourseUseCase {
   async allCoursesUseCase(page: number, limit: number, search?:string, category?:string): Promise<CourseEntity[] | null> {
     const { allCoursesRepo } = this.dependencies.repositories;
     try {
-      console.log(`Fetching courses for page ${page}, limit ${limit}`);
+      // console.log(`Fetching courses for page ${page}, limit ${limit}`);
       const list = await allCoursesRepo(page, limit, search, category);
-      console.log("Courses fetched:", list);
+      // console.log("Courses fetched:", list);
       if (!list) return null;
       return list;
     } catch (error: any) {
@@ -54,7 +54,7 @@ export class CourseUseCase {
         try {
             
             const details = await courseDetailsRepo(courseId)
-            console.log(details,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssss');
+            // console.log(details,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssss');
             
             if(!details) return null
             return details
@@ -69,6 +69,19 @@ export class CourseUseCase {
       const {similarCourseRepo} = this.dependencies.repositories
       try {
         const courses = await similarCourseRepo(courseId)
+        if(!courses) return null
+        return courses
+      } catch (error:constant) {
+        throw new Error("An unexpected error is occurred");
+      }
+    }
+
+        async latestCoursesUseCase():Promise<CourseEntity[]|null>{
+      const {latestCoursesRepo} = this.dependencies.repositories
+      try {
+            console.log('loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo');
+        
+        const courses = await latestCoursesRepo()
         if(!courses) return null
         return courses
       } catch (error:constant) {

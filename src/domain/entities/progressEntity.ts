@@ -14,8 +14,8 @@ export interface ProgressEntity {
     _id: Types.ObjectId;
     lessonTitle: string;
     lessonDescription?: string;
-    video?: string; // For backward compatibility
-    videoUrl?: string; // For frontend
+    video?: string; 
+    videoUrl?: string; 
     thumbnailUrl?: string;
   }
   
@@ -45,33 +45,3 @@ export interface ProgressEntity {
   }
 
   
-  
-
-  // export interface LessonLean {
-  //   _id: Types.ObjectId;
-  //   lessonTitle: string;
-  //   lessonDescription?: string;
-  //   video?: string;
-  //   thumbnailUrl?: string;
-  // }
-  
-  // // Interface for a module (used in CourseLean)
-  // export interface ModuleLean {
-  //   moduleTitle: string;
-  //   lessons: LessonLean[];
-  // }
-  
-  // // Interface for the Course document (lean version)
-  // export interface CourseLean {
-  //   _id: Types.ObjectId;
-  //   courseTitle: string;
-  //   courseDescription?: string;
-  //   instructor?: string;
-  //   aboutInstructor?: string;
-  //   thumbnailUrl?: string;
-  //   pricingOption?: "Premium" | "Free";
-  //   price?: number;
-  //   content: ModuleLean[];
-  //   user?: { username: string };
-  //   isBlocked: boolean;
-  // }

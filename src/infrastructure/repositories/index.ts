@@ -5,7 +5,6 @@ import { InstructorRepositories } from "./instructorRepositories";
 import { studentRepositories } from "./studentRepository";
 
 export const repositories = (dependencies: IDependencies) => {
-  // const authRepos = new AuthRepositories(dependencies);
 
   return {
     ...AuthRepositories(dependencies),

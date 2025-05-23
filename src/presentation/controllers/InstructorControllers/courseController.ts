@@ -9,7 +9,7 @@ import {
   getSignedUrlForS3Videos,
 } from "../../../_boot/getSignedUrl";
 import { CourseEntity } from "../../../domain/entities/courseEntity";
-import { ChatGroup } from "../../../domain/entities/chatEntity";
+import { ChatGroup, ChatGroupInput } from "../../../domain/entities/chatEntity";
 
 interface S3File extends Express.Multer.File {
   location: string; // S3 adds 'location' property with the file URL
@@ -54,7 +54,6 @@ export class CourseController {
         return;
       }
 
-      //  Verify JWT
       const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
       const decoded = jwt.verify(token, secretKey) as {
         _id: string;
@@ -82,7 +81,7 @@ export class CourseController {
         accountNumber,
         email,
         phone,
-        modules, // Expecting modules as an array from FormData
+        modules, 
       } = req.body;
 
       const thumbnail = files.find((file) => file.fieldname === "thumbnail");
@@ -90,7 +89,7 @@ export class CourseController {
         file.fieldname.startsWith("video_")
       );
 
-      // Parse module and lesson data from req.body.modules
+      
       const content = modules.map((module: any, moduleIndex: number) => ({
         moduleTitle: module.title,
         lessons: module.lessons.map((lesson: any, lessonIndex: number) => {
@@ -111,7 +110,7 @@ export class CourseController {
         categoryName: category,
         instructorName,
         aboutInstructor,
-        pricingOption: isPaid, // Match schema field
+        pricingOption: isPaid, 
         price: price ? parseFloat(price) : undefined,
         accountNumber: accountNumber ? parseInt(accountNumber) : undefined,
         additionalEmail: email,
@@ -125,17 +124,22 @@ export class CourseController {
         courseData,
         id
       );
-      if (!savedCourse || !savedCourse._id) {
+      if (!savedCourse || !savedCourse._id ) {
         throw new Error("Failed to create course");
       }
+      if (!savedCourse.courseTitle) {
+      throw new Error("Course title is missing in the saved course");
+    }
 
-      const data: ChatGroup = {
+
+
+      const data: ChatGroupInput = {
         title:savedCourse.courseTitle,
         courseId: savedCourse._id.toString(), 
         adminId: id,
         members: [id],
       };
-      console.log(data,'dddddddddddd');        
+           
       
       const createGroupChat = await createChatUseCase(this.dependencies).execute(data)
 
@@ -246,7 +250,6 @@ export class CourseController {
       const { courseId } = req.params;
       console.log("Fetching course details for:", courseId);
 
-      // ✅ Fetch course details from DB
       let course = await courseDetailsUseCase(this.dependencies).execute(
         courseId
       );
@@ -259,7 +262,6 @@ export class CourseController {
         return;
       }
 
-      // ✅ Generate signed URL for the thumbnail (if available)
       if (course.thumbnailUrl) {
         const thumbnailKey = course.thumbnailUrl.split(
           "/course_assets/thumbnails/"
@@ -267,7 +269,6 @@ export class CourseController {
         course.thumbnailUrl = await getSignedUrlForS3thumbnails(thumbnailKey);
       }
 
-      // ✅ Generate signed URLs for videos (if available)
       if (course.content && Array.isArray(course.content)) {
         for (const module of course.content) {
           if (module.lessons && Array.isArray(module.lessons)) {
@@ -295,7 +296,7 @@ export class CourseController {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
-  //////////////////////////////////////////
+  
   async editCourse(req: Request, res: Response): Promise<void> {
     const { editCourseUseCase } = this.dependencies.useCases;
 
@@ -339,7 +340,7 @@ export class CourseController {
         accountNumber,
         email,
         phone,
-        modules, // Expecting modules as an array from FormData
+        modules, 
       } = req.body;
 
       const thumbnail = files.find((file) => file.fieldname === "thumbnail");
@@ -347,7 +348,6 @@ export class CourseController {
         file.fieldname.startsWith("video_")
       );
 
-      // Parse module and lesson data from req.body.modules
       const content = modules.map((module: any, moduleIndex: number) => ({
         moduleTitle: module.title,
         lessons: module.lessons.map((lesson: any, lessonIndex: number) => {
@@ -357,7 +357,7 @@ export class CourseController {
           return {
             lessonTitle: lesson.title,
             lessonDescription: lesson.lessonDescription,
-            video: video?.location || lesson.video || "", // Use existing URL if no new video
+            video: video?.location || lesson.video || "", 
           };
         }),
       }));

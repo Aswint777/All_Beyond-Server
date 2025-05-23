@@ -12,7 +12,7 @@ import { GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 const stripe = new Stripe(
   process.env.STRIPE_SECRET_KEY || "your-stripe-secret-key",
   {
-    apiVersion: "2025-03-31.basil", // Latest version as of April 2025
+    apiVersion: "2025-03-31.basil",
   }
 );
 
@@ -117,6 +117,8 @@ export class EnrolmentController {
       };
       // Enroll user (for both free and verified premium courses)
       const course = await enrolCourseUseCases(this.dependencies).execute(data);
+      console.log(data,"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+      
       const addMember = await addMemberUseCase(this.dependencies).execute(data)
       if (!course) {
         res.status(httpStatusCode.NOT_ACCEPTABLE).json({

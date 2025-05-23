@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { UserEntity } from "../../../domain/entities/User";
 import { constant } from "../../../_lib/common/constant";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 
 export class ProfileUseCase {
   private dependencies: IDependencies;
@@ -14,15 +15,17 @@ export class ProfileUseCase {
   async profileEditUseCase(data: UserEntity): Promise<UserEntity | null> {
     try {
       const { profileEdit } = this.dependencies.repositories;
-      console.log("Executing editProfileUseCase with data:", data);
       const result = await profileEdit(data);
       if (!result) {
         return null;
       }
       return result;
-    } catch (error: any) {
+    } catch (error: constant) {
       console.error("Error in editProfileUseCase:", error);
-      throw new Error(error?.message || "Error in profile editing.");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "An unexpected error is occurred",
+      };
     }
   }
 
@@ -34,8 +37,6 @@ export class ProfileUseCase {
     confirmPassword: string
   ): Promise<boolean | null> {
     try {
-      console.log("Executing changePasswordUseCase");
-
       if (newPassword !== confirmPassword) {
         return false;
       }
@@ -45,17 +46,18 @@ export class ProfileUseCase {
         return false;
       }
 
-      console.log(user, "User found in changePasswordUseCase");
-
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
         return false;
       }
 
       return true;
-    } catch (error: any) {
+    } catch (error: constant) {
       console.error("Error in changePasswordUseCase:", error);
-      throw new Error(error?.message || "Error in changing password.");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "An unexpected error is occurred",
+      };
     }
   }
 
@@ -65,7 +67,6 @@ export class ProfileUseCase {
     profilePhoto: string
   ): Promise<UserEntity | null> {
     try {
-      console.log(`Executing uploadPhotoUseCase for userId: ${userId}`);
       const result = this.dependencies.repositories.uploadPhoto(
         userId,
         profilePhoto
@@ -74,18 +75,24 @@ export class ProfileUseCase {
         return null;
       }
       return result;
-    } catch (error: any) {
+    } catch (error: constant) {
       console.error("Error in uploadPhotoUseCase:", error);
-      throw new Error(error?.message || "Error in uploading profile photo.");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "An unexpected error is occurred",
+      };
     }
   }
 
-  async switchUserRoleUseCase(id:string):Promise<UserEntity|null>{
+  async switchUserRoleUseCase(id: string): Promise<UserEntity | null> {
     try {
-      const {switchRole} = this.dependencies.repositories
-      return await switchRole(id)
-    } catch (error:constant) {
-      throw new Error(error?.message || "Error in switching Role.");
+      const { switchRole } = this.dependencies.repositories;
+      return await switchRole(id);
+    } catch (error: constant) {
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "An unexpected error is occurred",
+      };
     }
   }
 }

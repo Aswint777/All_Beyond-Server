@@ -40,13 +40,12 @@ export class CourseController {
         return;
       }
 
-      // ✅ Generate Signed URL for Thumbnails
       courses = await Promise.all(
         courses.map(async (course) => {
           if (course.thumbnailUrl) {
             const fileKey = course.thumbnailUrl.split(
               "/course_assets/thumbnails/"
-            )[1]; // Extract filename
+            )[1]; 
             course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
           }
           return course;
@@ -56,7 +55,6 @@ export class CourseController {
       const totalCourses = await getTotalCount(this.dependencies).execute();
 
 
-      // Remove S3 URL generation for now - add it back when properly implemented
       res.status(200).json({
         success: true,
         message: "Courses retrieved successfully",
@@ -83,7 +81,6 @@ export class CourseController {
     try {
       const { courseId } = req.params;
 
-      // ✅ Await the result of the Promise before using .map()
       let course = await courseDetailsUseCase(this.dependencies).execute(
         courseId
       );
@@ -95,12 +92,9 @@ export class CourseController {
         });
         return;
       }
-       console.log(course,'////////////////////////////////////////////////');
-      //  
+      
       const reviewStatus = await averageReviewUseCase(this.dependencies).execute(courseId)
-      // console.log(reviewStatus,"reviewStatus....................................................................................................");
        
-      // Process only if `thumbnailUrl` exists
       if (course.thumbnailUrl) {
         const fileKey = course.thumbnailUrl.split(
           "/course_assets/thumbnails/"
@@ -108,20 +102,19 @@ export class CourseController {
         course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
       }
 
-      // Process only the first video
     if (course.content && Array.isArray(course.content)) {
-      let videoProcessed = false; // Flag to track if we've processed a video
+      let videoProcessed = false; 
       for (const module of course.content) {
         if (module.lessons && Array.isArray(module.lessons)) {
           for (const lesson of module.lessons) {
-            if (lesson.video && !videoProcessed) { // Only process if video exists and not yet processed
+            if (lesson.video && !videoProcessed) { 
               const videoKey = lesson.video.split("/course_assets/videos/")[1];
               lesson.video = await getSignedUrlForS3Videos(videoKey);
-              videoProcessed = true; // Set flag to true after processing the first video
-              break; // Exit the inner loop after processing the first video
+              videoProcessed = true; 
+              break; 
             }
           }
-          if (videoProcessed) break; // Exit the outer loop if we've processed a video
+          if (videoProcessed) break; 
         }
       }
     }
@@ -143,7 +136,6 @@ export class CourseController {
     const { similarCourseUseCase } = this.dependencies.useCases;
     try {
       const { courseId } = req.params;
-      // console.log(courseId, "similar courses ");
       let courses = await similarCourseUseCase(this.dependencies).execute(
         courseId
       );
@@ -157,19 +149,17 @@ export class CourseController {
 
       
 
-      // ✅ Generate Signed URL for Thumbnails
       courses = await Promise.all(
         courses.map(async (course) => {
           if (course.thumbnailUrl) {
             const fileKey = course.thumbnailUrl.split(
               "/course_assets/thumbnails/"
-            )[1]; // Extract filename
+            )[1]; 
             course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
           }
           return course;
         })
       );
-      console.log("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddsamplw data :", courses);
 
       res.status(200).json({
         success: true,
@@ -215,19 +205,17 @@ export class CourseController {
 
       
 
-      // ✅ Generate Signed URL for Thumbnails
       courses = await Promise.all(
         courses.map(async (course) => {
           if (course.thumbnailUrl) {
             const fileKey = course.thumbnailUrl.split(
               "/course_assets/thumbnails/"
-            )[1]; // Extract filename
+            )[1];
             course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
           }
           return course;
         })
       );
-      console.log(courses,'kkkk');
       
       res.status(httpStatusCode.CREATED).json({
         success: true,

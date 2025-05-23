@@ -1,6 +1,5 @@
 import mongoose, { model, Schema, Types } from "mongoose";
 import { ChatGroup } from "../../../domain/entities/chatEntity";
-// import { ChatGroup } from "../../../domain/entities/ChatGroup";
 
 const ChatGroupSchema = new Schema({
   id: {
@@ -18,7 +17,7 @@ const ChatGroupSchema = new Schema({
   },
   members: [
     {
-      type: Types.ObjectId,
+      type:Types.ObjectId,
       ref: "users",
     },
   ],

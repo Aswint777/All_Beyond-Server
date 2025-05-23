@@ -22,7 +22,7 @@ export class InstructorApplyUseCase {
       throw new Error(error?.message || "Error in otp apply instructor");
     }
   }
-
+// instructorDashboard UseCase
   async instructorDashboardUseCase(
     userId: string
   ): Promise<InstructorDashboardData | null> {

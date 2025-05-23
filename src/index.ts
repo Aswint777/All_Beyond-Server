@@ -15,30 +15,27 @@ dotenv.config();
 
 const app: Application = express();
 
-const httpServer = createServer(app); // Create HTTP server
-const socketManager = new SocketManager(httpServer); // Initialize Socket.IO with HTTP server
+const httpServer = createServer(app); 
+const socketManager = new SocketManager(httpServer); 
 
-// ✅ Remove or Adjust COOP Headers to Fix Google OAuth Issues
 
 app.use((req, res, next) => {
-  res.removeHeader("Cross-Origin-Opener-Policy"); // ✅ Remove COOP to allow OAuth
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups"); // ✅ Allow OAuth popups
+  res.removeHeader("Cross-Origin-Opener-Policy"); 
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups"); 
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-  res.setHeader("Referrer-Policy", "no-referrer-when-downgrade"); // ✅ Allows proper OAuth communication
+  res.setHeader("Referrer-Policy", "no-referrer-when-downgrade"); 
   next();
 });
 
-// Middleware to parse JSON requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// Define routes
 
 const corsOptions: CorsOptions = {
   origin: (process.env.REACT_APP_URL as string) || "http://localhost:5173",
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"], // ✅ Allow necessary methods
-  allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow required headers
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
+  allowedHeaders: ["Content-Type", "Authorization"], 
 };
 
 
@@ -61,12 +58,7 @@ app.get("/health", (req, res) => {
     // Connect to MongoDB
     await connectMongoDB();
 
-    // Start the Express server
     const PORT = process.env.PORT || 5000;
-
-    // app.listen(PORT, () => { 
-    //   console.log(`Server is running on port ${PORT}`);
-    // });
 
     httpServer.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
@@ -77,6 +69,6 @@ app.get("/health", (req, res) => {
       "Failed to start the application:",
       error instanceof Error ? error.message : String(error)
     );
-    process.exit(1); // Exit the process with failure code
+    process.exit(1); 
   }
 })();

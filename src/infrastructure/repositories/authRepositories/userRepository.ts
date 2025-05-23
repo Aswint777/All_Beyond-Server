@@ -1,5 +1,4 @@
 import { User } from "../../database/model/userModel";
-// import { UserEntity } from "../../domain/entities/User";
 import { generateUserID } from "../../../_lib/common/generateUserID";
 import { IRepositories } from "../../../application/interfaces/IRepositories";
 import { createUserEntity, UserEntity } from "../../../domain/entities/User";
@@ -22,7 +21,7 @@ export class UserRepository
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies; 
   }
-  // ✅ Check if email exists
+  //  Check if email exists
   async checkByEmail(email: string): Promise<UserEntity | null> {
     try {
       const oldUser = await User.findOne({ email });
@@ -36,7 +35,7 @@ export class UserRepository
     }
   }
 
-  // ✅ Check if username exists
+  // Check if username exists
   async checkByName(name: string): Promise<boolean | null> {
     try {
       const oldUser = await User.findOne({ username: name });
@@ -51,7 +50,7 @@ export class UserRepository
     }
   }
 
-  // ✅ Check if user is not blocked
+  // Check if user is not blocked
   async checkNotBlocked(email: string): Promise<UserEntity | null> {
     try {
       return await User.findOne({ email, isBlocked: false });
@@ -61,7 +60,7 @@ export class UserRepository
     }
   }
 
-  // // ✅ Create a new user
+  //  Create a new user
   async createUser(data: createUserEntity): Promise<UserEntity | null> {
     try {
       return await User.create(data);
@@ -71,11 +70,10 @@ export class UserRepository
     }
   }
 
-  // ✅ Get user details by ID
+  //  Get user details by ID
   async getUserDetails(_id: string): Promise<UserEntity | null> {
     try {
       const d =  await User.findOne({ _id });
-      // console.log(' D   :',d);
       
       if(!d) return null
       return d
@@ -85,7 +83,7 @@ export class UserRepository
     }
   }
 
-  // ✅ Google Authentication
+  //  Google Authentication
   async googleAuth(
     email: string,
     username: string

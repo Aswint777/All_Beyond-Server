@@ -74,30 +74,28 @@ export class AdminUserRepository
     limit: number = 10
   ): Promise<{ transactions: TransactionOutput[]; totalTransactions: number } | null> {
     try {
-      // Fetch payments with pagination
       const transactions = await Payment.find().sort({createdAt:-1})
         .populate({
           path: "userId",
-          select: "username", // Student name
-          match: { isBlocked: false }, // Only unblocked students
+          select: "username", 
+          match: { isBlocked: false }, 
         })
         .populate({
           path: "courseId",
           select: "courseTitle user",
-          match: { isBlocked: false }, // Only unblocked courses
+          match: { isBlocked: false }, 
           populate: {
             path: "user",
-            select: "username", // Instructor name
-            match: { isBlocked: false }, // Only unblocked instructors
+            select: "username", 
+            match: { isBlocked: false }, 
           },
         })
         .skip(skip)
         .limit(limit)
         .lean() as unknown as PopulatedTransaction[];
   
-      // Filter out invalid transactions and map to output format
       const validTransactions: TransactionOutput[] = transactions
-        .filter((t) => t.userId && t.courseId && t.courseId.user) // Ensure all required fields exist
+        .filter((t) => t.userId && t.courseId && t.courseId.user) 
         .map((t) => ({
           _id: t._id.toString(),
           studentName: t.userId.username,
@@ -109,10 +107,7 @@ export class AdminUserRepository
           amount : t.amount
         }));
   
-      // Get total count
       const totalTransactions = await Payment.countDocuments();
-  
-      console.log("📌Repository result 📌 :", { transactions: validTransactions, totalTransactions });
   
       return { transactions: validTransactions, totalTransactions };
     } catch (error: any) {

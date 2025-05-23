@@ -13,5 +13,5 @@ export interface IGetAssessmentUseCase{
 }
 
 export interface IUpdateAssessmentUseCase{
-    execute(assessmentId:string,data:QuestionEntity[]):Promise<AssessmentEntity |null>
+    execute(assessmentId:string,data: { questions: QuestionEntity[] }):Promise<AssessmentEntity |null>
 }

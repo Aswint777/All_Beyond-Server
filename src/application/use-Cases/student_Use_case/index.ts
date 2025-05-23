@@ -1,7 +1,9 @@
 import { Answers } from "../../../domain/entities/assessmentEntity";
 import {
+  AddMember,
   AddMemberData,
   ChatGroup,
+  ChatGroupInput,
   TextMessage,
 } from "../../../domain/entities/chatEntity";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
@@ -84,11 +86,11 @@ export const studentUseCase = (dependencies: IDependencies) => {
     }),
 
     createChatUseCase: () => ({
-      execute: (data: ChatGroup) => chatUseCase.createChatUseCase(data),
+      execute: (data: ChatGroupInput) => chatUseCase.createChatUseCase(data),
     }),
 
     addMemberUseCase: () => ({
-      execute: (data: AddMemberData) => chatUseCase.addMemberUseCase(data),
+      execute: (data: AddMember) => chatUseCase.addMemberUseCase(data),
     }),
     getUserChatsUseCase: () => ({
       execute: (userId: string) => chatUseCase.getUserChatsUseCase(userId),

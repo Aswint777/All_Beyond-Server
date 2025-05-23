@@ -41,8 +41,6 @@ export class AdminInstructorRepository
     status: string
   ): Promise<UserEntity | null> {
     try {
-      // console.log("api call is here ");
-      // console.log(status, Id);
 
       const update = await User.findOneAndUpdate(
         { _id: Id },

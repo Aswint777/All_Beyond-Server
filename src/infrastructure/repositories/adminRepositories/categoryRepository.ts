@@ -96,19 +96,18 @@ export class CategoryRepository
     }
   }
 
-  // check duplicate category
-  // Check duplicate category, excluding current category ID if provided
+
 async duplicateCategory(name: string, excludeId?: string): Promise<categoryEntity[] | null> {
   try {
     const trimmedName = name.trim().toLowerCase();
     const filter: any = { name: { $regex: new RegExp(`^${trimmedName}$`, "i") } };
 
     if (excludeId) {
-      filter._id = { $ne: excludeId }; // Exclude current category
+      filter._id = { $ne: excludeId }; 
     }
 
     const duplicate = await category.find(filter);
-    return duplicate.length > 0 ? duplicate : null; // Return null if no duplicates
+    return duplicate.length > 0 ? duplicate : null; 
   } catch (error) {
     if (error instanceof Error) {
       throw error;

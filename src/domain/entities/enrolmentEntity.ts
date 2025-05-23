@@ -131,17 +131,6 @@ interface ModuleDocument {
     courseEnrollments: CourseEnrollment[];
   }
 
-  // export interface StudentDashboardData {
-  //   totalCoursesEnrolled: number;
-  //   enrolledCourses: { courseName: string; count: number }[];
-  //   recentEnrollments: StudentEnrollment[];
-  // }
-  
-  // export interface StudentEnrollment {
-  //   courseName: string;
-  //   enrollmentDate: string;
-  //   courseId: string;
-  // }
   
   export interface LeanEnrollment {
     _id: string;

@@ -59,13 +59,7 @@ export class StudentOverviewController {
       const userId = user._id;
       const { rating, comment } = req.body;
       const { courseId } = req.params;
-      console.log(
-        rating,
-        comment,
-        courseId,
-        userId,
-        "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkjjjjj"
-      );
+
       const data = {
         userId: userId,
         courseId: courseId,

@@ -16,15 +16,15 @@ export class AdminUserUseCase {
     try {
       const { getStudentsList } = this.dependencies.repositories;
       const userList = await getStudentsList();
-      console.log(userList);
       return userList;
     } catch (error: constant) {
-      console.log("Error in checking with get user");
-
-      throw new Error(error?.message || "Error in checking with get user");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in checking with get user",
+      };
     }
   }
- 
+
   // blocking the users
   async blockUnblockUserUseCase(
     userId: string,
@@ -39,45 +39,51 @@ export class AdminUserUseCase {
         return false;
       }
     } catch (error: constant) {
-      console.log("Error in block and unblock");
-
-      throw new Error(error?.message || "Error in block and unblock");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in block and unblock",
+      };
     }
   }
 
-  // user Details 
-  async userDetailsUseCase(userId:string): Promise<UserEntity| null>{
-    const {findByUserId} = this.dependencies.repositories
+  // user Details
+  async userDetailsUseCase(userId: string): Promise<UserEntity | null> {
+    const { findByUserId } = this.dependencies.repositories;
     try {
-      const details = await findByUserId(userId)
-      
-      if(!details){
-        return null
+      const details = await findByUserId(userId);
+
+      if (!details) {
+        return null;
       }
-      return details
-
-    } catch (error:constant) {
-      throw new Error(error?.message || "Error in user Details use case");
-
+      return details;
+    } catch (error: constant) {
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in user Details use case",
+      };
     }
   }
+
+  // Fetch transaction History
   async transactionHistoryUseCase(
     skip: number,
     limit: number
-  ): Promise<{ transactions: TransactionOutput[]; totalTransactions: number } | null> {
+  ): Promise<{
+    transactions: TransactionOutput[];
+    totalTransactions: number;
+  } | null> {
     const { transactionHistoryRepository } = this.dependencies.repositories;
     try {
       const result = await transactionHistoryRepository(skip, limit);
       if (!result || result.transactions.length === 0) {
         return null;
       }
-      console.log(result,"📌 Step 1 complete");
-      
       return result;
     } catch (error: any) {
-      console.error("Error in transactionHistoryUseCase:", error);
-      throw new Error("An unexpected error occurred");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in transactionHistoryUseCase",
+      };
     }
   }
-
 }

@@ -3,7 +3,6 @@ import { AssessmentController } from "./assessmentController";
 import { CourseController } from "./courseController";
 import { ApplyInstructorController } from "./instructorApplicationController";
 import { InstructorOverviewController } from "./overviewController";
-// import { InstructorController } from "./instructorApplicationController";
 
 export const instructorController = (dependencies: IDependencies) => {
   const instructorApply = new ApplyInstructorController(dependencies);

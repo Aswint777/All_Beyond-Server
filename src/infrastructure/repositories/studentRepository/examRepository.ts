@@ -13,7 +13,6 @@ import {
   ExamResult,
   CertificateDetails,
   LeanUser,
-  // ExamAssessment,
 } from "../../../domain/entities/assessmentEntity";
 import { Assessment, Course, Enrolment, User } from "../../database/model";
 import { constant } from "../../../_lib/common/constant";
@@ -43,7 +42,6 @@ export class ExamRepository
     search: string
   ): Promise<AssessmentResponse> {
     try {
-      // Validate inputs
       if (!Types.ObjectId.isValid(userId)) {
         throw new Error("Invalid user ID");
       }
@@ -51,7 +49,6 @@ export class ExamRepository
         throw new Error("Invalid pagination parameters");
       }
 
-      // Find enrollments for the student
 
       const enrollments: LeansEnrolment[] = await Enrolment.find({
         userId: new Types.ObjectId(userId),
@@ -71,7 +68,6 @@ export class ExamRepository
         };
       }
 
-      // Filter out enrollments with undefined courseId
       const validEnrollments = enrollments.filter((e) => e.courseId);
       const courseIds = validEnrollments.map((e) => e.courseId.toString());
 
@@ -86,13 +82,11 @@ export class ExamRepository
         };
       }
 
-      // Build query for assessments
       const assessmentQuery = {
         courseId: { $in: courseIds.map((id) => new Types.ObjectId(id)) },
         ...(search ? { courseTitle: { $regex: search, $options: "i" } } : {}),
       };
 
-      // Fetch assessments and total count
       const [assessments, totalAssessments] = await Promise.all([
         Assessment.find(assessmentQuery)
           .skip((page - 1) * limit)
@@ -115,7 +109,6 @@ export class ExamRepository
 
       const totalPages = Math.ceil(totalAssessments / limit);
 
-      // Format assessments
       const formattedAssessments: AssessmentDetails[] = assessments.map(
         (assessment) => {
           const enrollment = validEnrollments.find(
@@ -147,11 +140,6 @@ export class ExamRepository
         }
       );
 
-      console.log(
-        "Formatted Assessments:",
-        formattedAssessments,
-        "++++++++++++++++++++++++++++++++++"
-      );
 
       return {
         assessments: formattedAssessments,
@@ -173,7 +161,6 @@ export class ExamRepository
     assessmentId: string
   ): Promise<ExamAssessment | null> {
     try {
-      console.log("pppppppppppppppppppppppppppppppppppppppppppp", assessmentId);
 
       const exams = await Assessment.findOne({
         _id: new mongoose.Types.ObjectId(assessmentId),
@@ -191,17 +178,14 @@ export class ExamRepository
     answers: { answers: Answers[] }
   ): Promise<ExamResult | null> {
     try {
-      // Debug input
       console.log("submitAssessmentRepository input:", {
         assessmentId,
         userId,
         answers,
       });
 
-      // Extract the answers array
       const answerArray = answers.answers;
 
-      // Validate inputs
       if (
         !Types.ObjectId.isValid(assessmentId) ||
         !Types.ObjectId.isValid(userId)
@@ -218,7 +202,6 @@ export class ExamRepository
         answers: answerArray,
       });
 
-      // Fetch assessment
       const assessment = (await Assessment.findOne({
         _id: new Types.ObjectId(assessmentId),
       }).lean()) as AssessmentEntity;
@@ -233,7 +216,6 @@ export class ExamRepository
         throw new Error("Assessment missing courseId");
       }
 
-      // Validate answers
       if (answerArray.length !== assessment.questions.length) {
         throw new Error("Number of answers does not match number of questions");
       }
@@ -249,7 +231,6 @@ export class ExamRepository
         throw new Error("Invalid answer data");
       }
 
-      // Check correct answers
       const correctAnswers = answerArray.reduce((count, answer) => {
         const question = assessment.questions[answer.questionIndex];
         return (
@@ -257,15 +238,12 @@ export class ExamRepository
         );
       }, 0);
 
-      // Calculate marks
       const totalQuestions = assessment.questions.length;
       const marks = (correctAnswers * 100) / totalQuestions;
 
-      // Determine pass/fail status
       const passed = marks >= 60;
       const status = passed ? "passed" : "failed";
 
-      // Update or create enrolment
       const enrolment = await Enrolment.findOneAndUpdate(
         {
           userId: new Types.ObjectId(userId),
@@ -286,7 +264,6 @@ export class ExamRepository
         throw new Error("Failed to update enrolment");
       }
 
-      // Return result
       return {
         status,
         correctAnswers,
@@ -308,7 +285,6 @@ export class ExamRepository
     userId: string
   ): Promise<CertificateDetails | null> {
     try {
-      // Validate inputs
       if (
         !mongoose.Types.ObjectId.isValid(assessmentId) ||
         !mongoose.Types.ObjectId.isValid(userId)
@@ -316,7 +292,6 @@ export class ExamRepository
         throw new Error("Invalid assessment or user ID");
       }
 
-      // Fetch assessment
       const assessment = await Assessment.findOne({
         _id: new mongoose.Types.ObjectId(assessmentId),
       }).lean();
@@ -325,7 +300,6 @@ export class ExamRepository
         return null;
       }
 
-      // Fetch enrolment to get mark and verify passed status
       const enrolment = (await Enrolment.findOne({
         userId: new mongoose.Types.ObjectId(userId),
         courseId: assessment.courseId,
@@ -337,7 +311,6 @@ export class ExamRepository
         return null;
       }
 
-      // Fetch course for instructor name
       const course = await Course.findOne({
         _id: assessment.courseId,
       }).lean();
@@ -350,18 +323,15 @@ export class ExamRepository
         return null;
       }
 
-      // Fetch user for student name
       const user = (await User.findOne({
         _id: new mongoose.Types.ObjectId(userId),
       }).lean()) as unknown as LeanUser;
-      // console.log(user,'uuuuuuuuuuuuuuuuuuuuuuu');
       
       if (!user) {
         console.log(`User not found for ID: ${userId}`);
         return null; 
       }
 
-      // Construct CertificateDetails
       const certificate: CertificateDetails = {
         studentName: user.username,
         instructor: instructor?.username || "Unknown Instructor",
@@ -372,7 +342,6 @@ export class ExamRepository
           : 0,
       };
 
-      // console.log("Certificate Details:", certificate);
       return certificate;
     } catch (error: any) {
       console.error(

@@ -107,7 +107,6 @@ export class ExamController {
       const userId = user._id;
       const { assessmentId } = req.params;
       const answers = req.body
-      console.log("Response data:555555555555", userId,assessmentId,answers)
       const result = await submitAssessmentUseCase(this.dependencies).execute(
         assessmentId,userId,answers
       );
@@ -146,7 +145,7 @@ export class ExamController {
       }
       const userId = user._id;
       const { assessmentId } = req.params;
-      // console.log("Response data:555555555555", userId,assessmentId)
+   
       const result = await certificateUseCase(this.dependencies).execute(
         assessmentId,userId
       );
@@ -159,7 +158,6 @@ export class ExamController {
         return;
       }
 
-// console.log(result,'result ');
 
       res.status(httpStatusCode.OK).json({
         success: true,

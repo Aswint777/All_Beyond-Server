@@ -5,8 +5,8 @@ import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
 import { uploadCloudinary, uploadS3 } from "../../_boot/multerConfig";
 
 const cpUpload = uploadCloudinary.fields([
-  { name: "profilePhoto", maxCount: 1 }, // Single file for profile photo
-  { name: "educationFile", maxCount: 1 }, // Single file for education document
+  { name: "profilePhoto", maxCount: 1 }, 
+  { name: "educationFile", maxCount: 1 }, 
 ]);
 
 export const instructorRoutes = (dependencies: IDependencies) => {

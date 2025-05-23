@@ -12,7 +12,7 @@ export class ProfileController {
     this.dependencies = dependencies;
   }
 
-  // ✅ Edit Profile Controller
+  // Edit Profile Controller
   async editProfile(req: Request, res: Response): Promise<void> {
     try {
       console.log("Incoming request in editProfileController:", req.body);
@@ -35,7 +35,6 @@ export class ProfileController {
       const { changePasswordUseCase, profileEditUseCase } =
         this.dependencies.useCases;
 
-      // 🛑 Handle Password Change
       let hashedPassword: string | undefined;
       if (currentPassword && newPassword && confirmPassword) {
         const passwordChanged = await changePasswordUseCase(
@@ -53,7 +52,6 @@ export class ProfileController {
         hashedPassword = await bcrypt.hash(newPassword, 10);
       }
 
-      // 📄 Profile Data Update
       const profileData = {
         userId,
         firstName,
@@ -94,7 +92,7 @@ export class ProfileController {
     }
   }
 
-  // ✅ Upload Profile Photo Controller
+  //  Upload Profile Photo Controller
   async uploadProfilePhoto(req: Request, res: Response): Promise<void> {
     try {
       console.log(
@@ -105,7 +103,6 @@ export class ProfileController {
       const userId = req.body.userId;
       const { uploadPhotoUseCase } = this.dependencies.useCases;
 
-      // 📷 Extract Photo Path
       const profilePhoto =
         req.files && "profilePhoto" in req.files
           ? (req.files.profilePhoto as Express.Multer.File[])[0]?.path
@@ -119,7 +116,6 @@ export class ProfileController {
         return;
       }
 
-      // ✅ Upload Photo
       const data = await uploadPhotoUseCase(this.dependencies).execute(
         userId,
         profilePhoto
@@ -154,7 +150,6 @@ export class ProfileController {
         return;
       }
 
-      // 🛑 Verify JWT
       const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
       const decoded = jwt.verify(token, secretKey) as {
         _id: string;

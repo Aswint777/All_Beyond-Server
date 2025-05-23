@@ -9,9 +9,8 @@ export const adminUseCases = (dependencies: IDependencies) => {
   const adminInstructorUseCase = new AdminInstructorUseCase(dependencies);
   const adminUserUseCase = new AdminUserUseCase(dependencies);
   const categoryUseCase = new CategoryUseCase(dependencies);
-  const overviewUseCase = new OverviewUseCase(dependencies)
+  const overviewUseCase = new OverviewUseCase(dependencies);
   return {
-    // instructor useCase in admin side 
     getInstructorApplicationUseCase: () => ({
       execute: () => adminInstructorUseCase.getInstructorApplicationUseCase(),
     }),
@@ -20,7 +19,6 @@ export const adminUseCases = (dependencies: IDependencies) => {
         adminInstructorUseCase.updateInstructorStatusUseCase(Id, status),
     }),
 
-    // student useCase in admin side
     getStudentsListUseCase: () => ({
       execute: () => adminUserUseCase.getStudentsListUseCase(),
     }),
@@ -30,15 +28,15 @@ export const adminUseCases = (dependencies: IDependencies) => {
         adminUserUseCase.blockUnblockUserUseCase(userId, isBlocked),
     }),
 
-    userDetailsUseCase:()=>({
-      execute:(userId:string)=>adminUserUseCase.userDetailsUseCase(userId)
+    userDetailsUseCase: () => ({
+      execute: (userId: string) => adminUserUseCase.userDetailsUseCase(userId),
     }),
 
-    transactionHistoryUseCase:()=>({
-      execute:(skip: number,limit: number)=>adminUserUseCase.transactionHistoryUseCase(skip,limit)
+    transactionHistoryUseCase: () => ({
+      execute: (skip: number, limit: number) =>
+        adminUserUseCase.transactionHistoryUseCase(skip, limit),
     }),
 
-    // category usecase
     getCategoryListUseCase: () => ({
       execute: () => categoryUseCase.getCategoryListUseCase(),
     }),
@@ -55,9 +53,8 @@ export const adminUseCases = (dependencies: IDependencies) => {
         categoryUseCase.categoryEditUseCase(id, name, description),
     }),
 
-    dashboardUseCase:()=>({
-      execute:()=>overviewUseCase.dashboardUseCase()
+    dashboardUseCase: () => ({
+      execute: () => overviewUseCase.dashboardUseCase(),
     }),
-
   };
 };

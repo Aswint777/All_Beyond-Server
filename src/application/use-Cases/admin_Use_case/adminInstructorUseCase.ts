@@ -1,5 +1,6 @@
 import { constant } from "../../../_lib/common/constant";
 import { notification } from "../../../_lib/common/emailDesign";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../interfaces/IDependencies";
 
@@ -17,12 +18,12 @@ export class AdminInstructorUseCase {
     try {
       const { getInstructorApplication } = this.dependencies.repositories;
       const userList = await getInstructorApplication();
-      console.log(userList);
       return userList;
     } catch (error: constant) {
-      console.log("Error in checking with get user");
-
-      throw new Error(error?.message || "Error in checking with get user");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in checking with get user",
+      };
     }
   }
 
@@ -33,27 +34,22 @@ export class AdminInstructorUseCase {
   ): Promise<UserEntity | null> {
     const { updateInstructorStatus } = this.dependencies.repositories;
     try {
-      console.log(Id, "......");
-
       const update = await updateInstructorStatus(Id, status);
       if (!update) {
         return null;
       }
-      if(update.status === "approved" && update.email&& update.username ){
-         console.log('approved');
-         await notification(update.username,update.email,'approved');
-        }
-      if(update.status === "rejected" && update.username &&update.email){
-        console.log('rejected');
-        await notification(update.username,update.email,'rejected');
-
+      if (update.status === "approved" && update.email && update.username) {
+        await notification(update.username, update.email, "approved");
       }
-      console.log(update,"kskskskskksskskkkssk");
-      
+      if (update.status === "rejected" && update.username && update.email) {
+        await notification(update.username, update.email, "rejected");
+      }
       return update;
     } catch (error: constant) {
-      console.error("Error updating instructor status:", error);
-      return null;
+    throw {
+      status: httpStatusCode.INTERNAL_SERVER_ERROR,
+      message: error?.message || "Error in checking with update user",
+    };
     }
   }
 }

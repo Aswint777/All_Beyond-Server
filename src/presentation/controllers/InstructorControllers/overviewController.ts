@@ -14,7 +14,6 @@ export class InstructorOverviewController {
   async instructorDashboard(req: Request, res: Response): Promise<void> {
     const { instructorDashboardUseCase } = this.dependencies.useCases;
     try {
-      console.log("-----------------------------instructorDashboard---------------------------------------");
       
             const user = getUserFromToken(req, res);
             if (!user) return;

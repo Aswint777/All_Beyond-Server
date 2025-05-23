@@ -45,9 +45,9 @@ export class CourseUseCase {
 // list 
 async listInstructorCourseUseCase(
   id: string,
-  search: string = "", // Default to empty string
-  skip: number = 0,   // Default to 0
-  limit: number = 6   // Default to 6
+  search: string = "", 
+  skip: number = 0,   
+  limit: number = 6   
 ): Promise<{ courses: CourseEntity[]; totalCourses: number } | null> {
   const { listInstructorRepository } = this.dependencies.repositories;
   try {
@@ -77,7 +77,6 @@ async listInstructorCourseUseCase(
   async blockCourseUseCase(courseId:string):Promise<CourseEntity|null>{
     const {blockCourseRepository} = this.dependencies.repositories
     try {
-      console.log('usecase');
       
       const course = await blockCourseRepository(courseId)
       if(!course) return null

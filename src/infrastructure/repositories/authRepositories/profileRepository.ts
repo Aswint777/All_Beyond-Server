@@ -7,11 +7,11 @@ import { User } from "../../database/model";
 export class ProfileRepository
   implements Pick<IRepositories, "profileEdit" | "uploadPhoto">
 {
-  private dependencies: IDependencies; // ✅ Store dependencies
+  private dependencies: IDependencies; 
   constructor(dependencies: IDependencies) {
-    this.dependencies = dependencies; // ✅ Assign dependencies
+    this.dependencies = dependencies; 
   }
-  // ✅ Update User Profile
+  //  Update User Profile
   async profileEdit(data: UserEntity): Promise<UserEntity | null> {
     try {
       console.log("Profile Update Data:", data);
@@ -35,9 +35,9 @@ export class ProfileRepository
 
       console.log(facebook, "facebook ////////////////");
 
-      // ✅ Update user details
+      //  Update user details
       const updatedUser = await User.findOneAndUpdate(
-        { userId }, // Find user by ID
+        { userId }, 
         {
           $set: {
             firstName,
@@ -47,7 +47,7 @@ export class ProfileRepository
             linkedin,
             facebook,
             instagram,
-            ...(password && { password }), // ✅ Only update password if provided
+            ...(password && { password }), 
           },
         },
         { new: true, runValidators: true }
@@ -68,7 +68,7 @@ export class ProfileRepository
     }
   }
 
-  // ✅ Upload Profile Photo
+  // Upload Profile Photo
   async uploadPhoto(
     userId: string,
     profilePhoto: string
@@ -77,7 +77,7 @@ export class ProfileRepository
       const photo = await User.findOneAndUpdate(
         { userId },
         { $set: { profilePhoto: profilePhoto } },
-        { new: true, upsert: true } // ✅ Create if not exists
+        { new: true, upsert: true } 
       );
 
       if (!photo) {
@@ -110,7 +110,7 @@ export class ProfileRepository
             },
           },
         ],
-        { new: true } // Returns the updated document
+        { new: true } 
       );
       if (!changeRole) return null;
       return changeRole;

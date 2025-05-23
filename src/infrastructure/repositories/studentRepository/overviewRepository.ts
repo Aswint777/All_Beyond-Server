@@ -18,25 +18,22 @@ export class OverViewRepository
  try {
     console.log("studentDashboardRepository called for userId:", userId);
 
-    // Validate userId
     if (!Types.ObjectId.isValid(userId)) {
       throw new Error("Invalid user ID");
     }
 
-    // Fetch enrollments with course details
     const enrollmentsRaw = await Enrolment.find({ userId: new Types.ObjectId(userId) })
       .populate({
         path: "courseId",
         select: "courseTitle price",
         model: Course,
       })
-      .sort({ createdAt: -1 }) // Most recent first
+      .sort({ createdAt: -1 })
       .lean()
       .exec();
 
     const enrollments = enrollmentsRaw as unknown as LeanEnrollment[];
 
-    // If no enrollments, return empty data
     if (!enrollments || enrollments.length === 0) {
       return {
         totalCoursesEnrolled: 0,
@@ -48,10 +45,8 @@ export class OverViewRepository
       };
     }
 
-    // Compute total courses enrolled
     const totalCoursesEnrolled = enrollments.length;
 
-    // Compute paid and free courses
     const totalPaidCourses = enrollments.filter(
       (enrollment) =>
         enrollment.courseId &&
@@ -68,7 +63,6 @@ export class OverViewRepository
         (enrollment.courseId as any).price === 0
     ).length;
 
-    // Compute completed and pending assessments using the 'passed' field in Enrolment
     const completedAssessments = enrollments.filter(
       (enrollment) => enrollment.passed === true
     ).length;
@@ -77,7 +71,6 @@ export class OverViewRepository
       (enrollment) => enrollment.passed === false
     ).length;
 
-    // Map recent enrollments (up to 5)
     const recentEnrollments: StudentEnrollment[] = enrollments
       .slice(0, 5)
       .filter((enrollment) => enrollment.courseId !== null && enrollment.courseId !== undefined)
@@ -140,12 +133,10 @@ export class OverViewRepository
 
     async averageReviewRepository(courseId:string): Promise<AverageReview| null> {
       try {
-        // Validate courseId
         if (!mongoose.Types.ObjectId.isValid(courseId)) {
           throw new Error("Invalid course ID");
         }
     
-        // Aggregate to calculate count and average rating
         const result = await Review.aggregate([
           { $match: { courseId: new mongoose.Types.ObjectId(courseId) } },
           {
@@ -157,15 +148,13 @@ export class OverViewRepository
           },
         ]);
     
-        // If no reviews found, return null
         if (!result || result.length === 0) {
           return null;
         }
     
-        // Return the count and average
         return {
           count: result[0].count,
-          average: result[0].average ? Number(result[0].average.toFixed(1)) : 0, // Round to 1 decimal
+          average: result[0].average ? Number(result[0].average.toFixed(1)) : 0, 
         };
       } catch (error: any) {
         throw new Error(`Failed to fetch average review: ${error.message || "An unexpected error occurred"}`);

@@ -42,7 +42,6 @@ export class CourseRepository
       }
       courseData.categoryName = courseCategory._id;
 
-      console.log("✅ Category found:", courseCategory);
 
       // Validate Content Structure
       if (
@@ -78,14 +77,12 @@ export class CourseRepository
         });
       });
 
-      console.log("✅ Course content validated successfully.");
 
-      // Validate Pricing Option
       if (
         courseData.pricingOption !== "Premium" &&
         courseData.pricingOption !== "Free"
       ) {
-        courseData.pricingOption = "Free"; // Default value
+        courseData.pricingOption = "Free"; 
       }
 
       // Convert NaN price to 0
@@ -102,7 +99,6 @@ export class CourseRepository
       // Create Course
       const saveCourse = await Course.create({ ...courseData, user: id });
       if (!saveCourse) {
-        console.log("❌ Error: Course not saved.");
         return null;
       }
 
@@ -186,18 +182,18 @@ export class CourseRepository
         courseData.content.forEach((module, moduleIndex) => {
           if (!module.moduleTitle) {
             throw new Error(
-              `❌ Module ${moduleIndex + 1} is missing a moduleTitle.`
+              ` Module ${moduleIndex + 1} is missing a moduleTitle.`
             );
           }
           if (!Array.isArray(module.lessons) || module.lessons.length === 0) {
             throw new Error(
-              `❌ Module ${moduleIndex + 1} must have at least one lesson.`
+              ` Module ${moduleIndex + 1} must have at least one lesson.`
             );
           }
           module.lessons.forEach((lesson, lessonIndex) => {
             if (!lesson.lessonTitle) {
               throw new Error(
-                `❌ Lesson ${lessonIndex + 1} in Module ${
+                ` Lesson ${lessonIndex + 1} in Module ${
                   moduleIndex + 1
                 } is missing a lessonTitle.`
               );
@@ -245,14 +241,12 @@ export class CourseRepository
       );
 
       if (!updatedCourse) {
-        console.log("❌ Error: Course not found for update.");
         return null;
       }
 
-      console.log("✅ Course updated successfully:", updatedCourse);
       return updatedCourse;
     } catch (error) {
-      console.error("❌ Error in editCourseRepository:", error);
+      console.error(" Error in editCourseRepository:", error);
       throw new Error("An unexpected error occurred while updating course.");
     }
   }
@@ -265,8 +259,8 @@ export class CourseRepository
       
       return await Course.findOneAndUpdate(
         { _id: courseId },
-        [{ $set: { isBlocked: { $not: "$isBlocked" } } }], // Toggle true/false
-        { new: true } // Return the updated document
+        [{ $set: { isBlocked: { $not: "$isBlocked" } } }], 
+        { new: true } 
       );
     } catch (error: constant) {
       throw new Error("An unexpected error occurred while updating course.");

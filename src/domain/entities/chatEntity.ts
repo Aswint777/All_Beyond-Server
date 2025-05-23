@@ -1,4 +1,4 @@
-import { ObjectId, Types } from "mongoose";
+import { ObjectId, Schema, Types } from "mongoose";
 import { Socket, Server } from "socket.io";
 
 
@@ -10,29 +10,36 @@ export interface CourseChat {
     enrolledStudents: string[];
   }
 
-  export interface ChatGroup {
-    id?: string;
-    title?:string
-    courseId?: string | Types.ObjectId;
-    adminId?: string | Types.ObjectId;
-    members?: (string | Types.ObjectId)[];
-    createdAt?: Date;
-  }
-
   export interface Message {
     id: string;
     chatGroupId: string;
     senderId: string;
-    content?: string;
+    content: string;
     fileUrl?: string;
-    username?:string
-    createdAt: string;
+    username:string
+    createdAt: Date;
   }
 
-  export interface AddMemberData {
-    courseId?:string|ObjectId
-    userId?:string|ObjectId
-  }
+  export interface ChatGroup {
+  chatId: string;
+  title: string;
+  courseId: string;
+  adminId: string;
+  members: string[];
+  createdAt: Date;
+}
+
+export interface AddMemberData {
+  chatId: string;
+  userId?: string;
+  courseId?: string;
+}
+
+export interface AddMember {
+  courseId?: string;
+  userId?: string;
+}
+  
 
   export interface UserChatList {
     id: string;
@@ -64,6 +71,14 @@ export interface CourseChat {
     fileUrl?: string;
 
   }
+
+
+   export interface ChatGroupInput {
+      title: string;
+      courseId: string;
+      adminId: string;
+      members: string[];
+    }
 
   export interface SocketService {
     registerUser(userId: string, socket: Socket): void;

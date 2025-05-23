@@ -24,14 +24,12 @@ export const jwtMiddleware = async (
   try {
     console.log("JWT Middleware Executing...");
 
-    // ✅ Extract Cookies (First Check the Cookie Before Authorization Header)
     const { access_token, refresh_token } = req.cookies;
    console.log(req.cookies,"req.cookies");
    
     let user: UserPayload | null = null;
     console.log(access_token, refresh_token);
 
-    // ✅ If Access Token Exists in Cookie, Verify It
     if (access_token) {
       try {
         user = jwt.verify(
@@ -46,7 +44,6 @@ export const jwtMiddleware = async (
       }
     }
 
-    // ✅ If Access Token is Invalid, Check Refresh Token
     if (!user && refresh_token) {
       try {
         const refreshUser = jwt.verify(
@@ -54,7 +51,6 @@ export const jwtMiddleware = async (
           process.env.REFRESH_TOKEN_SECRET as string
         ) as UserPayload;
 
-        // ✅ Generate a new access token
         const newAccessToken = generateAccessToken(refreshUser);
         res.cookie("access_token", newAccessToken, {
           httpOnly: true,
@@ -67,22 +63,17 @@ export const jwtMiddleware = async (
       } catch (refreshError) {
         console.log("Invalid or expired refresh token.");
         return;
-        // res.status(401).json({ error: "Session expired. Please log in again." });
       }
     }
 
-    // ✅ If No Valid Token is Found, Reject Request
     if (!user) {
       return;
-      // res.status(401).json({ error: "Unauthorized access. Please log in." });
     }
 
-    // ✅ Attach user to request
     req.user = user;
     next();
   } catch (error) {
     console.error("Error in JWT middleware:", error);
     return;
-    // res.status(500).json({ error: "Internal Server Error" });
   }
 };

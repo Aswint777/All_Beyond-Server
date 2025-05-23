@@ -39,7 +39,7 @@ export class ApplyInstructor
             isAppliedInstructor: true,
           },
         },
-        { upsert: true, new: true } // Create new user if not found
+        { upsert: true, new: true } 
       );
       if (!applyOne) {
         return false;
@@ -57,7 +57,6 @@ export class ApplyInstructor
     userId: string
   ): Promise<InstructorDashboardData | null> {
     try {
-      // 1. Total Users
       const courses = await Course.find({
         user: new Types.ObjectId(userId),
       }).select("_id");
@@ -78,7 +77,6 @@ export class ApplyInstructor
         courseId: { $in: courseIds },
       });
 
-      // 2. Total Revenue (sum of instructorShare)
       const revenueResult = await Payment.aggregate([
         {
           $match: {
@@ -95,12 +93,10 @@ export class ApplyInstructor
 
       const totalRevenue = revenueResult[0]?.totalInstructorRevenue || 0;
 
-      // 3. Total Courses
       const totalCourses = await Course.countDocuments({
         user: new Types.ObjectId(userId),
       });
 
-      // 4. Monthly Sign-ups (last 6 months)
       const sixMonthsAgo = new Date();
       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
       sixMonthsAgo.setDate(1);
@@ -154,7 +150,6 @@ export class ApplyInstructor
         }
       );
 
-      // 5. Course Enrollments
       const courseEnrollments = await Enrolment.aggregate([
         {
           $lookup: {

@@ -26,26 +26,23 @@ const http_1 = require("http");
 const socketManager_1 = require("./_lib/socket/socketManager");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const httpServer = (0, http_1.createServer)(app); // Create HTTP server
-const socketManager = new socketManager_1.SocketManager(httpServer); // Initialize Socket.IO with HTTP server
-// ✅ Remove or Adjust COOP Headers to Fix Google OAuth Issues
+const httpServer = (0, http_1.createServer)(app);
+const socketManager = new socketManager_1.SocketManager(httpServer);
 app.use((req, res, next) => {
-    res.removeHeader("Cross-Origin-Opener-Policy"); // ✅ Remove COOP to allow OAuth
-    res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups"); // ✅ Allow OAuth popups
+    res.removeHeader("Cross-Origin-Opener-Policy");
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
     res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-    res.setHeader("Referrer-Policy", "no-referrer-when-downgrade"); // ✅ Allows proper OAuth communication
+    res.setHeader("Referrer-Policy", "no-referrer-when-downgrade");
     next();
 });
-// Middleware to parse JSON requests
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
-// Define routes
 const corsOptions = {
     origin: process.env.REACT_APP_URL || "http://localhost:5173",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"], // ✅ Allow necessary methods
-    allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow required headers
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 };
 (0, dependencies_1.initializeSocketService)(httpServer);
 // Use CORS middleware with the options
@@ -62,11 +59,7 @@ app.get("/health", (req, res) => {
     try {
         // Connect to MongoDB
         yield (0, dbConnection_1.connectMongoDB)();
-        // Start the Express server
         const PORT = process.env.PORT || 5000;
-        // app.listen(PORT, () => { 
-        //   console.log(`Server is running on port ${PORT}`);
-        // });
         httpServer.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
             console.log(`Socket.IO initialized and listening on http://localhost:${PORT}/socket.io`);
@@ -74,6 +67,6 @@ app.get("/health", (req, res) => {
     }
     catch (error) {
         console.error("Failed to start the application:", error instanceof Error ? error.message : String(error));
-        process.exit(1); // Exit the process with failure code
+        process.exit(1);
     }
 }))();

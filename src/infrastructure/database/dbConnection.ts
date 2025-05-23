@@ -30,7 +30,7 @@ export class MongoDBConnection {
       minPoolSize: 1,
       connectTimeoutMS: 30000,
       socketTimeoutMS: 45000,
-      family: 4, // Force IPv4
+      family: 4, 
     },
   };
 

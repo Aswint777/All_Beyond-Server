@@ -2,6 +2,7 @@ import { Certificate } from "crypto";
 import { Types } from "mongoose";
 
 export interface QuestionEntity {
+  _id?: string;
   question: string;
   options: string[];
   correctOption: number;
@@ -9,7 +10,7 @@ export interface QuestionEntity {
 
 export interface AssessmentEntity {
   _id?: string;
-  courseId: string;
+  courseId?: string;
   courseTitle?: string;
   questions: QuestionEntity[];
   createdAt?: Date;
@@ -73,7 +74,6 @@ export interface AssessmentResult {
   attempts: number;
   passed: boolean 
   studentName?: string;
-  // status?: "passed" | "failed";
 
 }
 

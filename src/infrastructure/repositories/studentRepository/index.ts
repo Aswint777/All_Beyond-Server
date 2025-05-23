@@ -1,8 +1,10 @@
 import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { Answers } from "../../../domain/entities/assessmentEntity";
 import {
+  AddMember,
   AddMemberData,
   ChatGroup,
+  ChatGroupInput,
   TextMessage,
 } from "../../../domain/entities/chatEntity";
 import { EnrolmentEntity } from "../../../domain/entities/enrolmentEntity";
@@ -63,9 +65,9 @@ export const studentRepositories = (dependencies: IDependencies) => {
     averageReviewRepository: (courseId: string) =>
       overViewRepository.averageReviewRepository(courseId),
 
-    createChatRepository: (data: ChatGroup) =>
+    createChatRepository: (data: ChatGroupInput) =>
       chatRepository.createChatRepository(data),
-    addMemberRepository: (data: AddMemberData) =>
+    addMemberRepository: (data: AddMember) =>
       chatRepository.addMemberRepository(data),
     getUserChatsRepository: (userId: string) =>
       chatRepository.getUserChatsRepository(userId),

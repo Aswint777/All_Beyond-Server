@@ -70,7 +70,6 @@ export const notification = async (
   }
 
   try {
-    console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
     const subject = status === "approved" ? "Instructor Approval Notification" : "Instructor Application Update";
     const text = status === "approved"
       ? `Dear ${username}, you are approved as an instructor.`
@@ -84,7 +83,6 @@ export const notification = async (
     });
 
     if (result.success) {
-      console.log(`Notification email sent to: ${email}`);
       return { success: true };
     } else {
       console.error("Failed to send email.");

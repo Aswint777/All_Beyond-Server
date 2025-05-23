@@ -15,7 +15,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      // required: true
     },
     userId: {
       type: String,
@@ -59,10 +58,10 @@ const userSchema = new Schema(
     },
     educationFile: {
       type: String,
-    }, // URL of uploaded file
+    }, 
     profilePhoto: {
       type: String,
-    }, // URL of profile photo (optional)
+    }, 
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
@@ -75,7 +74,6 @@ const userSchema = new Schema(
     },
     isVerified: {
       type: String,
-      // enum:["requested","approved","declined","false"],
       default: false,
     },
     profession: {

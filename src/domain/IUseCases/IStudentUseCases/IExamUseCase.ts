@@ -4,6 +4,7 @@ import {
   AssessmentResponse,
   CertificateDetails,
   ExamAssessment,
+  ExamResult,
 } from "../../entities/assessmentEntity";
 
 export interface IStudentAssessmentsUseCase {
@@ -21,7 +22,7 @@ export interface IGetQuestionsUseCase {
 
 export interface ISubmitAssessmentUseCase {
   execute(assessmentId: string,userId:string, answers:{answers: Answers[]}
-  ): Promise<ExamAssessment | null>;
+  ): Promise<ExamResult | null>;
 }
 
 

@@ -12,10 +12,8 @@ export class OverViewRepository
   }
   async dashboardRepository(): Promise<DashboardData|null> {
     try {
-      // 1. Total Users
       const totalUsers = await User.countDocuments({ isBlocked: false });
   
-      // 2. Total Revenue (sum of amount)
       const revenueResult = await Payment.aggregate([
         { $match: { amount: { $ne: null } } },
         {
@@ -27,7 +25,6 @@ export class OverViewRepository
       ]);
       const totalRevenue = revenueResult[0]?.totalRevenue || 0;
   
-      // 3. Total Profit (sum of adminShare)
       const profitResult = await Payment.aggregate([
         { $match: { adminShare: { $ne: null } } },
         {
@@ -39,7 +36,6 @@ export class OverViewRepository
       ]);
       const totalProfit = profitResult[0]?.totalProfit || 0;
   
-      // 4. Monthly User Sign-ups (last 6 months for simplicity)
       const sixMonthsAgo = new Date();
       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
   
@@ -79,7 +75,6 @@ export class OverViewRepository
         };
       });
   
-      // 5. Course Enrollments
       const courseEnrollments = await Enrolment.aggregate([
         {
           $lookup: {
@@ -106,7 +101,7 @@ export class OverViewRepository
           },
         },
         { $sort: { enrollments: -1 } },
-        { $limit: 5 }, // Top 5 courses
+        { $limit: 5 }, 
       ]);
   
       return {

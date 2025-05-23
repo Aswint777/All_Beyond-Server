@@ -1,6 +1,5 @@
 import mongoose, { model, Schema } from "mongoose";
 import { Message } from "../../../domain/entities/chatEntity";
-// import { Message } from "../../../domain/entities/Message";
 
 const MessageSchema = new Schema({
   id: {

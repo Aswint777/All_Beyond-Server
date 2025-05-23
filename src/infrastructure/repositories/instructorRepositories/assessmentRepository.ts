@@ -29,7 +29,6 @@ export class AssessmentRepository
     search: string
   ): Promise<{ courses: assessmentCourses[]; totalPages: number }> {
     try {
-      // Build query for courses
       const query = {
         user: new Types.ObjectId(userId),
         isBlocked: false,
@@ -38,7 +37,6 @@ export class AssessmentRepository
 
       console.log("Query:", query);
 
-      // Fetch courses and total count
       const [courses, totalCourses] = await Promise.all([
         Course.find(query)
           .skip((page - 1) * limit)
@@ -55,10 +53,8 @@ export class AssessmentRepository
         return { courses: [], totalPages: 0 };
       }
 
-      // Calculate total pages
       const totalPages = Math.ceil(totalCourses / limit);
 
-      // Fetch assessments
       const courseIds = courses.map((course) => course._id);
       const assessments = await Assessment.find({
         courseId: { $in: courseIds },
@@ -67,7 +63,6 @@ export class AssessmentRepository
         .exec()
         .then((data) => data as unknown as LeanAssessment[]);
 
-      // Fetch enrolments and populate user for studentName
       const enrolments = await Enrolment.find({ courseId: { $in: courseIds } })
         .populate<{ userId: { _id: string; username: string } }>(
           "userId",
@@ -77,7 +72,6 @@ export class AssessmentRepository
         .exec()
         .then((data) => data as unknown as LeanEnrolment[]);
 
-      // Combine data
       const formattedCourses: assessmentCourses[] = courses.map((course) => {
         const assessment = assessments.find(
           (a) => a.courseId.toString() === course._id.toString()

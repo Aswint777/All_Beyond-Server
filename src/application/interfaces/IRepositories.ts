@@ -24,8 +24,10 @@ import {
   ReviewData,
 } from "../../domain/entities/overviewEntity";
 import {
+  AddMember,
   AddMemberData,
   ChatGroup,
+  ChatGroupInput,
   Message,
   TextMessage,
   UserChatList,
@@ -37,6 +39,7 @@ import {
   AssessmentResponse,
   CertificateDetails,
   ExamAssessment,
+  ExamResult,
   QuestionEntity,
 } from "../../domain/entities/assessmentEntity";
 
@@ -159,8 +162,9 @@ export interface IRepositories {
     assessmentId: string
   ) => Promise<AssessmentEntity | null>;
 
-    updateAssessmentRepository: (
-    assessmentId: string,data:QuestionEntity[]
+  updateAssessmentRepository: (
+    assessmentId: string,
+    data: { questions: QuestionEntity[] }
   ) => Promise<AssessmentEntity | null>;
 
   // => student
@@ -207,14 +211,13 @@ export interface IRepositories {
   getReviewRepository: (courseId: string) => Promise<ReviewData[] | null>;
   averageReviewRepository: (courseId: string) => Promise<AverageReview | null>;
 
-  createChatRepository: (data: ChatGroup) => Promise<ChatGroup | null>;
-  addMemberRepository: (data: AddMemberData) => Promise<AddMemberData | null>;
+  createChatRepository: (data: ChatGroupInput) => Promise<ChatGroup | null>;
+  addMemberRepository: (data: AddMember) => Promise<AddMemberData | null>;
 
   getUserChatsRepository: (userId: string) => Promise<UserChatList[] | null>;
   getChatMessagesRepository: (chatId: string) => Promise<Message[] | null>;
   sendMessagesRepository: (data: TextMessage) => Promise<Message | null>;
 
-  
   studentAssessmentsRepository: (
     userId: string,
     page: number,
@@ -222,12 +225,28 @@ export interface IRepositories {
     search: string
   ) => Promise<AssessmentResponse | null>;
 
-    getQuestionsRepository: (assessmentId:string) => Promise<ExamAssessment | null>;
+  getQuestionsRepository: (
+    assessmentId: string
+  ) => Promise<ExamAssessment | null>;
 
-    submitAssessmentRepository:(assessmentId: string,userId:string, answers:{answers: Answers[]}
-    )=>Promise<ExamAssessment | null>;
+  submitAssessmentRepository: (
+    assessmentId: string,
+    userId: string,
+    answers: { answers: Answers[] }
+  ) => Promise<ExamResult | null>;
 
-      certificateRepository:(assessmentId: string,userId:string)=>Promise<CertificateDetails | null>;
-
-
+  certificateRepository: (
+    assessmentId: string,
+    userId: string
+  ) => Promise<CertificateDetails | null>;
 }
+
+// import { IAdminRepository } from "../../domain/IRepository/IAdminRepository";
+// import { IAuthRepository } from "../../domain/IRepository/IAuthRepository";
+// import { IInstructorRepository } from "../../domain/IRepository/IInstructorRepository";
+// import { IStudentRepository } from "../../domain/IRepository/IStudentRepository";
+
+// export type IRepositories = IAuthRepository &
+//   IAdminRepository &
+//   IInstructorRepository &
+//   IStudentRepository;

@@ -1,5 +1,5 @@
-export interface payLoad{
-    _id:string
-    email:string
-    role:string
+export interface payLoad {
+  _id: string;
+  email: string;
+  role: string;
 }

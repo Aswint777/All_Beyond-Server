@@ -1,14 +1,14 @@
-import { ChatGroup, Message, TextMessage, UserChatList } from "../../entities/chatEntity";
+import { AddMember, AddMemberData, ChatGroup, ChatGroupInput, Message, TextMessage, UserChatList } from "../../entities/chatEntity";
 
 export interface ICreateChatUseCase {
-  execute(data:ChatGroup): Promise<ChatGroup | null>;
+  execute(data:ChatGroupInput): Promise<ChatGroup | null>;
 }
 export interface IAddMemberUseCase {
-  execute(data:ChatGroup): Promise<ChatGroup | null>;
+  execute(data:AddMember): Promise<AddMemberData | null>;
 }
 
 export interface IGetUserChatsUseCase {
-  execute(userId:string): Promise<UserChatList[] | null>;
+  execute(userId:string): Promise<UserChatList[] | null>; 
 }
 
 export interface IGetChatMessagesUseCase {

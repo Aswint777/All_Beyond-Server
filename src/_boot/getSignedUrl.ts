@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { S3Client, HeadObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  HeadObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import { httpStatusCode } from "../_lib/common/HttpStatusCode";
 import dotenv from "dotenv";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { CloudFront } from "aws-sdk";
-
-// import httpStatusCode from "http-status-codes";
-
 dotenv.config();
-
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION as string,
@@ -18,28 +18,29 @@ const s3 = new S3Client({
   },
 });
 
-
-
 // Function for fetching signed URL for thumbnails
-export const getSignedUrlForS3thumbnails = async (fileKey: string): Promise<string> => {
+export const getSignedUrlForS3thumbnails = async (
+  fileKey: string
+): Promise<string> => {
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: `course_assets/thumbnails/${fileKey}`,
   });
 
-  return getSignedUrl(s3, command, { expiresIn: 3600 }); // 5 minutes expiry
+  return getSignedUrl(s3, command, { expiresIn: 3600 });
 };
 
 // Function for fetching signed URLs for videos
-export const getSignedUrlForS3Videos = async (fileKey: string): Promise<string> => {
+export const getSignedUrlForS3Videos = async (
+  fileKey: string
+): Promise<string> => {
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: `course_assets/videos/${fileKey}`,
   });
 
-  return getSignedUrl(s3, command, { expiresIn: 3600 }); // 5 minutes expiry
+  return getSignedUrl(s3, command, { expiresIn: 3600 });
 };
-
 
 const cloudFront = new CloudFront();
 const signer = new CloudFront.Signer(
@@ -47,10 +48,13 @@ const signer = new CloudFront.Signer(
   process.env.CLOUDFRONT_PRIVATE_KEY!
 );
 
-export async function getSignedUrlForCloudFront(videoKey: string, userId: string): Promise<string> {
+export async function getSignedUrlForCloudFront(
+  videoKey: string,
+  userId: string
+): Promise<string> {
   try {
     const url = `https://${process.env.CLOUDFRONT_DOMAIN}/${videoKey}`;
-    const expires = Math.floor((Date.now() + 60 * 60 * 1000) / 1000); // 1 hour from now
+    const expires = Math.floor((Date.now() + 60 * 60 * 1000) / 1000);
 
     return new Promise((resolve, reject) => {
       signer.getSignedUrl(
@@ -73,4 +77,3 @@ export async function getSignedUrlForCloudFront(videoKey: string, userId: string
     throw new Error("Failed to generate CloudFront URL");
   }
 }
-

@@ -12,7 +12,7 @@ export class OtpController {
     this.dependencies = dependencies;
   }
 
-  // ✅ Verify OTP Controller
+  //  Verify OTP Controller
   async otpVerification(req: Request, res: Response): Promise<void> {
     try {
       console.log("Incoming request in verifyOtpController:", req.body);
@@ -22,7 +22,6 @@ export class OtpController {
         otp: otp,
       };
 
-      // 🔍 Check OTP Match
       const otpMatch = await this.dependencies.useCases
         .otpMatchCheckingUseCase(this.dependencies)
         .execute(otpData);
@@ -36,7 +35,6 @@ export class OtpController {
         return;
       }
 
-      // ✅ Mark OTP as verified
       const verifyOtpComplete = await this.dependencies.useCases
         .verifyOtpTrueUseCase(this.dependencies)
         .execute(email);
@@ -56,13 +54,12 @@ export class OtpController {
     }
   }
 
-  //   // ✅ Resend OTP Controller
+  //   Resend OTP Controller
   async resendOtp(req: Request, res: Response): Promise<void> {
     try {
       console.log("Incoming request in resendOtpController:", req.body);
       const { email } = req.body;
 
-      // 🔍 Validate Email
       const emailExists = await this.dependencies.useCases
         .checkByEmailUseCase(this.dependencies)
         .execute(email);
@@ -76,10 +73,8 @@ export class OtpController {
         return;
       }
 
-      // 🔢 Generate New OTP
-      // const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
        const otp = generateOTP()
-      // 📧 Send OTP via Email
       await sendEmail({
         to: email,   
         subject: "OTP Verification",
@@ -87,7 +82,6 @@ export class OtpController {
       });
       console.log("last");
 
-      // 🔄 Save New OTP
       const otpData = {
         email: email,
         otp: otp,

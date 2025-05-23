@@ -1,4 +1,5 @@
 import { constant } from "../../../_lib/common/constant";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { categoryEntity } from "../../../domain/entities/categoryEntity";
 import { UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../interfaces/IDependencies";
@@ -18,11 +19,10 @@ export class CategoryUseCase {
 
       return categoryList;
     } catch (error: constant) {
-      console.log("Error in checking with listing category");
-
-      throw new Error(
-        error?.message || "Error in checking with listing category"
-      );
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in checking with listing category",
+      };
     }
   }
 
@@ -35,8 +35,8 @@ export class CategoryUseCase {
     try {
       const name =
         typeof data.name === "string" ? data.name.trim().toLowerCase() : "";
-      const id = ""
-      // Check for duplicate category  
+      const id = "";
+      // Check for duplicate category
       const isDuplicate = await duplicateCategory(name);
       if (isDuplicate) {
         throw new Error("Category already exists.");
@@ -49,8 +49,10 @@ export class CategoryUseCase {
       }
       return result;
     } catch (error: any) {
-      console.error("Error in add category:", error);
-      throw new Error(error?.message || "Error in add category");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in add category",
+      };
     }
   }
 
@@ -62,15 +64,11 @@ export class CategoryUseCase {
     const { block_UnblockCategory } = this.dependencies.repositories;
 
     try {
-      console.log(
-        "hai false.................................................."
-      );
       if (isBlocked === true) {
         isBlocked = false;
       } else {
         isBlocked = true;
       }
-      console.log(isBlocked, "jjjjjjjjjjjjjjjjjj");
 
       const result = await block_UnblockCategory(id, isBlocked);
       if (result) {
@@ -79,9 +77,10 @@ export class CategoryUseCase {
         return false;
       }
     } catch (error: constant) {
-      console.log("Error in block and unblock");
-
-      throw new Error(error?.message || "Error in block and unblock");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in user blockUnblockCategoryUseCase",
+      };
     }
   }
 
@@ -92,28 +91,24 @@ export class CategoryUseCase {
     description: string
   ): Promise<{ success: boolean; message?: string }> {
     const { categoryEdit, duplicateCategory } = this.dependencies.repositories;
-  
+
     try {
-      name = name.trim(); // Ensure name is properly formatted
-  
-      // Check if the category name is a duplicate
+      name = name.trim();
       const isDuplicate = await duplicateCategory(name, id);
       if (isDuplicate) {
-        console.log("Duplicate category detected.");
-        return { success: false, message: "Category already exists." }; // Return structured response
+        return { success: false, message: "Category already exists." };
       }
-  
-      console.log("categoryEditUseCase: Updating category");
+
       const result = await categoryEdit(id, name, description);
-  
+
       return result
         ? { success: true, message: "Category updated successfully." }
         : { success: false, message: "Failed to update category." };
     } catch (error: any) {
-      console.error("Error in categoryEditUseCase:", error);
-      throw new Error(error?.message || "Error occurred in category edit.");
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in user categoryEditUseCase",
+      };
     }
   }
-  
-  
 }

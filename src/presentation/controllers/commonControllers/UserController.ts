@@ -25,14 +25,13 @@ export class UserController {
     this.dependencies = dependencies;
   }
 
-  // ✅ Sign Up Method
+  // Sign Up Method
   async signUp(req: Request, res: Response): Promise<void> {
     try {
       const { name, email, password } = req.body;
       const { checkByNameUseCase, checkByEmailUseCase, createUserUseCase } =
         this.dependencies.useCases;
 
-      // ✅ Input Validation
       if (!name || !email || !password) {
         res.status(httpStatusCode.BAD_REQUEST).json({
           success: false,
@@ -41,7 +40,6 @@ export class UserController {
         return;
       }
 
-      // 🛑 Check if the username exists
       const nameResult = await checkByNameUseCase(this.dependencies).execute(
         name
       );
@@ -54,7 +52,6 @@ export class UserController {
         return;
       }
 
-      // 🛑 Check if the email exists
       const emailResult = await checkByEmailUseCase(this.dependencies).execute(
         email
       );
@@ -66,14 +63,12 @@ export class UserController {
         return;
       }
 
-      // 🔐 Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       const data = {
         username: name,
         email: email,
         password: hashedPassword,
       };
-      // ✅ Create the user
       const newUser = await createUserUseCase(this.dependencies).execute(data);
       if (!newUser) {
         res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
@@ -84,11 +79,10 @@ export class UserController {
       }
       console.log(newUser, "success");
 
-      // 🔢 Generate OTP
-      // const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
        const otp = generateOTP()
 
-      // 📧 Send OTP via email
+     
       await sendEmail({
         to: email,
         subject: "OTP Verification",
@@ -111,7 +105,7 @@ export class UserController {
       });
       return;
     } catch (error: any) {
-      console.error("❌ Error during signup:", error);
+      console.error("Error during signup:", error);
       res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: "Internal server error. Please try again later.",
@@ -119,7 +113,7 @@ export class UserController {
     }
   }
 
-  // ✅ Login Method
+  //  Login Method
   async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
@@ -130,7 +124,7 @@ export class UserController {
         return;
       }
 
-      // 🔐 Check login credentials
+  
       const userLogin = await this.dependencies.useCases
         .loginUseCase(this.dependencies)
         .execute(email, password);
@@ -141,7 +135,7 @@ export class UserController {
         return;
       }
 
-      // 🔑 Generate JWT Tokens
+   
       const accessToken = generateAccessToken({
         _id: String(userLogin?._id),
         email: userLogin?.email!,
@@ -153,7 +147,7 @@ export class UserController {
         role: userLogin?.role!,
       });
 
-      // 🍪 Set cookies for tokens
+     
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: true,
@@ -179,7 +173,7 @@ export class UserController {
     }
   }
 
-  // ✅ Logout Method
+  // Logout Method
   async logout(req: Request, res: Response): Promise<void> {
     try {
       const cookieOptions: any = {
@@ -200,14 +194,14 @@ export class UserController {
     }
   }
 
-  // ✅ Get User Details Method
+  //  Get User Details Method
   async getUserDetails(req: Request, res: Response): Promise<void> {
     try {
       const user = getUserFromToken(req, res);
       if (!user) return;
       const _id = user._id;
 
-      // 🔍 Fetch user details
+    
       const userDetails = await this.dependencies.useCases
         .getUserDetailsUseCase(this.dependencies)
         .execute(_id);
@@ -225,12 +219,12 @@ export class UserController {
     }
   }
 
-  // ✅ Google Authentication Method
+  //  Google Authentication Method
   async googleAuth(req: Request, res: Response): Promise<void> {
     try {
       const { credential } = req.body;
 
-      // 🛑 Verify Google ID Token
+    
       const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: process.env.GOOGLE_CLIENT_ID,
@@ -246,7 +240,7 @@ export class UserController {
 
       const { email } = payload;
 
-      // 🔍 Check if user exists or create new one
+      
       const userEntry = await this.dependencies.useCases
         .googleAuthUseCase(this.dependencies)
         .execute(email);
@@ -258,7 +252,7 @@ export class UserController {
         return;
       }
 
-      // 🔑 Generate JWT Tokens
+  
       const accessToken = generateAccessToken({
         _id: String(userEntry?._id),
         email: userEntry?.email!,
@@ -270,7 +264,7 @@ export class UserController {
         role: userEntry?.role!,
       });
 
-      // 🍪 Set cookies
+     
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: true,

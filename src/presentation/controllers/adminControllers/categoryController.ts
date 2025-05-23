@@ -41,7 +41,6 @@ export class CategoryController {
     } catch (error: any) {
       console.error("Error in addCategoryController:", error);
 
-      // ✅ Send meaningful error response
       res.status(400).json({
         error:
           error.message || "Internal server error. Please try again later.",
@@ -75,7 +74,6 @@ export class CategoryController {
   async blockCategoryController(req: Request, res: Response): Promise<void> {
     const { blockUnblockCategoryUseCase } = this.dependencies.useCases;
     try {
-      console.log(req.body, "console here .............mmmmmmmmmm..");
       const { id, status } = req.body;
       const categories = await blockUnblockCategoryUseCase(
         this.dependencies

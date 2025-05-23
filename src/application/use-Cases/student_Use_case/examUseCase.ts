@@ -1,5 +1,5 @@
 import { constant } from "../../../_lib/common/constant";
-import { Answers, assessmentCourses, AssessmentEntity, AssessmentResponse, CertificateDetails, ExamAssessment } from "../../../domain/entities/assessmentEntity";
+import { Answers, assessmentCourses, AssessmentEntity, AssessmentResponse, CertificateDetails, ExamAssessment, ExamResult } from "../../../domain/entities/assessmentEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 
 export class ExamUseCase {
@@ -53,8 +53,8 @@ export class ExamUseCase {
     }
   }
 
-  async submitAssessmentUseCase(assessmentId: string,userId:string,    answers:{answers: Answers[]}
-  ): Promise<ExamAssessment| null> {
+  async submitAssessmentUseCase(assessmentId: string,userId:string, answers:{answers: Answers[]}
+  ): Promise<ExamResult| null> {
     const { submitAssessmentRepository } = this.dependencies.repositories;
     try {
       const allCourses = await submitAssessmentRepository(assessmentId,userId,answers);

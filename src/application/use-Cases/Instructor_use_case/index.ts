@@ -56,7 +56,7 @@ export const instructorUseCase = (dependencies: IDependencies) => {
     }),
     
     updateAssessmentUseCase: () => ({
-      execute: (assessmentId: string,data:QuestionEntity[]) =>
+      execute: (assessmentId: string, data: { questions: QuestionEntity[] }) =>
         assessmentUseCase.updateAssessmentUseCase(assessmentId,data),
     }),
   };

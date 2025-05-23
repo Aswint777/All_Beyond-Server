@@ -34,7 +34,7 @@ const courseSchema = new Schema(
           {
             _id: {
               type: Types.ObjectId,
-              auto: true, // Auto-generate ObjectId
+              auto: true, 
             },
             lessonTitle: {
               type: String,

@@ -12,11 +12,11 @@ export interface PaymentEntity {
 
 export interface PopulatedTransaction {
   _id: mongoose.Types.ObjectId;
-  userId: { _id: mongoose.Types.ObjectId; username: string }; // Populated student
+  userId: { _id: mongoose.Types.ObjectId; username: string }; 
   courseId: {
     _id: mongoose.Types.ObjectId;
     courseTitle: string;
-    user: { _id: mongoose.Types.ObjectId; username: string }; // Populated instructor
+    user: { _id: mongoose.Types.ObjectId; username: string }; 
   };
   amount: number;
   instructorShare: number;
@@ -24,7 +24,6 @@ export interface PopulatedTransaction {
   createdAt: Date;
 }
 
-// Define the output transaction format
 export interface TransactionOutput {
   _id: string;
   studentName: string;

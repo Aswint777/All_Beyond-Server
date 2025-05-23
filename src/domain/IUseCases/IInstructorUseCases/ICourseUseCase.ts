@@ -10,10 +10,6 @@ export interface IAllCategoriesUseCase {
 }
 
 
-// export interface IListInstructorCourseUseCase{
-//     execute (id:string):Promise<CourseEntity[] |null>
-// }
-
 export interface IListInstructorCourseUseCase {
     execute(
       id: string,

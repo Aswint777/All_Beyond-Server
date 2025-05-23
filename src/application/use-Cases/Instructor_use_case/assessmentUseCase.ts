@@ -8,7 +8,7 @@ export class AssessmentUseCase {
   constructor(dependencies: IDependencies) {
     this.dependencies = dependencies;
   }
-
+//assessment Courses UseCase
   async assessmentCoursesUseCase(
     userId: string,
     page: number,
@@ -28,7 +28,7 @@ export class AssessmentUseCase {
       throw new Error("An unexpected error occurred: " + (error.message || "Unknown error"));
     }
   }
-
+// createAssessments UseCase
    async createAssessmentsUseCase(data:AssessmentEntity): Promise<AssessmentEntity | null> {
     const { createAssessmentsRepository } = this.dependencies.repositories;
     try {
@@ -57,10 +57,10 @@ export class AssessmentUseCase {
     }
   }
 
-       async updateAssessmentUseCase(assessmentId:string,data:QuestionEntity[]): Promise<AssessmentEntity | null> {
+       async updateAssessmentUseCase(assessmentId:string, data: { questions: QuestionEntity[] }): Promise<AssessmentEntity | null> {
     const { updateAssessmentRepository } = this.dependencies.repositories;
     try {
-      const allCourses = await updateAssessmentRepository(assessmentId,data);
+      const allCourses = await updateAssessmentRepository(assessmentId,data); 
       if (!allCourses) {
         return null;
       }

@@ -88,7 +88,12 @@ import {
   IGetAssessmentUseCase,
   IUpdateAssessmentUseCase,
 } from "../../domain/IUseCases/IInstructorUseCases/IAssessmentUseCase";
-import { ICertificateUseCase, IGetQuestionsUseCase, IStudentAssessmentsUseCase, ISubmitAssessmentUseCase } from "../../domain/IUseCases/IStudentUseCases/IExamUseCase";
+import {
+  ICertificateUseCase,
+  IGetQuestionsUseCase,
+  IStudentAssessmentsUseCase,
+  ISubmitAssessmentUseCase,
+} from "../../domain/IUseCases/IStudentUseCases/IExamUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -122,8 +127,7 @@ export interface IUseCases {
     dependencies: IDependencies
   ) => ISwitchUserRoleUseCase;
 
-    latestCoursesUseCase: (dependencies: IDependencies) => ILatestCoursesUseCase;
-
+  latestCoursesUseCase: (dependencies: IDependencies) => ILatestCoursesUseCase;
 
   // Admin Use Cases
   getStudentsListUseCase: (
@@ -217,9 +221,9 @@ export interface IUseCases {
     dependencies: IDependencies
   ) => IStudentAssessmentsUseCase;
 
-    getQuestionsUseCase: (dependency: IDependencies) => IGetQuestionsUseCase;
-    submitAssessmentUseCase: (dependency: IDependencies) =>ISubmitAssessmentUseCase
-    certificateUseCase: (dependency: IDependencies) =>ICertificateUseCase
-
-
+  getQuestionsUseCase: (dependency: IDependencies) => IGetQuestionsUseCase;
+  submitAssessmentUseCase: (
+    dependency: IDependencies
+  ) => ISubmitAssessmentUseCase;
+  certificateUseCase: (dependency: IDependencies) => ICertificateUseCase;
 }

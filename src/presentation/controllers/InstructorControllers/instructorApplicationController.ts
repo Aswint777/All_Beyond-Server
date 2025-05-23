@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { IDependencies } from "../../../application/interfaces/IDependencies";
-// import { User } from "../../models/User"; // Import User model
+
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import jwt from "jsonwebtoken";
 
-// Extending MulterRequest to include the files property correctly
+
 interface MulterRequest extends Request {
   files?: {
     profilePhoto?: Express.Multer.File[];
@@ -37,7 +37,7 @@ export class ApplyInstructorController {
 
       console.log(profilePhoto, educationFile);
 
-      // Destructure form fields from request body
+     
       const {
         firstName,
         lastName,

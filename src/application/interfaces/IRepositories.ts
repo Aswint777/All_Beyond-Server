@@ -83,7 +83,7 @@ export interface IRepositories {
   // => Admin Repository
 
   // adminUserRepository
-  getStudentsList: () => Promise<UserEntity[] | boolean | null>;
+  getStudentsList: (page:number, limit:number) => Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>;
   block_UnBlockUser: (
     userId: string,
     isBlocked: boolean
@@ -120,7 +120,9 @@ export interface IRepositories {
   dashboardRepository: () => Promise<DashboardData | null>;
 
   // adminInstructorRepository
-  getInstructorApplication: () => Promise<UserEntity[] | boolean | null>;
+  getInstructorApplication: (page:number, limit:number) => Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>;
+    getInstructorsRepo: (page:number, limit:number) => Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>;
+
   updateInstructorStatus: (
     Id: string,
     status: string

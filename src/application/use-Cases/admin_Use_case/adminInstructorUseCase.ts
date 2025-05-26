@@ -11,13 +11,25 @@ export class AdminInstructorUseCase {
     this.dependencies = dependencies;
   }
 
-  // listing the students in the admin side
-  async getInstructorApplicationUseCase(): Promise<
-    UserEntity[] | boolean | null
-  > {
+  // listing the Instructor application in the admin side
+  async getInstructorApplicationUseCase(page:number, limit:number):  Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null> {
     try {
       const { getInstructorApplication } = this.dependencies.repositories;
-      const userList = await getInstructorApplication();
+      const userList = await getInstructorApplication(page,limit);
+      return userList;
+    } catch (error: constant) {
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "Error in checking with get user",
+      };
+    }
+  }
+
+    // listing the Instructor in the admin side
+  async getInstructorUseCase(page:number, limit:number):  Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null> {
+    try {
+      const { getInstructorsRepo } = this.dependencies.repositories;
+      const userList = await getInstructorsRepo(page,limit);
       return userList;
     } catch (error: constant) {
       throw {

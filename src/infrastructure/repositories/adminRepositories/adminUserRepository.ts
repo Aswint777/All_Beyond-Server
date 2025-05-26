@@ -14,19 +14,35 @@ export class AdminUserRepository
     this.dependencies = dependencies;
   }
   //listing the students
-  async getStudentsList(): Promise<UserEntity[] | boolean | null> {
+  async getStudentsList(page:number, limit:number): Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number } | boolean |null> {
     try {
       console.log("console on the check by email repository");
+    const query = { isVerified: true, role: "student" };
+    const skip = (page - 1) * limit;
 
-      const studentsList = await User.find({
-        isVerified: true,
-        role: "student",
-      });
-      console.log(studentsList, " result form getStudentsList repo");
-      if (studentsList) {
-        return studentsList;
-      }
-      return false;
+    const total = await User.countDocuments(query);
+    const studentsList = await User.find(query)
+      .skip(skip)
+      .limit(limit)
+
+    if (studentsList.length > 0) {
+      return {
+        data: studentsList,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      };
+    }
+    return false;
+      // const studentsList = await User.find({
+      //   isVerified: true,
+      //   role: "student",
+      // });
+      // // console.log(studentsList, " result form getStudentsList repo");
+      // if (studentsList) {
+      //   return studentsList;
+      // }
+      // return false;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw error;

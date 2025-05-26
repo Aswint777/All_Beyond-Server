@@ -12,10 +12,10 @@ export class AdminUserUseCase {
   }
 
   // listing the students in the admin side
-  async getStudentsListUseCase(): Promise<UserEntity[] | boolean | null> {
+  async getStudentsListUseCase(page:number, limit:number): Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number } | boolean|null > {
     try {
       const { getStudentsList } = this.dependencies.repositories;
-      const userList = await getStudentsList();
+      const userList = await getStudentsList(page, limit);
       return userList;
     } catch (error: constant) {
       throw {

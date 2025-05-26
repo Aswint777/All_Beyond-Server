@@ -34,6 +34,9 @@ export const adminController = (dependencies: IDependencies) => {
       adminInstructorController.adminInstructorApplicationList.bind(
         adminInstructorController
       ),
+    adminInstructorList: adminInstructorController.adminInstructorList.bind(
+      adminInstructorController
+    ),
     updateInstructorStatus:
       adminInstructorController.updateInstructorStatus.bind(
         adminInstructorController

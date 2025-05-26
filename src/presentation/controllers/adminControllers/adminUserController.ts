@@ -13,9 +13,16 @@ export class AdminUserController {
   async getAdminStudentsList(req: Request, res: Response): Promise<void> {
     try {
       const { getStudentsListUseCase } = this.dependencies.useCases;
+      console.log(req.query, "_______________");
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      console.log(page, limit, "hdf");
+      
+
+      // const {page,limit,} = req.body
       const userList = await getStudentsListUseCase(
         this.dependencies
-      ).execute();
+      ).execute(page,limit);
       res.status(httpStatusCode.OK).json({
         success: true,
         data: userList,
@@ -34,7 +41,7 @@ export class AdminUserController {
     try {
       const { userId, isBlocked } = req.body;
       console.log("testing is under going");
-      
+
       const statusChange = await blockUnblockUserUseCase(
         this.dependencies
       ).execute(userId, isBlocked);
@@ -52,20 +59,22 @@ export class AdminUserController {
         .json({ error: "Internal server error. Please try again later." });
     }
   }
-  
-  // user Details controller 
+
+  // user Details controller
   async userDetailsController(req: Request, res: Response): Promise<void> {
-    const {userDetailsUseCase} = this.dependencies.useCases
+    const { userDetailsUseCase } = this.dependencies.useCases;
     try {
-         console.log( req.params,'userDetails ' );
-         const {userId} = req.params
-      const userData = await userDetailsUseCase(this.dependencies).execute(userId)
+      console.log(req.params, "userDetails ");
+      const { userId } = req.params;
+      const userData = await userDetailsUseCase(this.dependencies).execute(
+        userId
+      );
       res.status(httpStatusCode.OK).json({
         success: true,
         message: "User status changed",
-        data:userData
+        data: userData,
       });
-    } catch (error:constant) {
+    } catch (error: constant) {
       console.error("Error in user Details :", error.message);
       res
         .status(httpStatusCode.INTERNAL_SERVER_ERROR)
@@ -80,11 +89,14 @@ export class AdminUserController {
       const pageNum = parseInt(page as string, 10) || 1;
       const limitNum = parseInt(limit as string, 10) || 10;
       const skip = (pageNum - 1) * limitNum;
-  
+
       console.log("Query params:", { page: pageNum, limit: limitNum, skip });
-  
-      const result = await transactionHistoryUseCase(this.dependencies).execute(skip, limitNum);
-  
+
+      const result = await transactionHistoryUseCase(this.dependencies).execute(
+        skip,
+        limitNum
+      );
+
       if (!result || result.transactions.length === 0) {
         res.status(httpStatusCode.OK).json({
           success: true,
@@ -98,10 +110,10 @@ export class AdminUserController {
         });
         return;
       }
-  
+
       const { transactions, totalTransactions } = result;
       const totalPages = Math.ceil(totalTransactions / limitNum);
-  
+
       res.status(httpStatusCode.OK).json({
         success: true,
         message: "Transactions fetched successfully",

@@ -14,19 +14,55 @@ export class AdminInstructorRepository
   }
 
   // listing the applied candidates for instructors
-  async getInstructorApplication(): Promise<UserEntity[] | boolean | null> {
+  async getInstructorApplication(page:number, limit:number):  Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null> {
     try {
       console.log("console on the check by email repository");
+    const query = { isVerified: true,isAppliedInstructor:true,status:'pending' };
+    const skip = (page - 1) * limit;
 
-      const studentsList = await User.find({
-        isVerified: true,
-        isAppliedInstructor: true,
-      });
-      console.log(studentsList, " result form getStudentsList repo");
-      if (studentsList) {
-        return studentsList;
+    const total = await User.countDocuments(query);
+    const studentsList = await User.find(query)
+      .skip(skip)
+      .limit(limit)
+
+    if (studentsList.length > 0) {
+      return {
+        data: studentsList,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      };
+    }
+    return false;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
       }
-      return false;
+      throw new Error("An unexpected error is occurred");
+    }
+  }
+
+    // listing the  instructors
+  async getInstructorsRepo(page:number, limit:number):  Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null> {
+    try {
+      console.log("console on the check by email repository");
+    const query = { isVerified: true,role:'instructor' };
+    const skip = (page - 1) * limit;
+
+    const total = await User.countDocuments(query);
+    const studentsList = await User.find(query)
+      .skip(skip)
+      .limit(limit)
+
+    if (studentsList.length > 0) {
+      return {
+        data: studentsList,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      };
+    }
+    return false;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw error;

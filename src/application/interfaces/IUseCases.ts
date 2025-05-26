@@ -36,6 +36,7 @@ import {
 
 import {
   IGetInstructorApplicationUseCase,
+  IGetInstructorUseCase,
   IUpdateInstructorStatusUseCase,
 } from "../../domain/IUseCases/IAdminuseCases/IAdminInstructorUseCase";
 
@@ -153,6 +154,8 @@ export interface IUseCases {
   getInstructorApplicationUseCase: (
     dependencies: IDependencies
   ) => IGetInstructorApplicationUseCase;
+
+    getInstructorUseCase: (dependencies: IDependencies) => IGetInstructorUseCase;
   updateInstructorStatusUseCase: (
     dependencies: IDependencies
   ) => IUpdateInstructorStatusUseCase;

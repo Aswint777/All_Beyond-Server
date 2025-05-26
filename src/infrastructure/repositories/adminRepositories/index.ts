@@ -15,7 +15,7 @@ export const AdminRepositories = (dependencies: IDependencies) => {
 
   return {
     ////
-    getStudentsList: () => adminUserRepositoryInstance.getStudentsList(),
+    getStudentsList: (page:number, limit:number) => adminUserRepositoryInstance.getStudentsList(page, limit),
     block_UnBlockUser: (userId: string, isBlocked: boolean) =>
       adminUserRepositoryInstance.block_UnBlockUser(userId, isBlocked),
     findByUserId: (userId: string) =>
@@ -25,8 +25,10 @@ export const AdminRepositories = (dependencies: IDependencies) => {
       adminUserRepositoryInstance.transactionHistoryRepository(skip, limit),
 
     /////
-    getInstructorApplication: () =>
-      adminInstructorRepositoryInstance.getInstructorApplication(),
+    getInstructorApplication: (page:number, limit:number) =>
+      adminInstructorRepositoryInstance.getInstructorApplication(page,limit),
+        getInstructorsRepo: (page:number, limit:number) =>
+      adminInstructorRepositoryInstance.getInstructorsRepo(page,limit),
     updateInstructorStatus: (Id: string, status: string) =>
       adminInstructorRepositoryInstance.updateInstructorStatus(Id, status),
 

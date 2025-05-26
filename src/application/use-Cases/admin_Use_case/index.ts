@@ -12,7 +12,10 @@ export const adminUseCases = (dependencies: IDependencies) => {
   const overviewUseCase = new OverviewUseCase(dependencies);
   return {
     getInstructorApplicationUseCase: () => ({
-      execute: () => adminInstructorUseCase.getInstructorApplicationUseCase(),
+      execute: (page:number, limit:number) => adminInstructorUseCase.getInstructorApplicationUseCase(page, limit),
+    }),
+        getInstructorUseCase: () => ({
+      execute: (page:number, limit:number) => adminInstructorUseCase.getInstructorUseCase(page, limit),
     }),
     updateInstructorStatusUseCase: () => ({
       execute: (Id: string, status: string) =>
@@ -20,7 +23,7 @@ export const adminUseCases = (dependencies: IDependencies) => {
     }),
 
     getStudentsListUseCase: () => ({
-      execute: () => adminUserUseCase.getStudentsListUseCase(),
+      execute: (page:number, limit:number) => adminUserUseCase.getStudentsListUseCase(page, limit),
     }),
 
     blockUnblockUserUseCase: () => ({

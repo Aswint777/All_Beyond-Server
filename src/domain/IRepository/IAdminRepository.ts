@@ -8,7 +8,7 @@ export interface IAdminRepository {
     // => Admin Repository
 
   // adminUserRepository
-  getStudentsList: () => Promise<UserEntity[] | boolean | null>;
+  getStudentsList: (page:number, limit:number) => Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean|null>;
   block_UnBlockUser: (
     userId: string,
     isBlocked: boolean

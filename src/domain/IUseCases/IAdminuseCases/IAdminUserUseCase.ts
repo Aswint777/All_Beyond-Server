@@ -6,7 +6,7 @@ export interface IBlock_UnBlockUserUseCase {
 }
 
 export interface IGetStudentsListUseCase {
-  execute(): Promise<UserEntity[] | boolean | null>;
+  execute(page:number, limit:number): Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>;
 }
 
 export interface IUserDetailsUseCase {

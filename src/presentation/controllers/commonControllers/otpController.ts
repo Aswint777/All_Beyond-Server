@@ -43,6 +43,7 @@ export class OtpController {
       res.status(201).json({
         success: true,
         message: "User registration completed successfully!",
+        data:true
       });
       return;
     } catch (error: any) {

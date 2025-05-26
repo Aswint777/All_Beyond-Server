@@ -13,6 +13,7 @@ export const adminRouters = (dependencies: IDependencies) => {
     blockCategory,
     editCategory,
     adminInstructorApplicationList,
+    adminInstructorList,
     updateInstructorStatus,
     userDetailsController,
     transactionHistory,
@@ -29,6 +30,7 @@ export const adminRouters = (dependencies: IDependencies) => {
   router
     .route("/AdminInstructorApplicationList")
     .get(jwtMiddleware,verifyAdmin,adminInstructorApplicationList);
+  router.route("/AdminInstructorList").get(jwtMiddleware,verifyAdmin,adminInstructorList);
   router.route("/updateInstructorStatus").put(jwtMiddleware,verifyAdmin,updateInstructorStatus);
 
   router.route("/user-details/:userId").get(userDetailsController)

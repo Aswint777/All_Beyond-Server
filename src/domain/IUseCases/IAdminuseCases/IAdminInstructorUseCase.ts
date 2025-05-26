@@ -1,7 +1,11 @@
 import { UserEntity } from "../../entities/User";
 
 export interface IGetInstructorApplicationUseCase {
-  execute(): Promise<UserEntity[] | boolean | null>;
+  execute(page:number, limit:number) : Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>
+}
+
+export interface IGetInstructorUseCase {
+  execute(page:number, limit:number) : Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>
 }
 
 export interface IUpdateInstructorStatusUseCase {

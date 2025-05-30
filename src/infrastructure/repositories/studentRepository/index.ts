@@ -71,10 +71,13 @@ export const studentRepositories = (dependencies: IDependencies) => {
       chatRepository.addMemberRepository(data),
     getUserChatsRepository: (userId: string) =>
       chatRepository.getUserChatsRepository(userId),
-    getChatMessagesRepository: (chatId: string) =>
-      chatRepository.getChatMessagesRepository(chatId),
+    getChatMessagesRepository: (chatId: string,userId:string) =>
+      chatRepository.getChatMessagesRepository(chatId,userId),
     sendMessagesRepository: (data: TextMessage) =>
       chatRepository.sendMessagesRepository(data),
+        getLastMessageRepository: (chatId: string,userId:string) =>
+      chatRepository.getLastMessageRepository(chatId,userId),
+
 
     studentAssessmentsRepository: (
       userId: string,

@@ -96,10 +96,14 @@ export const studentUseCase = (dependencies: IDependencies) => {
       execute: (userId: string) => chatUseCase.getUserChatsUseCase(userId),
     }),
     getChatMessagesUseCase: () => ({
-      execute: (chatId: string) => chatUseCase.getChatMessagesUseCase(chatId),
+      execute: (chatId: string,userId:string) => chatUseCase.getChatMessagesUseCase(chatId,userId),
     }),
     sendMessagesUseCase: () => ({
       execute: (data: TextMessage) => chatUseCase.sendMessagesUseCase(data),
+    }),
+
+        getLastMessageUseCase: () => ({
+      execute: (chatId: string,userId:string) => chatUseCase.getLastMessageUseCase(chatId,userId),
     }),
 
     studentAssessmentsUseCase: () => ({

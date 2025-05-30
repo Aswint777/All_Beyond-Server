@@ -18,6 +18,7 @@ export interface CourseChat {
     fileUrl?: string;
     username:string
     createdAt: Date;
+    readBy?: string[];
   }
 
   export interface ChatGroup {

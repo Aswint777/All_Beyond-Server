@@ -30,6 +30,8 @@ export const studentController = (dependencies: IDependencies) => {
     getUserChats:chat.getUserChats.bind(chat),
     getChatMessages:chat.getChatMessages.bind(chat),
     sendMessages:chat.sendMessages.bind(chat),
+    getLastMessage:chat.getLastMessage.bind(chat),
+
 
     studentAssessments:exam.studentAssessments.bind(exam),
     getQuestions:exam.getQuestions.bind(exam),

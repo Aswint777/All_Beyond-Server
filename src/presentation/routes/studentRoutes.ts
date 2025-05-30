@@ -21,6 +21,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     getUserChats,
     getChatMessages,
     sendMessages,
+    getLastMessage,
     studentAssessments,
     getQuestions,
     submitAssessment,
@@ -66,7 +67,9 @@ export const studentRoutes = (dependencies: IDependencies) => {
   router
     .route("/messages/:chatId")
     .post(jwtMiddleware, verifyUser, sendMessages);
-
+ router
+    .route("/lastMessage/:chatId")
+    .get(jwtMiddleware, verifyUser, getLastMessage);
   router
     .route("/studentAssessments")
     .get(jwtMiddleware, verifyUser, studentAssessments);

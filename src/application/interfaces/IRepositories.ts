@@ -217,8 +217,10 @@ export interface IRepositories {
   addMemberRepository: (data: AddMember) => Promise<AddMemberData | null>;
 
   getUserChatsRepository: (userId: string) => Promise<UserChatList[] | null>;
-  getChatMessagesRepository: (chatId: string) => Promise<Message[] | null>;
+  getChatMessagesRepository: (chatId: string,userId:string) => Promise<Message[] | null>;
   sendMessagesRepository: (data: TextMessage) => Promise<Message | null>;
+    getLastMessageRepository: (chatId: string,userId: string) => Promise<{ lastMessage: Message[] | null; unreadCount: number }>;
+
 
   studentAssessmentsRepository: (
     userId: string,

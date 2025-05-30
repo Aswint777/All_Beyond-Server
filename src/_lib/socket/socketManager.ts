@@ -142,7 +142,7 @@ export class SocketManager {
         if (userId === socket.data.userId && this.socketService.isInRoom(userId, chatGroupId)) {
           this.socketService.emitToRoom(chatGroupId, "stopTyping", { userId, chatGroupId });
         }
-      });
+      }); 
 
       socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id, "User ID:", socket.data.userId);

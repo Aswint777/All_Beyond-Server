@@ -12,8 +12,12 @@ export interface IGetUserChatsUseCase {
 }
 
 export interface IGetChatMessagesUseCase {
-  execute(chatId:string): Promise<Message[] | null>;
+  execute(chatId:string,userId:string): Promise<Message[] | null>;
 }
 export interface ISendMessagesUseCase {
   execute(data:TextMessage): Promise<Message | null>;
+}
+
+export interface IGetLastMessageUseCase {
+  execute(chatId:string,userId:string): Promise<{ lastMessage: Message[] | null; unreadCount: number }>;
 }

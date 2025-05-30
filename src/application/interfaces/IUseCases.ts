@@ -80,6 +80,7 @@ import {
   IAddMemberUseCase,
   ICreateChatUseCase,
   IGetChatMessagesUseCase,
+  IGetLastMessageUseCase,
   IGetUserChatsUseCase,
   ISendMessagesUseCase,
 } from "../../domain/IUseCases/IStudentUseCases/IChatUseCase";
@@ -219,6 +220,9 @@ export interface IUseCases {
     dependency: IDependencies
   ) => IGetChatMessagesUseCase;
   sendMessagesUseCase: (dependency: IDependencies) => ISendMessagesUseCase;
+   getLastMessageUseCase: (
+    dependency: IDependencies
+  ) => IGetLastMessageUseCase;
 
   studentAssessmentsUseCase: (
     dependencies: IDependencies

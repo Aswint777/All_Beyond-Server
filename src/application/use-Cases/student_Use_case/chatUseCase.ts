@@ -28,23 +28,20 @@ export class ChatUseCase {
 
   async addMemberUseCase(data: AddMember): Promise<AddMemberData | null> {
     const { addMemberRepository } = this.dependencies.repositories;
-       try {
-        console.log(data.courseId,data.userId,':::> HHHHHHHHHHHHHHHHHHH');
-        
-        if (!data.courseId || !data.userId) {
-          throw new Error("chatId and userId are required");
-        }
-
-        const result = await addMemberRepository(data);
-        if (!result) {
-          throw new Error("Failed to add member to chat group");
-        }
-
-        return result;
-      } catch (error: any) {
-        throw new Error(error.message || "Failed to add member");
+    try {
+      if (!data.courseId || !data.userId) {
+        throw new Error("chatId and userId are required");
       }
-    
+
+      const result = await addMemberRepository(data);
+      if (!result) {
+        throw new Error("Failed to add member to chat group");
+      }
+
+      return result;
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to add member");
+    }
   }
 
   async getUserChatsUseCase(userId: string): Promise<UserChatList[] | null> {
@@ -56,12 +53,15 @@ export class ChatUseCase {
     }
   }
 
-  async getChatMessagesUseCase(chatId: string): Promise<Message[] | null> {
+  async getChatMessagesUseCase(
+    chatId: string,
+    userId: string
+  ): Promise<Message[] | null> {
     try {
       const { getChatMessagesRepository } = this.dependencies.repositories;
-      const messageResult = await getChatMessagesRepository(chatId);
-      if(!messageResult) return null
-      return messageResult
+      const messageResult = await getChatMessagesRepository(chatId, userId);
+      if (!messageResult) return null;
+      return messageResult;
     } catch (error: constant) {
       throw new Error("An unexpected error is occurred");
     }
@@ -73,6 +73,19 @@ export class ChatUseCase {
       console.log("sendMessagesUseCase");
 
       return await sendMessagesRepository(data);
+    } catch (error: constant) {
+      throw new Error("An unexpected error is occurred");
+    }
+  }
+
+  async getLastMessageUseCase(
+    chatId: string,
+    userId: string
+  ): Promise<{ lastMessage: Message[] | null; unreadCount: number }> {
+    try {
+      const { getLastMessageRepository } = this.dependencies.repositories;
+      const messageResult = await getLastMessageRepository(chatId, userId);
+      return messageResult;
     } catch (error: constant) {
       throw new Error("An unexpected error is occurred");
     }

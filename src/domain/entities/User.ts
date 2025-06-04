@@ -48,7 +48,7 @@ export interface UserEntity {
   profile?: Profile;
   // contact?: Contact;
   isBlocked?: boolean;
-  isVerified?: isVerified;
+  isVerified?:boolean
   createdAt?: Date;
   updatedAt?: Date;
   profession?: string;
@@ -72,6 +72,7 @@ export interface UserEntity {
   linkedin?: string;
   facebook?: string;
   instagram?: string;
+  online?:boolean
 }
 
 // create user entity

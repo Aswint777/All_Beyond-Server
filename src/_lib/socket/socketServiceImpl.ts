@@ -22,6 +22,16 @@ export class SocketServiceImpl implements SocketService {
     this.io.to(roomId).emit(event, data);
   }
 
+    emitToUser(userId: string, event: string, data: any): void {
+    const socketId = this.userSocketMap.get(userId);
+    if (socketId) {
+      console.log(`Emitting to user ${userId} (socket ${socketId}):`, event, data);
+      this.io.to(socketId).emit(event, data);
+    } else {
+      console.log(`User ${userId} not found in userSocketMap`);
+    }
+  }
+
   joinRoom(userId: string, roomId: string): void {
     console.log('Joining room:', { userId, roomId });
     const socketId = this.userSocketMap.get(userId);
@@ -60,7 +70,12 @@ export class SocketServiceImpl implements SocketService {
       return isInRoom;
     }
     console.log(`User ${userId} not found in userSocketMap`);
-    return false;
+    return false;  
+  }
+
+  // Expose userSocketMap for debugging
+  getUserSocketMap(): Map<string, string> { 
+    return this.userSocketMap;  
   }
 }
 

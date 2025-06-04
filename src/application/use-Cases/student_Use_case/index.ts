@@ -105,6 +105,9 @@ export const studentUseCase = (dependencies: IDependencies) => {
         getLastMessageUseCase: () => ({
       execute: (chatId: string,userId:string) => chatUseCase.getLastMessageUseCase(chatId,userId),
     }),
+      videoChatListUseCase: () => ({
+      execute: (userId: string) => chatUseCase.videoChatListUseCase(userId),
+    }),
 
     studentAssessmentsUseCase: () => ({
       execute: (userId: string, page: number, limit: number, search: string) =>

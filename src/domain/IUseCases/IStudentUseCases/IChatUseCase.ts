@@ -21,3 +21,7 @@ export interface ISendMessagesUseCase {
 export interface IGetLastMessageUseCase {
   execute(chatId:string,userId:string): Promise<{ lastMessage: Message[] | null; unreadCount: number }>;
 }
+
+export interface IVideoChatListUseCase {
+  execute(userId:string): Promise<UserChatList[] | null>; 
+}

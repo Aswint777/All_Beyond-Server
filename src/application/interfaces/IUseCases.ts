@@ -5,6 +5,7 @@ import {
   IGetUserDetailsUseCase,
   IGoogleAuthUseCase,
   ILoginUseCase,
+  IOnlineUseCase,
 } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
 
 import {
@@ -83,6 +84,7 @@ import {
   IGetLastMessageUseCase,
   IGetUserChatsUseCase,
   ISendMessagesUseCase,
+  IVideoChatListUseCase,
 } from "../../domain/IUseCases/IStudentUseCases/IChatUseCase";
 import {
   IAssessmentCoursesUseCase,
@@ -108,6 +110,8 @@ export interface IUseCases {
     dependencies: IDependencies
   ) => IGetUserDetailsUseCase;
   googleAuthUseCase: (dependencies: IDependencies) => IGoogleAuthUseCase;
+    onlineUseCase: (dependencies: IDependencies) => IOnlineUseCase;
+
 
   verifyOtpUseCase: (dependencies: IDependencies) => IVerifyOtpUseCase;
   otpMatchCheckingUseCase: (
@@ -223,6 +227,9 @@ export interface IUseCases {
    getLastMessageUseCase: (
     dependency: IDependencies
   ) => IGetLastMessageUseCase;
+
+    videoChatListUseCase: (dependency: IDependencies) => IVideoChatListUseCase;
+
 
   studentAssessmentsUseCase: (
     dependencies: IDependencies

@@ -62,7 +62,8 @@ export class UserUseCase {
     password: string
   ): Promise<UserEntity | null> {
     try {
-      const { checkByEmail, checkNotBlocked } = this.dependencies.repositories;
+      const { checkByEmail, checkNotBlocked, userOnline } =
+        this.dependencies.repositories;
 
       const user = await checkByEmail(email);
       if (!user?.password) return null;
@@ -71,7 +72,11 @@ export class UserUseCase {
       if (!isMatch) {
         return null;
       }
-      return await checkNotBlocked(email);
+      const testing = await checkNotBlocked(email);
+      if(!testing){
+        return null 
+      }
+      return await userOnline(email);
     } catch (error: any) {
       console.error(" Error in loginUseCase:", error);
       throw {
@@ -109,6 +114,19 @@ export class UserUseCase {
       return await checkNotBlocked(email);
     } catch (error: constant) {
       console.error(" Error in googleAuthUseCase:", error);
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "An unexpected error is occurred",
+      };
+    }
+  }
+// user online status UseCase 
+    async onlineUseCase(email:string): Promise<UserEntity | null> {
+    try {
+      const {userOnline} = this.dependencies.repositories
+      return await userOnline(email);
+    } catch (error: any) {
+      console.error(" Error online status updating :", error);
       throw {
         status: httpStatusCode.INTERNAL_SERVER_ERROR,
         message: error?.message || "An unexpected error is occurred",

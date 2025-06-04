@@ -22,7 +22,7 @@ export const jwtMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log("JWT Middleware Executing...");
+    console.log("JWT Middleware Executing...!");
 
     const { access_token, refresh_token } = req.cookies;
    console.log(req.cookies,"req.cookies");
@@ -43,6 +43,7 @@ export const jwtMiddleware = async (
         );
       }
     }
+    
 
     if (!user && refresh_token) {
       try {

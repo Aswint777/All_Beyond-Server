@@ -40,17 +40,17 @@ export class UserController {
         return;
       }
 
-      const nameResult = await checkByNameUseCase(this.dependencies).execute(
-        name
-      );
+      // const nameResult = await checkByNameUseCase(this.dependencies).execute(
+      //   name
+      // );
 
-      if (nameResult) {
-        res.status(httpStatusCode.CONFLICT).json({
-          success: false,
-          message: "This username is already taken, please try another one",
-        });
-        return;
-      }
+      // if (nameResult) {
+      //   res.status(httpStatusCode.CONFLICT).json({
+      //     success: false,
+      //     message: "This username is already taken, please try another one",
+      //   });
+      //   return;
+      // }
 
       const emailResult = await checkByEmailUseCase(this.dependencies).execute(
         email
@@ -176,6 +176,7 @@ export class UserController {
   // Logout Method
   async logout(req: Request, res: Response): Promise<void> {
     try {
+      const { onlineUseCase } =this.dependencies.useCases;
       const cookieOptions: any = {
         httpOnly: true,
         secure: true,

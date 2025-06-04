@@ -26,6 +26,8 @@ export const AuthRepositories = (dependencies: IDependencies) => {
     getUserDetails: (_id: string) => UserRepositoryInstance.getUserDetails(_id),
     googleAuth: (email: string, username: string) =>
       UserRepositoryInstance.googleAuth(email, username),
+        userOnline: (email: string) => UserRepositoryInstance.userOnline(email),
+
 
     //OtpRepository
     verifyOtp: (otpData: verifyOtpEntity) =>

@@ -53,6 +53,8 @@ export interface IRepositories {
   getUserDetails: (_id: string) => Promise<UserEntity | null>;
   googleAuth: (email: string, username: string) => Promise<UserEntity | null>;
   checkNotBlocked: (email: string) => Promise<UserEntity | null>;
+  userOnline: (email: string) => Promise<UserEntity | null>;
+
 
   // otp repository
   verifyOtp: (data: verifyOtpEntity) => Promise<verifyOtpEntity | null>;
@@ -220,6 +222,7 @@ export interface IRepositories {
   getChatMessagesRepository: (chatId: string,userId:string) => Promise<Message[] | null>;
   sendMessagesRepository: (data: TextMessage) => Promise<Message | null>;
     getLastMessageRepository: (chatId: string,userId: string) => Promise<{ lastMessage: Message[] | null; unreadCount: number }>;
+  videoChatListRepository: (userId: string) => Promise<UserChatList[] | null>;
 
 
   studentAssessmentsRepository: (

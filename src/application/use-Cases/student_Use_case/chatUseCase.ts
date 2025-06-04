@@ -90,4 +90,13 @@ export class ChatUseCase {
       throw new Error("An unexpected error is occurred");
     }
   }
+
+    async videoChatListUseCase(userId: string): Promise<UserChatList[] | null> {
+    try {
+      const { videoChatListRepository } = this.dependencies.repositories;
+      return await videoChatListRepository(userId);
+    } catch (error: constant) {
+      throw new Error("An unexpected error is occurred");
+    }
+  }
 }

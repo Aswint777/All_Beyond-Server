@@ -37,7 +37,9 @@ export const authUseCases = (dependencies: IDependencies) => {
     googleAuthUseCase: () => ({
       execute: (email: string) => userUseCaseInstance.googleAuthUseCase(email),
     }),
-
+    onlineUseCase: () => ({
+      execute: (email: string) => userUseCaseInstance.onlineUseCase(email),
+    }),
     //otpUseCaseInstance
     verifyOtpUseCase: () => ({
       execute: (data: createUserEntity) =>

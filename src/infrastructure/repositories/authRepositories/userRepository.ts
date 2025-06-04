@@ -14,18 +14,23 @@ export class UserRepository
       | "checkNotBlocked"
       | "googleAuth"
       | "getUserDetails"
+      | "userOnline"
     >
 {
-  private dependencies: IDependencies; 
+  private dependencies: IDependencies;
 
   constructor(dependencies: IDependencies) {
-    this.dependencies = dependencies; 
+    this.dependencies = dependencies;
   }
   //  Check if email exists
   async checkByEmail(email: string): Promise<UserEntity | null> {
     try {
       const oldUser = await User.findOne({ email });
       if (!oldUser) {
+        return null;
+      }
+      if (oldUser.isVerified === false) {
+        await User.deleteOne({ _id: oldUser._id });
         return null;
       }
       return oldUser;
@@ -73,10 +78,12 @@ export class UserRepository
   //  Get user details by ID
   async getUserDetails(_id: string): Promise<UserEntity | null> {
     try {
-      const d =  await User.findOne({ _id });
-      
-      if(!d) return null
-      return d
+      console.log("test one ");
+
+      const d = await User.findOne({ _id });
+
+      if (!d) return null;
+      return d;
     } catch (error) {
       console.error("Error in getUserDetails:", error);
       return null;
@@ -96,4 +103,23 @@ export class UserRepository
       return null;
     }
   }
+
+ // user online status
+async userOnline(email: string): Promise<UserEntity | null> {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return null;
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { $set: { online: !user.online } },
+      { new: true }
+    );
+
+    return updatedUser;
+  } catch (error) {
+    console.error("Error in userOnline:", error);
+    return null;
+  }
+}
 }

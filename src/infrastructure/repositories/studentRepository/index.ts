@@ -78,6 +78,9 @@ export const studentRepositories = (dependencies: IDependencies) => {
         getLastMessageRepository: (chatId: string,userId:string) =>
       chatRepository.getLastMessageRepository(chatId,userId),
 
+          videoChatListRepository: (userId: string) =>
+      chatRepository.videoChatListRepository(userId),
+
 
     studentAssessmentsRepository: (
       userId: string,

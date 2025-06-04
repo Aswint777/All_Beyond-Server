@@ -26,6 +26,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     getQuestions,
     submitAssessment,
     courseCertificate,
+    videoChatList,
   } = studentController(dependencies);
 
   const router = Router();
@@ -66,24 +67,24 @@ export const studentRoutes = (dependencies: IDependencies) => {
     .get(jwtMiddleware, verifyUser, getChatMessages);
   router
     .route("/messages/:chatId")
-    .post(jwtMiddleware, verifyUser, sendMessages);
- router
+    .post(jwtMiddleware, verifyUser, sendMessages);    
+  router 
     .route("/lastMessage/:chatId")
     .get(jwtMiddleware, verifyUser, getLastMessage);
+  router.route("/videoChatList").get(jwtMiddleware, verifyUser, videoChatList);
   router
     .route("/studentAssessments")
     .get(jwtMiddleware, verifyUser, studentAssessments);
 
-     router
+  router
     .route("/getQuestions/:assessmentId")
     .get(jwtMiddleware, verifyUser, getQuestions);
 
-         router
+  router
     .route("/submit-assessment/:assessmentId")
     .post(jwtMiddleware, verifyUser, submitAssessment);
 
-    
-    router
+  router
     .route("/Download_Certificate/:assessmentId")
     .get(jwtMiddleware, verifyUser, courseCertificate);
 

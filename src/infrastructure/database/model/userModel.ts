@@ -58,10 +58,10 @@ const userSchema = new Schema(
     },
     educationFile: {
       type: String,
-    }, 
+    },
     profilePhoto: {
       type: String,
-    }, 
+    },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
@@ -73,7 +73,7 @@ const userSchema = new Schema(
       default: false,
     },
     isVerified: {
-      type: String,
+      type: Boolean,
       default: false,
     },
     profession: {
@@ -105,6 +105,10 @@ const userSchema = new Schema(
     },
     facebook: {
       type: String,
+    },
+    online: {
+      type: Boolean,
+      default: false,
     },
   },
   {

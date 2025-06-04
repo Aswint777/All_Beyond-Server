@@ -150,4 +150,51 @@ export class ChatController {
       res.status(500).json({ error: error.message });
     }
   }
+
+
+   // Get videoChatList for video call
+  async videoChatList(req: Request, res: Response): Promise<void> {
+    const { videoChatListUseCase } = this.dependencies.useCases;
+    try {
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+
+      const user = getUserFromToken(req, res);
+      if (!user) {
+        res.status(httpStatusCode.UNAUTHORIZED).json({
+          success: false,
+          message: "Unauthorized",
+        });
+        return;
+      }
+      const userId = user._id;
+      const chatList = await videoChatListUseCase(this.dependencies).execute(
+        userId
+      );
+
+      if (!chatList || chatList.length === 0) {
+        res.status(httpStatusCode.OK).json({
+          success: true,
+          message: "No chats found",
+          data: [],
+        });
+        return;
+      }
+      console.log(chatList,'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        message: "Chats listed successfully",
+        data: chatList,
+      });
+    } catch (error: any) {
+      console.error("Error in getUserChats:", error);
+      const status = error.message.includes("Invalid user ID")
+        ? httpStatusCode.BAD_REQUEST
+        : httpStatusCode.INTERNAL_SERVER_ERROR;
+      res.status(status).json({
+        success: false,
+        message: error.message || "Failed to fetch chats",
+      });
+    }
+  }
 }

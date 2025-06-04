@@ -23,3 +23,7 @@ export interface ILoginUseCase {
 export interface IGoogleAuthUseCase {
   execute(email: string): Promise<UserEntity | null>;
 }
+
+export interface IOnlineUseCase {
+  execute(email: string): Promise<UserEntity | null>;
+}

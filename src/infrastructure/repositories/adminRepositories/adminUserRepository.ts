@@ -16,14 +16,18 @@ export class AdminUserRepository
   //listing the students
   async getStudentsList(page:number, limit:number): Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number } | boolean |null> {
     try {
-      console.log("console on the check by email repository");
+      console.log("console on the check by email repository",page, limit);
     const query = { isVerified: true, role: "student" };
     const skip = (page - 1) * limit;
+console.log(query);
 
     const total = await User.countDocuments(query);
+    console.log(total);
+    
     const studentsList = await User.find(query)
       .skip(skip)
       .limit(limit)
+console.log(studentsList);
 
     if (studentsList.length > 0) {
       return {
@@ -34,15 +38,7 @@ export class AdminUserRepository
       };
     }
     return false;
-      // const studentsList = await User.find({
-      //   isVerified: true,
-      //   role: "student",
-      // });
-      // // console.log(studentsList, " result form getStudentsList repo");
-      // if (studentsList) {
-      //   return studentsList;
-      // }
-      // return false;
+
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw error;

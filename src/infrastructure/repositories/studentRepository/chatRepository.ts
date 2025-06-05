@@ -158,20 +158,20 @@ export class ChatRepository
           { $addToSet: { readBy: userId } }
         );
         // _______________________________________________________________________________________________
-        // const unreadCount = await MessageModel.countDocuments({
-        //   chatGroupId: chatId,
-        //   readBy: { $ne: userId },
-        // });
+        const unreadCount = await MessageModel.countDocuments({
+          chatGroupId: chatId,
+          readBy: { $ne: userId },
+        });
 
-        // this.dependencies.socketService.emitToRoom(
-        //   chatId,
-        //   "unreadCountUpdate",
-        //   {
-        //     userId,
-        //     chatGroupId: chatId,
-        //     unreadCount,
-        //   }
-        // );
+        this.dependencies.socketService.emitToRoom(
+          chatId,
+          "unreadCountUpdate",
+          {
+            userId,
+            chatGroupId: chatId,
+            unreadCount,
+          }
+        );
         // ___________________________________________________________________________________________________________
       }
         
@@ -225,33 +225,31 @@ export class ChatRepository
         return message;
       }
       // __________________________________________________________________________________________________
-      // Calculate and emit unread counts for each participant (except the sender)
-      // const participants = chatGroup.members || [];
-      // for (const participantId of participants) {
-      //   if (participantId === data.senderId) continue; // Skip the sender
+      const participants = chatGroup.members || []; 
+      for (const participantId of participants) {
+        if (participantId === data.senderId) continue; 
 
-      //   const unreadCount = await MessageModel.countDocuments({
-      //     chatGroupId: chatMessage.chatGroupId,
-      //     readBy: { $ne: participantId },
-      //   });
+        const unreadCount = await MessageModel.countDocuments({
+          chatGroupId: chatMessage.chatGroupId,
+          readBy: { $ne: participantId },
+        });
 
-      //   this.dependencies.socketService.emitToRoom(
-      //     chatMessage.chatGroupId,
-      //     "unreadCountUpdate",
-      //     {
-      //       userId: participantId, 
-      //       chatGroupId: chatMessage.chatGroupId,
-      //       unreadCount,
-      //     }
-      //   );
-      // }
+        this.dependencies.socketService.emitToRoom(
+          chatMessage.chatGroupId,
+          "unreadCountUpdate",
+          {
+            userId: participantId, 
+            chatGroupId: chatMessage.chatGroupId,
+            unreadCount,
+          }
+        );
+      }
 
-      // // Emit the new message to the chat group
-      // this.dependencies.socketService.emitToRoom(
-      //   chatMessage.chatGroupId,
-      //   "message",
-      //   message
-      // );
+      this.dependencies.socketService.emitToRoom(
+        chatMessage.chatGroupId,
+        "message",
+        message
+      );
       // _______________________________________________________________________________________________________
       return {
         ...message,
@@ -333,14 +331,12 @@ export class ChatRepository
       let users: VideoChatList[] = [];
 
       if (isStudent) {
-        // Fetch courses the student is enrolled in
         const enrolments = await Enrolment.find({ userId: userObjectId })
           .populate<{
             courseId: { user: Types.ObjectId; courseTitle: string };
           }>("courseId", "user")
           .lean();
 
-        // Get unique instructor IDs from enrolled courses
         const instructorIds = [
           ...new Set(
             enrolments
@@ -351,7 +347,6 @@ export class ChatRepository
           ),
         ];
 
-        // Fetch instructor details
         const instructors = await User.find({
           _id: { $in: instructorIds }, 
           role: "instructor",

@@ -108,7 +108,7 @@ export class ChatController {
 
         createdAt: chatMessage.createdAt,
       };
-      console.log("Emitting message to room:", chatId, messageData);
+      console.log("Emitting message to room:", chatId, messageData); 
 
       socketService.emitToRoom(chatId, "message", messageData);
 

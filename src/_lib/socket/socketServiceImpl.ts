@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { SocketService } from "../../domain/entities/chatEntity";
 
 export class SocketServiceImpl implements SocketService {
-  private userSocketMap: Map<string, string> = new Map(); // userId -> socketId
+  private userSocketMap: Map<string, string> = new Map();
 
   constructor(private io: Server) {}
 

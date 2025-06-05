@@ -12,6 +12,8 @@ export class AdminUserController {
   // listing the students
   async getAdminStudentsList(req: Request, res: Response): Promise<void> {
     try {
+      console.log('console userssssssssssssssssssssssssssssssssssss');
+      
       const { getStudentsListUseCase } = this.dependencies.useCases;
       console.log(req.query, "_______________");
       const page = parseInt(req.query.page as string) || 1;
@@ -23,6 +25,8 @@ export class AdminUserController {
       const userList = await getStudentsListUseCase(
         this.dependencies
       ).execute(page,limit);
+      console.log(userList,'{{{{{{{{{');
+      
       res.status(httpStatusCode.OK).json({
         success: true,
         data: userList,

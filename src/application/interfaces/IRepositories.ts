@@ -6,7 +6,10 @@ import {
 } from "../../domain/entities/verifyOtpEntity";
 import { categoryEntity } from "../../domain/entities/categoryEntity";
 import { ICreateUserUseCase } from "../../domain/IUseCases/IAuthUseCases/IUserUseCase";
-import { CourseEntity } from "../../domain/entities/courseEntity";
+import {
+  CourseEntity,
+  CoursesResponse,
+} from "../../domain/entities/courseEntity";
 import {
   PaymentEntity,
   TransactionOutput,
@@ -42,6 +45,7 @@ import {
   ExamResult,
   QuestionEntity,
 } from "../../domain/entities/assessmentEntity";
+import { Notify } from "../../domain/entities/notificationEntity";
 
 export interface IRepositories {
   // => Auth Repository
@@ -54,7 +58,6 @@ export interface IRepositories {
   googleAuth: (email: string, username: string) => Promise<UserEntity | null>;
   checkNotBlocked: (email: string) => Promise<UserEntity | null>;
   userOnline: (email: string) => Promise<UserEntity | null>;
-
 
   // otp repository
   verifyOtp: (data: verifyOtpEntity) => Promise<verifyOtpEntity | null>;
@@ -74,9 +77,16 @@ export interface IRepositories {
     page: number,
     limit: number,
     search?: string,
-    category?: string
-  ) => Promise<CourseEntity[] | null>;
-  getCoursesCountRepo: () => Promise<number>;
+    category?: string,
+    sort?: string,
+    pricingOption?: string
+  ) => Promise<CoursesResponse>;
+
+  getCoursesCountRepo: (
+    search: string,
+    category: string,
+    pricingOption: string
+  ) => Promise<number>;
 
   courseDetailsRepo: (courseId: string) => Promise<CourseEntity | null>;
   similarCourseRepo: (courseId: string) => Promise<CourseEntity[] | null>;
@@ -85,7 +95,19 @@ export interface IRepositories {
   // => Admin Repository
 
   // adminUserRepository
-  getStudentsList: (page:number, limit:number) => Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>;
+  getStudentsList: (
+    page: number,
+    limit: number
+  ) => Promise<
+    | {
+        data: UserEntity[];
+        total: number;
+        currentPage: number;
+        totalPages: number;
+      }
+    | boolean
+    | null
+  >;
   block_UnBlockUser: (
     userId: string,
     isBlocked: boolean
@@ -122,8 +144,32 @@ export interface IRepositories {
   dashboardRepository: () => Promise<DashboardData | null>;
 
   // adminInstructorRepository
-  getInstructorApplication: (page:number, limit:number) => Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>;
-    getInstructorsRepo: (page:number, limit:number) => Promise<{ data: UserEntity[], total: number, currentPage: number, totalPages: number }| boolean | null>;
+  getInstructorApplication: (
+    page: number,
+    limit: number
+  ) => Promise<
+    | {
+        data: UserEntity[];
+        total: number;
+        currentPage: number;
+        totalPages: number;
+      }
+    | boolean
+    | null
+  >;
+  getInstructorsRepo: (
+    page: number,
+    limit: number
+  ) => Promise<
+    | {
+        data: UserEntity[];
+        total: number;
+        currentPage: number;
+        totalPages: number;
+      }
+    | boolean
+    | null
+  >;
 
   updateInstructorStatus: (
     Id: string,
@@ -219,11 +265,16 @@ export interface IRepositories {
   addMemberRepository: (data: AddMember) => Promise<AddMemberData | null>;
 
   getUserChatsRepository: (userId: string) => Promise<UserChatList[] | null>;
-  getChatMessagesRepository: (chatId: string,userId:string) => Promise<Message[] | null>;
+  getChatMessagesRepository: (
+    chatId: string,
+    userId: string
+  ) => Promise<Message[] | null>;
   sendMessagesRepository: (data: TextMessage) => Promise<Message | null>;
-    getLastMessageRepository: (chatId: string,userId: string) => Promise<{ lastMessage: Message[] | null; unreadCount: number }>;
+  getLastMessageRepository: (
+    chatId: string,
+    userId: string
+  ) => Promise<{ lastMessage: Message[] | null; unreadCount: number }>;
   videoChatListRepository: (userId: string) => Promise<UserChatList[] | null>;
-
 
   studentAssessmentsRepository: (
     userId: string,
@@ -246,6 +297,18 @@ export interface IRepositories {
     assessmentId: string,
     userId: string
   ) => Promise<CertificateDetails | null>;
+
+  assessmentNotificationUpdateRepo: (
+    assessmentId: string
+  ) => Promise<boolean | null>;
+
+    createAssessmentNotificationRepo: (
+    courseId: string
+  ) => Promise<boolean | null>;
+
+    getNotificationsRepo: (
+    userId: string
+  ) => Promise<Notify[] | null>;
 }
 
 // import { IAdminRepository } from "../../domain/IRepository/IAdminRepository";

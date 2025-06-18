@@ -98,6 +98,7 @@ import {
   IStudentAssessmentsUseCase,
   ISubmitAssessmentUseCase,
 } from "../../domain/IUseCases/IStudentUseCases/IExamUseCase";
+import { IAssessmentNotificationUpdate, ICreateAssessmentNotification, IGetNotificationsUseCase } from "../../domain/IUseCases/IStudentUseCases/INotificationUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -110,8 +111,7 @@ export interface IUseCases {
     dependencies: IDependencies
   ) => IGetUserDetailsUseCase;
   googleAuthUseCase: (dependencies: IDependencies) => IGoogleAuthUseCase;
-    onlineUseCase: (dependencies: IDependencies) => IOnlineUseCase;
-
+  onlineUseCase: (dependencies: IDependencies) => IOnlineUseCase;
 
   verifyOtpUseCase: (dependencies: IDependencies) => IVerifyOtpUseCase;
   otpMatchCheckingUseCase: (
@@ -160,7 +160,7 @@ export interface IUseCases {
     dependencies: IDependencies
   ) => IGetInstructorApplicationUseCase;
 
-    getInstructorUseCase: (dependencies: IDependencies) => IGetInstructorUseCase;
+  getInstructorUseCase: (dependencies: IDependencies) => IGetInstructorUseCase;
   updateInstructorStatusUseCase: (
     dependencies: IDependencies
   ) => IUpdateInstructorStatusUseCase;
@@ -224,12 +224,9 @@ export interface IUseCases {
     dependency: IDependencies
   ) => IGetChatMessagesUseCase;
   sendMessagesUseCase: (dependency: IDependencies) => ISendMessagesUseCase;
-   getLastMessageUseCase: (
-    dependency: IDependencies
-  ) => IGetLastMessageUseCase;
+  getLastMessageUseCase: (dependency: IDependencies) => IGetLastMessageUseCase;
 
-    videoChatListUseCase: (dependency: IDependencies) => IVideoChatListUseCase;
-
+  videoChatListUseCase: (dependency: IDependencies) => IVideoChatListUseCase;
 
   studentAssessmentsUseCase: (
     dependencies: IDependencies
@@ -240,4 +237,17 @@ export interface IUseCases {
     dependency: IDependencies
   ) => ISubmitAssessmentUseCase;
   certificateUseCase: (dependency: IDependencies) => ICertificateUseCase;
+
+  assessmentNotificationUpdate: (
+    dependency: IDependencies
+  ) => IAssessmentNotificationUpdate;
+
+  
+  createAssessmentNotification: (
+    dependency: IDependencies
+  ) => ICreateAssessmentNotification;
+
+  getNotificationsUseCase: (
+    dependency: IDependencies
+  ) => IGetNotificationsUseCase;
 }

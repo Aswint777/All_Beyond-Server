@@ -11,69 +11,76 @@ export class CourseController {
     this.dependencies = dependencies;
   }
 
+
   async allCourses(req: Request, res: Response): Promise<void> {
-    const { allCoursesUseCase, getTotalCount } = this.dependencies.useCases;
-    try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 3;
-      const search = req.query.search as string | undefined;
-      const category = req.query.category as string | undefined;
+  const { allCoursesUseCase, getTotalCount } = this.dependencies.useCases;
+  try {
+    console.log(req.query);
+    console.log('kkkkkkkkk');
 
-      let courses = await allCoursesUseCase(this.dependencies).execute(
-        page,
-        limit,
-        search,
-        category
-      );
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 3;
+    const search = req.query.search as string | undefined;
+    const category = req.query.category as string | undefined;
+    const sort = req.query.sort as string | undefined; // Fixed: Use req.query.sort
+    const pricingOption = req.query.pricingOption as string | undefined; // Fixed: Use req.query.pricingOption
 
-      if (!courses || courses.length === 0) {
-        res.status(200).json({
-          success: true,
-          message: "No courses found",
-          data: {
-            courses: [],
-            totalPages: 0,
-            currentPage: page,
-            totalCourses: 0,
-          },
-        });
-        return;
-      }
+    const { courses, totalPages } = await allCoursesUseCase(this.dependencies).execute(
+      page,
+      limit,
+      search,
+      category,
+      sort,
+      pricingOption
+    );
+console.log('courses :  ', courses);
 
-      courses = await Promise.all(
-        courses.map(async (course) => {
-          if (course.thumbnailUrl) {
-            const fileKey = course.thumbnailUrl.split(
-              "/course_assets/thumbnails/"
-            )[1]; 
-            course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
-          }
-          return course;
-        })
-      );
-
-      const totalCourses = await getTotalCount(this.dependencies).execute();
-
-
+    if (!courses || courses.length === 0) {
       res.status(200).json({
         success: true,
-        message: "Courses retrieved successfully",
+        message: "No courses found",
         data: {
-          courses,
-          totalCourses,
+          courses: [],
+          totalPages: 0,
           currentPage: page,
-          totalPages: Math.ceil(totalCourses / limit),
+          totalCourses: 0,
         },
       });
-    } catch (error: any) {
-      console.error("Error in allCourses:", error);
-      res.status(500).json({
-        success: false,
-        message: "Internal server error: " + error.message,
-        data: {},
-      });
+      return;
     }
+
+    const updatedCourses = await Promise.all(
+      courses.map(async (course) => {
+        if (course.thumbnailUrl) {
+          const fileKey = course.thumbnailUrl.split("/course_assets/thumbnails/")[1];
+          course.thumbnailUrl = await getSignedUrlForS3thumbnails(fileKey);
+        }
+        return course;
+      })
+    );
+
+    const totalCourses = await getTotalCount(this.dependencies).execute(search, category, pricingOption);
+
+    res.status(200).json({
+      success: true, 
+      message: "Courses retrieved successfully",
+      data: {
+        courses: updatedCourses,
+        totalCourses,
+        currentPage: page,
+        totalPages,
+      },
+    });
+  } catch (error: any) {
+    console.error("Error in allCourses:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error: " + error.message,
+      data: {},
+    });
   }
+}
+
 
   // course details page
   async courseDetailsController(req: Request, res: Response): Promise<void> {

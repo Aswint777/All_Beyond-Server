@@ -13,7 +13,7 @@ export const AuthRepositories = (dependencies: IDependencies) => {
   const UserRepositoryInstance = new UserRepository(dependencies);
   const OtpRepositoryInstance = new OtpRepository(dependencies);
   const profileRepositoryInstance = new ProfileRepository(dependencies);
-  const courseRepositoryInstance = new CourseRepository(dependencies)
+  const courseRepositoryInstance = new CourseRepository(dependencies);
 
   return {
     //UserRepository
@@ -26,8 +26,7 @@ export const AuthRepositories = (dependencies: IDependencies) => {
     getUserDetails: (_id: string) => UserRepositoryInstance.getUserDetails(_id),
     googleAuth: (email: string, username: string) =>
       UserRepositoryInstance.googleAuth(email, username),
-        userOnline: (email: string) => UserRepositoryInstance.userOnline(email),
-
+    userOnline: (email: string) => UserRepositoryInstance.userOnline(email),
 
     //OtpRepository
     verifyOtp: (otpData: verifyOtpEntity) =>
@@ -42,17 +41,32 @@ export const AuthRepositories = (dependencies: IDependencies) => {
       profileRepositoryInstance.profileEdit(data),
     uploadPhoto: (userId: string, profilePhoto: string) =>
       profileRepositoryInstance.uploadPhoto(userId, profilePhoto),
-    switchRole:(id:string)=>profileRepositoryInstance.switchRole(id),
-
+    switchRole: (id: string) => profileRepositoryInstance.switchRole(id),
 
     // course repository
 
-    allCoursesRepo:(page: number, limit: number, search?:string, category?:string)=>courseRepositoryInstance.allCoursesRepo(page,limit, search, category),
-    getCoursesCountRepo:()=>courseRepositoryInstance.getCoursesCountRepo(),
+    allCoursesRepo: (
+      page: number,
+      limit: number,
+      search?: string,
+      category?: string,
+      sort?: string,
+      pricingOption?: string
+    ) =>
+      courseRepositoryInstance.allCoursesRepo(
+        page,
+        limit,
+        search,
+        category,
+        sort,
+        pricingOption
+      ),
+    getCoursesCountRepo: (search:string, category:string, pricingOption:string) => courseRepositoryInstance.getCoursesCountRepo(search, category, pricingOption),
 
-    courseDetailsRepo:(courseId:string)=>courseRepositoryInstance.courseDetailsRepo(courseId),
-    similarCourseRepo:(courseId:string)=>courseRepositoryInstance.similarCourseRepo(courseId),
-        latestCoursesRepo:()=>courseRepositoryInstance.latestCoursesRepo(),
-
+    courseDetailsRepo: (courseId: string) =>
+      courseRepositoryInstance.courseDetailsRepo(courseId),
+    similarCourseRepo: (courseId: string) =>
+      courseRepositoryInstance.similarCourseRepo(courseId),
+    latestCoursesRepo: () => courseRepositoryInstance.latestCoursesRepo(),
   };
 };

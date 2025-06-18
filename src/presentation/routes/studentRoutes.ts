@@ -27,6 +27,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     submitAssessment,
     courseCertificate,
     videoChatList,
+    getNotifications,
   } = studentController(dependencies);
 
   const router = Router();
@@ -87,6 +88,8 @@ export const studentRoutes = (dependencies: IDependencies) => {
   router
     .route("/Download_Certificate/:assessmentId")
     .get(jwtMiddleware, verifyUser, courseCertificate);
+
+    router.route('/notifications').get(getNotifications)
 
   return router;
 };

@@ -13,6 +13,7 @@ import { PaymentEntity } from "../../../domain/entities/paymentEntity";
 import { ChatRepository } from "./chatRepository";
 import { EnrolmentRepository } from "./enrolmentRepository";
 import { ExamRepository } from "./examRepository";
+import { NotificationRepository } from "./NotificationRepsitory";
 import { OverViewRepository } from "./overviewRepository";
 import { ProgressRepository } from "./progressRepository";
 
@@ -22,6 +23,7 @@ export const studentRepositories = (dependencies: IDependencies) => {
   const overViewRepository = new OverViewRepository(dependencies);
   const chatRepository = new ChatRepository(dependencies);
   const examRepository = new ExamRepository(dependencies);
+  const notificationRepository = new NotificationRepository(dependencies);
   return {
     coursePaymentRepository: (data: PaymentEntity) =>
       enrolmentRepository.coursePaymentRepository(data),
@@ -71,16 +73,15 @@ export const studentRepositories = (dependencies: IDependencies) => {
       chatRepository.addMemberRepository(data),
     getUserChatsRepository: (userId: string) =>
       chatRepository.getUserChatsRepository(userId),
-    getChatMessagesRepository: (chatId: string,userId:string) =>
-      chatRepository.getChatMessagesRepository(chatId,userId),
+    getChatMessagesRepository: (chatId: string, userId: string) =>
+      chatRepository.getChatMessagesRepository(chatId, userId),
     sendMessagesRepository: (data: TextMessage) =>
       chatRepository.sendMessagesRepository(data),
-        getLastMessageRepository: (chatId: string,userId:string) =>
-      chatRepository.getLastMessageRepository(chatId,userId),
+    getLastMessageRepository: (chatId: string, userId: string) =>
+      chatRepository.getLastMessageRepository(chatId, userId),
 
-          videoChatListRepository: (userId: string) =>
+    videoChatListRepository: (userId: string) =>
       chatRepository.videoChatListRepository(userId),
-
 
     studentAssessmentsRepository: (
       userId: string,
@@ -96,17 +97,24 @@ export const studentRepositories = (dependencies: IDependencies) => {
     submitAssessmentRepository: (
       assessmentId: string,
       userId: string,
-      answers:{answers: Answers[]}
+      answers: { answers: Answers[] }
     ) =>
       examRepository.submitAssessmentRepository(assessmentId, userId, answers),
 
-          certificateRepository: (
-      assessmentId: string,
-      userId: string,
-    ) =>
+    certificateRepository: (assessmentId: string, userId: string) =>
       examRepository.certificateRepository(assessmentId, userId),
 
-      
-  };
+    // Notification Repository
 
+    assessmentNotificationUpdateRepo: (assessmentId: string) =>
+      notificationRepository.assessmentNotificationUpdateRepo(assessmentId),
+
+    
+   createAssessmentNotificationRepo: (courseId: string) =>
+      notificationRepository.createAssessmentNotificationRepo(courseId),
+
+
+    getNotificationsRepo: (userId: string) =>
+      notificationRepository.getNotificationsRepo(userId),
+  };
 };

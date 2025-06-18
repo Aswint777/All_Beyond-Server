@@ -6,5 +6,4 @@ export interface IDependencies {
   repositories: IRepositories;
   useCases: IUseCases;
   socketService: SocketServiceImpl;
-
 }

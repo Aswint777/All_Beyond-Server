@@ -13,6 +13,7 @@ import { IDependencies } from "../../interfaces/IDependencies";
 import { ChatUseCase } from "./chatUseCase";
 import { EnrolmentUseCase } from "./enrolmentUseCase";
 import { ExamUseCase } from "./examUseCase";
+import { NotificationUsCase } from "./notificationUseCase";
 import { StudentOverviewUseCase } from "./overviewUseCase";
 import { ProgressUseCase } from "./progressUseCase";
 
@@ -22,6 +23,7 @@ export const studentUseCase = (dependencies: IDependencies) => {
   const studentOverviewUseCase = new StudentOverviewUseCase(dependencies);
   const chatUseCase = new ChatUseCase(dependencies);
   const examUseCase = new ExamUseCase(dependencies);
+  const NotificationUseCase = new NotificationUsCase(dependencies);
 
   return {
     coursePaymentUseCase: () => ({
@@ -96,16 +98,18 @@ export const studentUseCase = (dependencies: IDependencies) => {
       execute: (userId: string) => chatUseCase.getUserChatsUseCase(userId),
     }),
     getChatMessagesUseCase: () => ({
-      execute: (chatId: string,userId:string) => chatUseCase.getChatMessagesUseCase(chatId,userId),
+      execute: (chatId: string, userId: string) =>
+        chatUseCase.getChatMessagesUseCase(chatId, userId),
     }),
     sendMessagesUseCase: () => ({
       execute: (data: TextMessage) => chatUseCase.sendMessagesUseCase(data),
     }),
 
-        getLastMessageUseCase: () => ({
-      execute: (chatId: string,userId:string) => chatUseCase.getLastMessageUseCase(chatId,userId),
+    getLastMessageUseCase: () => ({
+      execute: (chatId: string, userId: string) =>
+        chatUseCase.getLastMessageUseCase(chatId, userId),
     }),
-      videoChatListUseCase: () => ({
+    videoChatListUseCase: () => ({
       execute: (userId: string) => chatUseCase.videoChatListUseCase(userId),
     }),
 
@@ -120,14 +124,32 @@ export const studentUseCase = (dependencies: IDependencies) => {
     }),
 
     submitAssessmentUseCase: () => ({
-      execute: (assessmentId: string,userId:string,    answers:{answers: Answers[]}
-      ) =>
-        examUseCase.submitAssessmentUseCase(assessmentId,userId,answers),
+      execute: (
+        assessmentId: string,
+        userId: string,
+        answers: { answers: Answers[] }
+      ) => examUseCase.submitAssessmentUseCase(assessmentId, userId, answers),
     }),
 
-        certificateUseCase: () => ({
-      execute: (assessmentId: string,userId:string,) =>
-        examUseCase.certificateUseCase(assessmentId,userId),
+    certificateUseCase: () => ({
+      execute: (assessmentId: string, userId: string) =>
+        examUseCase.certificateUseCase(assessmentId, userId),
+    }),
+
+    //Notification UseCase
+    assessmentNotificationUpdate: () => ({
+      execute: (assessmentId: string) =>
+        NotificationUseCase.assessmentNotificationUpdate(assessmentId),
+    }),
+
+    createAssessmentNotification: () => ({
+      execute: (courseId: string) =>
+        NotificationUseCase.createAssessmentNotification(courseId),
+    }),
+
+    getNotificationsUseCase: () => ({
+      execute: (userId: string) =>
+        NotificationUseCase.getNotificationsUseCase(userId),
     }),
   };
 };

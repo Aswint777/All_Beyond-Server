@@ -26,6 +26,8 @@ export const studentController = (dependencies: IDependencies) => {
     studentDashboard:overview.studentDashboard.bind(overview),
     addReview:overview.addReview.bind(overview),
     getReviews:overview.getReviews.bind(overview),
+    getNotifications:overview.getNotifications.bind(overview),
+
 
     getUserChats:chat.getUserChats.bind(chat),
     getChatMessages:chat.getChatMessages.bind(chat),

@@ -24,3 +24,9 @@ export interface CourseEntity {
   user?:ObjectId
   isBlocked?:boolean
 }
+
+
+export interface CoursesResponse {
+  courses: CourseEntity[];
+  totalPages: number;
+}

@@ -64,7 +64,7 @@ export class AssessmentController {
   }
 
   async createAssessments(req: Request, res: Response): Promise<void> {
-    const { createAssessmentsUseCase } = this.dependencies.useCases;
+    const { createAssessmentsUseCase,createAssessmentNotification } = this.dependencies.useCases;
     try {
       const user = getUserFromToken(req, res);
       if (!user) {
@@ -79,6 +79,10 @@ export class AssessmentController {
 
       const result = await createAssessmentsUseCase(this.dependencies).execute(
         data
+      );
+      const courseId = data.courseId
+       await createAssessmentNotification(this.dependencies).execute(
+        courseId
       );
 
       if (!result) {
@@ -134,7 +138,7 @@ export class AssessmentController {
   }
 
   async updateAssessment(req: Request, res: Response): Promise<void> {
-    const { updateAssessmentUseCase } = this.dependencies.useCases;
+    const { updateAssessmentUseCase,assessmentNotificationUpdate } = this.dependencies.useCases;
     try {
       const { assessmentId } = req.params;
       console.log(req.body);
@@ -152,8 +156,11 @@ export class AssessmentController {
         });
         return;
       }
-      console.log(result);
 
+      console.log(result);
+      const notify = await assessmentNotificationUpdate(this.dependencies).execute(
+        assessmentId
+      );
       res.status(httpStatusCode.OK).json({
         success: true,
         data: result,

@@ -89,8 +89,18 @@ export const authUseCases = (dependencies: IDependencies) => {
         page: number,
         limit: number,
         search?: string,
-        category?: string
-      ) => courseUseCase.allCoursesUseCase(page, limit, search, category),
+        category?: string,
+        sort?: string,
+        pricingOption?: string
+      ) =>
+        courseUseCase.allCoursesUseCase(
+          page,
+          limit,
+          search,
+          category,
+          sort,
+          pricingOption
+        ),
     }),
     courseDetailsUseCase: () => ({
       execute: (courseId: string) =>
@@ -101,7 +111,7 @@ export const authUseCases = (dependencies: IDependencies) => {
         courseUseCase.similarCourseUseCase(courseId),
     }),
     getTotalCount: () => ({
-      execute: () => courseUseCase.getTotalCount(),
+      execute: (search:string, category:string, pricingOption:string) => courseUseCase.getTotalCount(search, category, pricingOption),
     }),
 
     latestCoursesUseCase: () => ({

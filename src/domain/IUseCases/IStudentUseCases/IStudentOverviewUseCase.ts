@@ -15,3 +15,4 @@ export interface IGetReviewUseCase {
 export interface IAverageReviewUseCase {
   execute(courseId:string): Promise<AverageReview | null>;
 }
+

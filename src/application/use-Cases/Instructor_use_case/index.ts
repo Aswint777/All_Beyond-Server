@@ -41,6 +41,11 @@ export const instructorUseCase = (dependencies: IDependencies) => {
       execute: (userId: string) =>
         instructorApplyUseCase.instructorDashboardUseCase(userId),
     }),
+
+        instructorTransactionsUseCase: () => ({
+      execute: (userId:string,skip: number, limit: number) =>
+        instructorApplyUseCase.instructorTransactionsUseCase(userId,skip, limit),
+    }),
     assessmentCoursesUseCase: () => ({
       execute: (userId: string, page: number, limit: number, search: string) =>
         assessmentUseCase.assessmentCoursesUseCase(userId, page, limit, search),

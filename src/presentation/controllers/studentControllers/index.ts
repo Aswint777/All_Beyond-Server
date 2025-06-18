@@ -8,9 +8,9 @@ import { ProgressController } from "./progressController";
 export const studentController = (dependencies: IDependencies) => {
   const enrolment = new EnrolmentController(dependencies);
   const progress = new ProgressController(dependencies);
-  const overview = new StudentOverviewController(dependencies)
-  const chat = new ChatController(dependencies)
-  const exam = new ExamController(dependencies)
+  const overview = new StudentOverviewController(dependencies);
+  const chat = new ChatController(dependencies);
+  const exam = new ExamController(dependencies);
 
   return {
     enrollCourse: enrolment.enrollCourse.bind(enrolment),
@@ -23,24 +23,21 @@ export const studentController = (dependencies: IDependencies) => {
     getProgress: progress.getProgress.bind(progress),
     updateProgress: progress.updateProgress.bind(progress),
 
-    studentDashboard:overview.studentDashboard.bind(overview),
-    addReview:overview.addReview.bind(overview),
-    getReviews:overview.getReviews.bind(overview),
-    getNotifications:overview.getNotifications.bind(overview),
+    studentDashboard: overview.studentDashboard.bind(overview),
+    addReview: overview.addReview.bind(overview),
+    getReviews: overview.getReviews.bind(overview),
+    getNotifications: overview.getNotifications.bind(overview),
+    studentTransactions: overview.studentTransactions.bind(overview),
 
+    getUserChats: chat.getUserChats.bind(chat),
+    getChatMessages: chat.getChatMessages.bind(chat),
+    sendMessages: chat.sendMessages.bind(chat),
+    getLastMessage: chat.getLastMessage.bind(chat),
+    videoChatList: chat.videoChatList.bind(chat),
 
-    getUserChats:chat.getUserChats.bind(chat),
-    getChatMessages:chat.getChatMessages.bind(chat),
-    sendMessages:chat.sendMessages.bind(chat),
-    getLastMessage:chat.getLastMessage.bind(chat),
-    videoChatList:chat.videoChatList.bind(chat),
-
-
-
-    studentAssessments:exam.studentAssessments.bind(exam),
-    getQuestions:exam.getQuestions.bind(exam),
-    submitAssessment:exam.submitAssessment.bind(exam),
-    courseCertificate:exam.courseCertificate.bind(exam),
-
+    studentAssessments: exam.studentAssessments.bind(exam),
+    getQuestions: exam.getQuestions.bind(exam),
+    submitAssessment: exam.submitAssessment.bind(exam),
+    courseCertificate: exam.courseCertificate.bind(exam),
   };
 };

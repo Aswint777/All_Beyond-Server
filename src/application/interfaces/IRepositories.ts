@@ -199,6 +199,15 @@ export interface IRepositories {
     userId: string
   ) => Promise<InstructorDashboardData | null>;
 
+    instructorTransactionsRepo: (
+      userId:string,
+    skip: number,
+    limit: number
+  ) => Promise<{
+    transactions: TransactionOutput[];
+    totalTransactions: number;
+  } | null>;
+
   assessmentCoursesRepository: (
     userId: string,
     page: number,
@@ -309,6 +318,16 @@ export interface IRepositories {
     getNotificationsRepo: (
     userId: string
   ) => Promise<Notify[] | null>;
+
+  
+    studentTransactionsRepo: (
+      userId:string,
+    skip: number,
+    limit: number
+  ) => Promise<{
+    transactions: TransactionOutput[];
+    totalTransactions: number;
+  } | null>;
 }
 
 // import { IAdminRepository } from "../../domain/IRepository/IAdminRepository";

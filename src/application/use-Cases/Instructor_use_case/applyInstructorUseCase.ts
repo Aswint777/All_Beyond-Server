@@ -1,5 +1,7 @@
 import { constant } from "../../../_lib/common/constant";
+import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import { InstructorDashboardData } from "../../../domain/entities/enrolmentEntity";
+import { TransactionOutput } from "../../../domain/entities/paymentEntity";
 import { UserEntity } from "../../../domain/entities/User";
 import { IDependencies } from "../../interfaces/IDependencies";
 
@@ -35,4 +37,29 @@ export class InstructorApplyUseCase {
       throw new Error("An unexpected error occurred");
     }
   }
+
+  
+    // Fetch transaction History
+    async instructorTransactionsUseCase(
+      userId:string,
+      skip: number,
+      limit: number
+    ): Promise<{
+      transactions: TransactionOutput[];
+      totalTransactions: number;
+    } | null> {
+      const { instructorTransactionsRepo } = this.dependencies.repositories;
+      try {
+        const result = await instructorTransactionsRepo(userId,skip, limit);
+        if (!result || result.transactions.length === 0) {
+          return null;
+        }
+        return result;
+      } catch (error: any) {
+        throw {
+          status: httpStatusCode.INTERNAL_SERVER_ERROR,
+          message: error?.message || "Error in transactionHistoryUseCase",
+        };
+      }
+    }
 }

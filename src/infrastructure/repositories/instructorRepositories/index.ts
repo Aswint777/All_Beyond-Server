@@ -30,6 +30,9 @@ export const InstructorRepositories = (dependencies: IDependencies) => {
       courseRepository.blockCourseRepository(courseId),
     instructorDashboardRepository: (userId: string) =>
       applyInstructorInstance.instructorDashboardRepository(userId),
+
+        instructorTransactionsRepo: (userId:string,skip: number = 0, limit: number = 10) =>
+      applyInstructorInstance.instructorTransactionsRepo(userId,skip, limit),
     assessmentCoursesRepository: (
       userId: string,
       page: number,

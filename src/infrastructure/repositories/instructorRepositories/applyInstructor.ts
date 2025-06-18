@@ -8,6 +8,7 @@ import {
 } from "../../../domain/entities/enrolmentEntity";
 import { UserEntity } from "../../../domain/entities/User";
 import { Course, Enrolment, Payment, User } from "../../database/model";
+import { PopulatedTransaction, TransactionOutput } from "../../../domain/entities/paymentEntity";
 
 export class ApplyInstructor
   implements Pick<IRepositories, "instructorApplication">
@@ -194,4 +195,59 @@ export class ApplyInstructor
       throw new Error("An unexpected error occurred");
     }
   }
+
+    async instructorTransactionsRepo(
+      userId:string,
+      skip: number = 0,
+      limit: number = 10
+    ): Promise<{ transactions: TransactionOutput[]; totalTransactions: number } | null> {
+      try {
+        const courses = await Course.find({user:userId})
+ const courseIds = courses.map(course => course._id);
+
+    const transactions = await Payment.find({
+      courseId: { $in: courseIds }
+    })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "userId",
+        select: "username",
+        match: { isBlocked: false },
+      })
+      .populate({
+        path: "courseId",
+        select: "courseTitle user",
+        match: { isBlocked: false },
+        populate: {
+          path: "user",
+          select: "username",
+          match: { isBlocked: false },
+        },
+      })
+      .skip(skip)
+      .limit(limit)
+      .lean() as unknown as PopulatedTransaction[];
+
+    
+        const validTransactions: TransactionOutput[] = transactions
+          .filter((t) => t.userId && t.courseId && t.courseId.user) 
+          .map((t) => ({
+            _id: t._id.toString(),
+            studentName: t.userId.username,
+            instructorName: t.courseId.user.username,
+            courseName: t.courseId.courseTitle,
+            transactionDate: t.createdAt,
+            instructorShare: t.instructorShare,
+            adminShare: t.adminShare,
+            amount : t.amount
+          }));
+    
+        const totalTransactions = await Payment.countDocuments();
+    
+        return { transactions: validTransactions, totalTransactions };
+      } catch (error: any) {
+        console.error("Error in transactionHistoryRepository:", error);
+        throw new Error("An unexpected error occurred");
+      }
+    }
 }

@@ -21,10 +21,11 @@ export const instructorController = (dependencies: IDependencies) => {
     editCourse: courseController.editCourse.bind(courseController),
     blockCourse: courseController.blockCourse.bind(courseController),
     instructorDashboard: overview.instructorDashboard.bind(overview),
+    instructorTransactions: overview.instructorTransactions.bind(overview),
+
     assessmentCourses: assessment.assessmentCourses.bind(assessment),
     createAssessments: assessment.createAssessments.bind(assessment),
     getAssessment: assessment.getAssessment.bind(assessment),
-        updateAssessment: assessment.updateAssessment.bind(assessment),
-
+    updateAssessment: assessment.updateAssessment.bind(assessment),
   };
 };

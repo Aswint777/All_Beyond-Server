@@ -28,6 +28,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     courseCertificate,
     videoChatList,
     getNotifications,
+    studentTransactions,
   } = studentController(dependencies);
 
   const router = Router();
@@ -68,8 +69,8 @@ export const studentRoutes = (dependencies: IDependencies) => {
     .get(jwtMiddleware, verifyUser, getChatMessages);
   router
     .route("/messages/:chatId")
-    .post(jwtMiddleware, verifyUser, sendMessages);    
-  router 
+    .post(jwtMiddleware, verifyUser, sendMessages);
+  router
     .route("/lastMessage/:chatId")
     .get(jwtMiddleware, verifyUser, getLastMessage);
   router.route("/videoChatList").get(jwtMiddleware, verifyUser, videoChatList);
@@ -83,13 +84,14 @@ export const studentRoutes = (dependencies: IDependencies) => {
 
   router
     .route("/submit-assessment/:assessmentId")
-    .post(jwtMiddleware, verifyUser, submitAssessment);
+    .post(jwtMiddleware, verifyUser, submitAssessment); 
 
   router
     .route("/Download_Certificate/:assessmentId")
     .get(jwtMiddleware, verifyUser, courseCertificate);
 
-    router.route('/notifications').get(getNotifications)
+  router.route("/notifications").get(getNotifications);
+  router.route("/transactions").get(studentTransactions);
 
   return router;
 };

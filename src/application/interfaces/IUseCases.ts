@@ -44,6 +44,7 @@ import {
 import {
   IApplyInstructorUseCase,
   IInstructorDashboardUseCase,
+  IInstructorTransactionsUseCase,
 } from "../../domain/IUseCases/IInstructorUseCases/IApplyInstructorUseCase";
 import { IDependencies } from "./IDependencies";
 import {
@@ -76,6 +77,7 @@ import {
   IAverageReviewUseCase,
   IGetReviewUseCase,
   IStudentDashboardUseCase,
+  IStudentTransactionsUseCase,
 } from "../../domain/IUseCases/IStudentUseCases/IStudentOverviewUseCase";
 import {
   IAddMemberUseCase,
@@ -184,6 +186,10 @@ export interface IUseCases {
     dependency: IDependencies
   ) => IInstructorDashboardUseCase;
 
+    instructorTransactionsUseCase: (
+    dependency: IDependencies
+  ) => IInstructorTransactionsUseCase;
+
   assessmentCoursesUseCase: (
     dependencies: IDependencies
   ) => IAssessmentCoursesUseCase;
@@ -250,4 +256,8 @@ export interface IUseCases {
   getNotificationsUseCase: (
     dependency: IDependencies
   ) => IGetNotificationsUseCase;
+
+      studentTransactionsUseCase: (
+    dependency: IDependencies
+  ) => IStudentTransactionsUseCase;
 }

@@ -9,8 +9,10 @@ export interface CourseEntity {
   aboutInstructor?: string;
   thumbnailUrl?:string
   content?: {
+    //  _id?: string | ObjectId;
     moduleTitle?: string;
     lessons?: {
+       _id?: string | ObjectId;
       lessonTitle?: string;
       lessonDescription?: string;
       video?: string;

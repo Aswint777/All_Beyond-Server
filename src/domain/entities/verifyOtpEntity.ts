@@ -13,3 +13,8 @@ export interface matchOtpEntity{
     email?:string
     otp?:string
 }
+
+export interface resetOne{
+    email:string
+    newPassword:string
+}

@@ -3,9 +3,12 @@ import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { IRepositories } from "../../../application/interfaces/IRepositories";
 import {
   matchOtpEntity,
+  resetOne,
   verifyOtpEntity,
 } from "../../../domain/entities/verifyOtpEntity";
 import { otpVerify, User } from "../../database/model";
+import bcrypt from "bcrypt";
+
 
 export class OtpRepository
   implements Pick<IRepositories, "verifyOtp" | "otpMatchChecking">
@@ -60,6 +63,24 @@ export class OtpRepository
       );
 
       return !!checkUser;
+    } catch (error: unknown) {
+      console.error("Error in verifyOtpTrue:", error);
+      throw new Error("An unexpected error occurred while verifying OTP.");
+    }
+  }
+
+   async resetPasswordRepo(Data:resetOne): Promise<boolean | null> {
+    try {
+      const newPassword = Data.newPassword
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      const resetNewPassword = await User.findOneAndUpdate(
+        { email:Data.email },
+        {$set:{ password:hashedPassword} },
+        { new: true }
+      );
+
+      return true;
     } catch (error: unknown) {
       console.error("Error in verifyOtpTrue:", error);
       throw new Error("An unexpected error occurred while verifying OTP.");

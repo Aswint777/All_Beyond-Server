@@ -1,5 +1,6 @@
 import {
   matchOtpEntity,
+  resetOne,
   verifyOtpEntity,
 } from "../../entities/verifyOtpEntity";
 import { promises } from "dns";
@@ -13,4 +14,9 @@ export interface IVerifyOtpTrueUseCase {
 }
 export interface IOtpMatchCheckingUseCase {
   execute(otpData: matchOtpEntity): Promise<boolean | null>;
+}
+
+
+export interface IResetPasswordUseCase {
+  execute(Data: resetOne): Promise<boolean | null>;
 }

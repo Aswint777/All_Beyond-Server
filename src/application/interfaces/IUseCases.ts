@@ -10,6 +10,7 @@ import {
 
 import {
   IOtpMatchCheckingUseCase,
+  IResetPasswordUseCase,
   IVerifyOtpTrueUseCase,
   IVerifyOtpUseCase,
 } from "../../domain/IUseCases/IAuthUseCases/IOtpUseCase";
@@ -120,6 +121,8 @@ export interface IUseCases {
     dependencies: IDependencies
   ) => IOtpMatchCheckingUseCase;
   verifyOtpTrueUseCase: (dependencies: IDependencies) => IVerifyOtpTrueUseCase;
+    resetPasswordUseCase: (dependencies: IDependencies) => IResetPasswordUseCase;
+
 
   allCoursesUseCase: (dependencies: IDependencies) => allCoursesUseCase;
   getTotalCount: (dependencies: IDependencies) => IGetTotalCount;

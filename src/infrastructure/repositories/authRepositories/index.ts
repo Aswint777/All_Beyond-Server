@@ -2,6 +2,7 @@ import { IDependencies } from "../../../application/interfaces/IDependencies";
 import { createUserEntity, UserEntity } from "../../../domain/entities/User";
 import {
   matchOtpEntity,
+  resetOne,
   verifyOtpEntity,
 } from "../../../domain/entities/verifyOtpEntity";
 import { CourseRepository } from "./courseRepository";
@@ -35,6 +36,8 @@ export const AuthRepositories = (dependencies: IDependencies) => {
       OtpRepositoryInstance.otpMatchChecking(data),
     verifyOtpTrue: (email: string) =>
       OtpRepositoryInstance.verifyOtpTrue(email),
+        resetPasswordRepo: (Data: resetOne) =>
+      OtpRepositoryInstance.resetPasswordRepo(Data),
 
     // Profile Repository
     profileEdit: (data: UserEntity) =>

@@ -68,7 +68,9 @@ export class UserRepository
   //  Create a new user
   async createUser(data: createUserEntity): Promise<UserEntity | null> {
     try {
-      return await User.create(data);
+      const sign =  await User.create(data);
+      await User.findOneAndUpdate({email:sign.email},{$set:{firstName:sign.username}})
+      return sign
     } catch (error) {
       console.error("Error in createUser:", error);
       return null;

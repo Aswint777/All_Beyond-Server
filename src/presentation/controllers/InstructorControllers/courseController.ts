@@ -16,6 +16,20 @@ interface S3File extends Express.Multer.File {
   key: string; // S3 key/path of the file
 }
 
+interface LessonInput {
+  id?: string;
+  title: string;
+  description?: string;
+  lessonDescription?: string;
+  video?: string;
+  replaceVideo?: boolean;
+}
+interface ModuleInput {
+  id?: string;
+  title: string;
+  lessons: LessonInput[];
+}
+
 interface S3File extends Express.MulterS3.File {
   location: string;
   key: string;
@@ -42,7 +56,8 @@ export class CourseController {
   }
   // create new Course
   async createCourse(req: Request, res: Response): Promise<void> {
-    const { createCourseUseCase,createChatUseCase } = this.dependencies.useCases;
+    const { createCourseUseCase, createChatUseCase } =
+      this.dependencies.useCases;
 
     try {
       if (!req.user) {
@@ -81,7 +96,7 @@ export class CourseController {
         accountNumber,
         email,
         phone,
-        modules, 
+        modules,
       } = req.body;
 
       const thumbnail = files.find((file) => file.fieldname === "thumbnail");
@@ -89,7 +104,6 @@ export class CourseController {
         file.fieldname.startsWith("video_")
       );
 
-      
       const content = modules.map((module: any, moduleIndex: number) => ({
         moduleTitle: module.title,
         lessons: module.lessons.map((lesson: any, lessonIndex: number) => {
@@ -110,7 +124,7 @@ export class CourseController {
         categoryName: category,
         instructorName,
         aboutInstructor,
-        pricingOption: isPaid, 
+        pricingOption: isPaid,
         price: price ? parseFloat(price) : undefined,
         accountNumber: accountNumber ? parseInt(accountNumber) : undefined,
         additionalEmail: email,
@@ -124,24 +138,23 @@ export class CourseController {
         courseData,
         id
       );
-      if (!savedCourse || !savedCourse._id ) {
+      if (!savedCourse || !savedCourse._id) {
         throw new Error("Failed to create course");
       }
       if (!savedCourse.courseTitle) {
-      throw new Error("Course title is missing in the saved course");
-    }
-
-
+        throw new Error("Course title is missing in the saved course");
+      }
 
       const data: ChatGroupInput = {
-        title:savedCourse.courseTitle,
-        courseId: savedCourse._id.toString(), 
+        title: savedCourse.courseTitle,
+        courseId: savedCourse._id.toString(),
         adminId: id,
         members: [id],
       };
-           
-      
-      const createGroupChat = await createChatUseCase(this.dependencies).execute(data)
+
+      const createGroupChat = await createChatUseCase(
+        this.dependencies
+      ).execute(data);
 
       res
         .status(httpStatusCode.CREATED)
@@ -296,14 +309,16 @@ export class CourseController {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
-  
+
   async editCourse(req: Request, res: Response): Promise<void> {
-    const { editCourseUseCase } = this.dependencies.useCases;
+    const { editCourseUseCase, courseDetailsUseCase } =
+      this.dependencies.useCases;
 
     try {
       console.log("edit Course in instructor");
-      const files = req.files as S3File[];
+      const files = (req.files as S3File[]) || [];
       const { courseId } = req.params;
+      console.log("files:", files);
 
       if (!req.user) {
         res.status(401).json({ message: "Unauthorized: No user" });
@@ -322,64 +337,155 @@ export class CourseController {
       };
       const id = decoded._id;
 
-      if (!req.files || !Array.isArray(req.files)) {
-        res
-          .status(httpStatusCode.BAD_REQUEST)
-          .json({ message: "No files uploaded" });
-        return;
-      }
-
       const {
         title,
         courseDescription,
         category,
-        instructorName,
+        instructor,
         aboutInstructor,
         isPaid,
         price,
         accountNumber,
         email,
         phone,
-        modules, 
+        modules,
+        thumbnailUrl,
       } = req.body;
 
       const thumbnail = files.find((file) => file.fieldname === "thumbnail");
       const videoFiles = files.filter((file) =>
         file.fieldname.startsWith("video_")
       );
+      const existingCourse = await courseDetailsUseCase(
+        this.dependencies
+      ).execute(courseId);
+      if (!existingCourse) {
+        res
+          .status(httpStatusCode.NOT_FOUND)
+          .json({ message: "Course not found" });
+        return;
+      }
 
-      const content = modules.map((module: any, moduleIndex: number) => ({
-        moduleTitle: module.title,
-        lessons: module.lessons.map((lesson: any, lessonIndex: number) => {
-          const video = videoFiles.find(
-            (file) => file.fieldname === `video_${moduleIndex}_${lessonIndex}`
+      const parsedModules = (
+        typeof modules === "string" ? JSON.parse(modules) : modules
+      ) as ModuleInput[];
+
+      const content = parsedModules.map(
+        (module: ModuleInput, moduleIndex: number) => {
+          const existingModule = existingCourse.content?.find(
+            (m) => m.moduleTitle === module.title
           );
-          return {
-            lessonTitle: lesson.title,
-            lessonDescription: lesson.lessonDescription,
-            video: video?.location || lesson.video || "", 
+
+          // extract lessons first
+          const lessons = module.lessons.map(
+            (
+              lesson,
+              lessonIndex
+            ): {
+              lessonTitle: string;
+              lessonDescription: string;
+              video: string;
+              _id?: string;
+            } => {
+              const existingLesson = existingModule?.lessons?.find(
+                (l) =>
+                  l._id?.toString() === lesson.id ||
+                  l.lessonTitle === lesson.title
+              );
+
+              const video = videoFiles.find(
+                (file) =>
+                  file.fieldname === `video_${moduleIndex}_${lessonIndex}`
+              );
+
+              let videoUrl = "";
+              if (existingLesson) {
+                if (lesson.replaceVideo && video) {
+                  videoUrl = video.location;
+                } else {
+                  videoUrl = existingLesson.video || "";
+                }
+              } else {
+                if (video) {
+                  videoUrl = video.location;
+                } else {
+                  videoUrl = lesson.video || "";
+                }
+              }
+
+              const lessonObj: {
+                lessonTitle: string;
+                lessonDescription: string;
+                video: string;
+                _id?: string;
+              } = {
+                lessonTitle: lesson.title,
+                lessonDescription:
+                  lesson.lessonDescription || lesson.description || "",
+                video: videoUrl,
+              };
+
+              if (lesson.id && lesson.id !== "") {
+                lessonObj._id = lesson.id;
+              } else if (existingLesson?._id) {
+                lessonObj._id = existingLesson._id.toString();
+              }
+
+              return lessonObj;
+            }
+          );
+
+          const moduleObj: {
+            moduleTitle: string;
+            lessons: {
+              lessonTitle: string;
+              lessonDescription: string;
+              video: string;
+              _id?: string;
+            }[];
+            _id?: string;
+          } = {
+            moduleTitle: module.title,
+            lessons,
           };
-        }),
-      }));
-      const _id = courseId;
+
+          if (module.id) {
+            moduleObj._id = module.id;
+          }
+
+          return moduleObj;
+        }
+      );
+
+      const isObjectId = (id: string) => /^[0-9a-fA-F]{24}$/.test(id);
+
+      content.forEach((module) => {
+        if (module._id && !isObjectId(module._id.toString())) {
+          delete module._id;
+        }
+        module.lessons.forEach((lesson) => {
+          if (lesson._id && !isObjectId(lesson._id.toString())) {
+            delete lesson._id;
+          }
+        });
+      });
+
       const courseData = {
-        _id,
+        _id: courseId,
         courseTitle: title,
         courseDescription,
         categoryName: category,
-        instructorName,
+        instructor,
         aboutInstructor,
         pricingOption: isPaid,
         price: price ? parseFloat(price) : undefined,
         accountNumber: accountNumber ? parseInt(accountNumber) : undefined,
         additionalEmail: email,
         additionalContactNumber: phone,
-        thumbnailUrl: thumbnail?.location || "",
-        thumbnailKey: thumbnail?.key || "",
+        thumbnailUrl: thumbnail?.location || existingCourse.thumbnailUrl || "",
+        // thumbnailKey: thumbnail?.key || existingCourse.thumbnailKey || "",
         content,
       };
-
-      console.log("courseData:", courseData);
 
       const updatedCourse = await editCourseUseCase(this.dependencies).execute(
         courseData

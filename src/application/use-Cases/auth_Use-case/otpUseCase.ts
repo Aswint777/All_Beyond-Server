@@ -2,6 +2,7 @@ import { constant } from "../../../_lib/common/constant";
 import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import {
   matchOtpEntity,
+  resetOne,
   verifyOtpEntity,
 } from "../../../domain/entities/verifyOtpEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
@@ -50,6 +51,22 @@ export class OtpUseCase {
   async verifyOtpTrueUseCase(email: string): Promise<boolean | null> {
     try {
       const result = await this.dependencies.repositories.verifyOtpTrue(email);
+      if (!result) {
+        return false;
+      }
+      return true;
+    } catch (error: constant) {
+      console.error("Error in verifyOtpTrueUseCase:", error);
+      throw {
+        status: httpStatusCode.INTERNAL_SERVER_ERROR,
+        message: error?.message || "An unexpected error is occurred",
+      };
+    }
+  }
+
+    async resetPasswordUseCase(Data:resetOne): Promise<boolean | null> {
+    try {
+      const result = await this.dependencies.repositories.resetPasswordRepo(Data);
       if (!result) {
         return false;
       }

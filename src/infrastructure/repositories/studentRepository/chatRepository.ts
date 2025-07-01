@@ -202,8 +202,9 @@ export class ChatRepository
     try {
       const messageData = {
         ...data,
-        readBy: [data.senderId], // Initialize readBy with the senderId
+        readBy: [data.senderId], 
       };
+console.log(messageData,'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
 
       const chatMessage = await MessageModel.create(messageData);
       if (!chatMessage) return null;

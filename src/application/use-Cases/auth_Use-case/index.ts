@@ -1,5 +1,8 @@
 import { createUserEntity, UserEntity } from "../../../domain/entities/User";
-import { matchOtpEntity } from "../../../domain/entities/verifyOtpEntity";
+import {
+  matchOtpEntity,
+  resetOne,
+} from "../../../domain/entities/verifyOtpEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 import { CourseUseCase } from "./courseUseCase";
 import { OtpUseCase } from "./otpUseCase";
@@ -52,6 +55,11 @@ export const authUseCases = (dependencies: IDependencies) => {
     verifyOtpTrueUseCase: () => ({
       execute: (email: string) =>
         otpUseCaseInstance.verifyOtpTrueUseCase(email),
+    }),
+
+    resetPasswordUseCase: () => ({
+      execute: (Data: resetOne) =>
+        otpUseCaseInstance.resetPasswordUseCase(Data),
     }),
 
     // Profile useCase
@@ -111,7 +119,8 @@ export const authUseCases = (dependencies: IDependencies) => {
         courseUseCase.similarCourseUseCase(courseId),
     }),
     getTotalCount: () => ({
-      execute: (search:string, category:string, pricingOption:string) => courseUseCase.getTotalCount(search, category, pricingOption),
+      execute: (search: string, category: string, pricingOption: string) =>
+        courseUseCase.getTotalCount(search, category, pricingOption),
     }),
 
     latestCoursesUseCase: () => ({

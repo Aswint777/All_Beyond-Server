@@ -34,6 +34,8 @@ export const studentController = (dependencies: IDependencies) => {
     sendMessages: chat.sendMessages.bind(chat),
     getLastMessage: chat.getLastMessage.bind(chat),
     videoChatList: chat.videoChatList.bind(chat),
+        sendFileMessages: chat.sendFileMessages.bind(chat),
+
 
     studentAssessments: exam.studentAssessments.bind(exam),
     getQuestions: exam.getQuestions.bind(exam),

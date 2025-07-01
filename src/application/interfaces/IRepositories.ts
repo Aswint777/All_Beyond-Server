@@ -2,6 +2,7 @@ import { promises } from "dns";
 import { createUserEntity, UserEntity } from "../../domain/entities/User";
 import {
   matchOtpEntity,
+  resetOne,
   verifyOtpEntity,
 } from "../../domain/entities/verifyOtpEntity";
 import { categoryEntity } from "../../domain/entities/categoryEntity";
@@ -63,6 +64,8 @@ export interface IRepositories {
   verifyOtp: (data: verifyOtpEntity) => Promise<verifyOtpEntity | null>;
   otpMatchChecking: (data: matchOtpEntity) => Promise<boolean | null>;
   verifyOtpTrue: (data: string) => Promise<boolean | null>;
+    resetPasswordRepo: (data: resetOne) => Promise<boolean | null>;
+
 
   //profile repository
   profileEdit: (data: UserEntity) => Promise<UserEntity | null>;

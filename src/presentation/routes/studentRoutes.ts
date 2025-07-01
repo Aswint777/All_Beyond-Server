@@ -4,6 +4,9 @@ import { studentController } from "../controllers/studentControllers";
 import { jwtMiddleware } from "../middlewares/jwtMiddlewares";
 import { verifyStudent } from "../middlewares/verifyStudent";
 import { verifyUser } from "../middlewares/verifyUser";
+import { uploadFiles } from "../../_boot/multerConfig";
+
+const fileUpload = uploadFiles.single('file');
 
 export const studentRoutes = (dependencies: IDependencies) => {
   const {
@@ -29,6 +32,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     videoChatList,
     getNotifications,
     studentTransactions,
+    sendFileMessages,
   } = studentController(dependencies);
 
   const router = Router();
@@ -70,6 +74,11 @@ export const studentRoutes = (dependencies: IDependencies) => {
   router
     .route("/messages/:chatId")
     .post(jwtMiddleware, verifyUser, sendMessages);
+
+      router
+    .route("/fileMessages/:chatId")
+    .post(jwtMiddleware, verifyUser,fileUpload, sendFileMessages);
+
   router
     .route("/lastMessage/:chatId")
     .get(jwtMiddleware, verifyUser, getLastMessage);

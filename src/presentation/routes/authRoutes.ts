@@ -28,6 +28,9 @@ export const routers = (dependencies: IDependencies) => {
     similarCourse,
     allCategory,
     latestCourses,
+    forgot_Password,
+    forgotOtpVerification,
+    resetPassword,
   } = controller(dependencies);
 
   const router = Router();
@@ -41,6 +44,10 @@ export const routers = (dependencies: IDependencies) => {
   // otp routes
   router.route("/OtpVerify").post(otpVerification);
   router.route("/resent").post(resendOtp);
+  router.route("/forgot-password").post(forgot_Password);
+  router.route("/forgot-verify-otp").post(forgotOtpVerification);
+    router.route("/reset-password").post(resetPassword);
+
 
   router.route("/userDetails").get(jwtMiddleware, userDetails);
 
@@ -52,13 +59,13 @@ export const routers = (dependencies: IDependencies) => {
     .route("/uploadProfilePhoto")
     .put(jwtMiddleware, cpUpload, uploadProfilePhoto);
 
-    router.route("/switchUserRole").put(jwtMiddleware,switchUserRole)
-    
-    router.route("/courses").get(allCourses);
-    router.route('/courseDetails/:courseId').get(courseDetails)
-    router.route('/allCategory').get(allCategory)
-    router.route('/similarCourses/:courseId').get(similarCourse)
-        router.route('/latestCourses').get(latestCourses)
+  router.route("/switchUserRole").put(jwtMiddleware, switchUserRole);
+
+  router.route("/courses").get(allCourses);
+  router.route("/courseDetails/:courseId").get(courseDetails);
+  router.route("/allCategory").get(allCategory);
+  router.route("/similarCourses/:courseId").get(similarCourse);
+  router.route("/latestCourses").get(latestCourses);
 
   return router;
 };

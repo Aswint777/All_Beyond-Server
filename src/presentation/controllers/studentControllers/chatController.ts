@@ -95,6 +95,54 @@ export class ChatController {
       const chatMessage = await sendMessagesUseCase(this.dependencies).execute(
         data
       );
+      if (!chatMessage) { 
+        res.status(401).json({ success: false, message: "Unauthorized" });
+        return;
+      }
+      const messageData = {
+        id: chatMessage.id.toString(),
+        chatGroupId: chatMessage.chatGroupId.toString(),
+        senderId: chatMessage.senderId.toString(),
+        content: chatMessage.content,
+        username: chatMessage.username,
+
+        createdAt: chatMessage.createdAt,
+      };
+      console.log("Emitting message to room:", chatId, messageData); 
+
+      socketService.emitToRoom(chatId, "message", messageData);
+
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        message: "Chats listed successfully",
+        data: chatMessage,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+    // send File messages
+  async sendFileMessages(req: Request, res: Response): Promise<void> {
+    const { sendMessagesUseCase } = this.dependencies.useCases;
+    const { socketService } = this.dependencies;
+
+    try {
+      console.log('file: ',req.file);
+      const fileUpload =  req.file?.path || "";
+      const { senderId, username } = req.body;
+      const { chatId } = req.params;
+      console.log('bodybbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb:',senderId, username );
+      const data = {
+        chatGroupId: chatId,
+        senderId: senderId,
+        fileUrl: fileUpload,
+        username: username,
+      };
+
+      const chatMessage = await sendMessagesUseCase(this.dependencies).execute(
+        data
+      );
       if (!chatMessage) {
         res.status(401).json({ success: false, message: "Unauthorized" });
         return;

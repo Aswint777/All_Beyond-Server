@@ -40,14 +40,21 @@ export class ProfileUseCase {
       if (newPassword !== confirmPassword) {
         return false;
       }
-
+      console.log("email:",email);
+      
       const user = await this.dependencies.repositories.checkByEmail(email);
+      console.log(user);
+      
       if (!user || !user.password) {
+        console.log('llllll');
+
         return false;
       }
 
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
+        console.log('isMatch' );
+        
         return false;
       }
 

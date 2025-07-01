@@ -8,7 +8,7 @@ export const controller = (dependencies: IDependencies) => {
   const userController = new UserController(dependencies);
   const otpController = new OtpController(dependencies);
   const profileController = new ProfileController(dependencies);
-  const courseController = new CourseController(dependencies)
+  const courseController = new CourseController(dependencies);
 
   return {
     signUp: userController.signUp.bind(userController),
@@ -19,6 +19,10 @@ export const controller = (dependencies: IDependencies) => {
 
     otpVerification: otpController.otpVerification.bind(otpController),
     resendOtp: otpController.resendOtp.bind(otpController),
+    forgot_Password: otpController.forgot_Password.bind(otpController),
+    forgotOtpVerification:
+      otpController.forgotOtpVerification.bind(otpController),
+    resetPassword: otpController.resetPassword.bind(otpController),
 
     editProfile: profileController.editProfile.bind(profileController),
     uploadProfilePhoto:
@@ -26,10 +30,11 @@ export const controller = (dependencies: IDependencies) => {
     switchUserRole: profileController.switchUserRole.bind(profileController),
 
     allCourses: courseController.allCourses.bind(courseController),
-    courseDetails : courseController.courseDetailsController.bind(courseController),
-    similarCourse:courseController.similarCourseController.bind(courseController),
-    allCategory:courseController.allCategory.bind(courseController),
-    latestCourses:courseController.latestCourses.bind(courseController),
-
+    courseDetails:
+      courseController.courseDetailsController.bind(courseController),
+    similarCourse:
+      courseController.similarCourseController.bind(courseController),
+    allCategory: courseController.allCategory.bind(courseController),
+    latestCourses: courseController.latestCourses.bind(courseController),
   };
 };

@@ -225,7 +225,7 @@ export class CourseRepository
         updateData.instructorName = courseData.instructor;
       if (courseData.aboutInstructor)
         updateData.aboutInstructor = courseData.aboutInstructor;
-      if (courseData.accountNumber)
+      if (courseData.accountNumber) 
         updateData.accountNumber = courseData.accountNumber;
       if (courseData.additionalEmail)
         updateData.additionalEmail = courseData.additionalEmail;
@@ -249,7 +249,7 @@ export class CourseRepository
       console.error(" Error in editCourseRepository:", error);
       throw new Error("An unexpected error occurred while updating course.");
     }
-  }
+  } 
 
   // Block Course
 

@@ -3,6 +3,8 @@ import { SocketService } from "../../domain/entities/chatEntity";
 
 export class SocketServiceImpl implements SocketService {
   private userSocketMap: Map<string, string> = new Map();
+  private userInCallMap: Map<string, boolean> = new Map();
+
 
   constructor(private io: Server) {}
 
@@ -69,9 +71,22 @@ export class SocketServiceImpl implements SocketService {
       console.log(`User ${userId} is${isInRoom ? '' : ' not'} in room ${roomId}`);
       return isInRoom;
     }
-    console.log(`User ${userId} not found in userSocketMap`);
+    console.log(`User ${userId} not found in userSocketMap`); 
     return false;  
   }
+
+  public isUserInCall(userId: string): boolean {
+    return this.userInCallMap.get(userId) || false;
+  }
+
+  public setUserInCall(userId: string): void {
+    this.userInCallMap.set(userId, true);
+  } 
+
+  public clearUserInCall(userId: string): void {
+    this.userInCallMap.delete(userId);
+  }
+
 
   // Expose userSocketMap for debugging
   getUserSocketMap(): Map<string, string> { 

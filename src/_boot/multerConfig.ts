@@ -13,6 +13,18 @@ const cloudinaryStorage = new CloudinaryStorage({
   }),
 });
 
+const fileStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => ({
+    folder: "chat_Files",
+    format: file.mimetype.split("/")[1],
+    public_id: `${Date.now()}-${file.originalname}`,
+  }),
+});
+
+
+
+
 const s3Storage = multerS3({
   s3,
   bucket: process.env.AWS_S3_BUCKET_NAME as string,
@@ -28,4 +40,7 @@ const s3Storage = multerS3({
 });
 
 export const uploadCloudinary = multer({ storage: cloudinaryStorage });
+export const uploadFiles = multer({ storage: fileStorage });
+
+
 export const uploadS3 = multer({ storage: s3Storage });

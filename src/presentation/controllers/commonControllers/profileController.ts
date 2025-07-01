@@ -36,8 +36,10 @@ export class ProfileController {
         this.dependencies.useCases;
 
       let hashedPassword: string | undefined;
+      console.log(email,"!!!!");
+      
       if (currentPassword && newPassword && confirmPassword) {
-        const passwordChanged = await changePasswordUseCase(
+        const passwordChanged = await changePasswordUseCase( 
           this.dependencies
         ).execute(email, currentPassword, newPassword, confirmPassword);
 

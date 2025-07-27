@@ -12,3 +12,7 @@ export interface ICreateAssessmentNotification {
 export interface IGetNotificationsUseCase {
   execute(userId:string): Promise<Notify[] | null>;
 }
+
+export interface IReadAllNotificationsUseCase {
+  execute(userId:string): Promise<boolean| null>;
+}

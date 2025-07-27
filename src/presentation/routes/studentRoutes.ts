@@ -31,6 +31,7 @@ export const studentRoutes = (dependencies: IDependencies) => {
     courseCertificate,
     videoChatList,
     getNotifications,
+    readAllNotifications,
     studentTransactions,
     sendFileMessages,
   } = studentController(dependencies);
@@ -100,6 +101,8 @@ export const studentRoutes = (dependencies: IDependencies) => {
     .get(jwtMiddleware, verifyUser, courseCertificate);
 
   router.route("/notifications").get(getNotifications);
+    router.route("/notifications-read-all").put(readAllNotifications);
+
   router.route("/transactions").get(studentTransactions);
 
   return router;

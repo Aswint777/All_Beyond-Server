@@ -31,6 +31,7 @@ export class SocketManager {
           "Upgrade",
           "Sec-WebSocket-Key",
           "Sec-WebSocket-Version",
+          "Sec-WebSocket-Protocol",
         ],
       },
     });
@@ -89,9 +90,17 @@ export class SocketManager {
         return next(new Error("No valid token provided"));
       }
 
+      const sendingUser = await User.updateOne(
+        { _id: user._id },
+        { online: true }
+      );
+      console.log(
+        user.username,
+        "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+      );
+
       socket.data.userId = user._id;
       socket.data.username = user.username || "Unknown";
-      await User.updateOne({ _id: user._id }, { online: true });
       this.io.emit("user-status", { userId: user._id, online: true });
       console.log("Emitted user-status:", { userId: user._id, online: true });
       next();
@@ -143,6 +152,7 @@ export class SocketManager {
               return;
             }
             this.socketService.joinRoom(userId, chatGroupId);
+            console.log(`User ${userId} joined chat ${chatGroupId}`);
           } catch (error) {
             console.error("Error joining chat:", error);
             socket.emit("error", "Failed to join chat");
@@ -161,6 +171,7 @@ export class SocketManager {
               userId,
               chatGroupId,
             });
+            console.log(`User ${userId} typing in ${chatGroupId}`);
           }
         }
       );
@@ -176,21 +187,50 @@ export class SocketManager {
               userId,
               chatGroupId,
             });
+            console.log(`User ${userId} stopped typing in ${chatGroupId}`);
           }
         }
       );
 
       socket.on(
         "call-invitation",
-        (data: { to: string; fromUsername: string; from: string }) => {
-          if (data.to && socket.data.userId) {
-            this.socketService.emitToUser(data.to, "call-invitation", {
-              from: socket.data.userId,
-              to: data.to,
-              fromUsername: data.fromUsername,
-            });
-            console.log("Call invitation sent:", data);
+        async (data: { to: string; fromUsername: string; from: string }) => {
+          if (
+            !data.to ||
+            !socket.data.userId ||
+            data.from !== socket.data.userId
+          ) {
+            console.log("Invalid call-invitation data:", data);
+            return;
           }
+          if (this.socketService.isUserInCall(data.to)) {
+            this.socketService.emitToUser(socket.data.userId, "call-busy", {
+              message: "User is currently in a call.",
+            });
+            console.log("Call rejected: User is busy:", data.to);
+            return;
+          }
+          if (!this.socketService.getUserSocketMap().has(data.to)) {
+            this.socketService.emitToUser(socket.data.userId, "call-busy", {
+              message: "User is offline or unavailable.",
+            });
+            console.log("Call rejected: User offline:", data.to);
+            return;
+          }
+          const user = await User.findById(socket.data.userId);
+          const fromUsername = user?.username || "Unknown";
+
+          this.socketService.setUserInCall(socket.data.userId); // Mark caller as in-call
+          this.socketService.emitToUser(data.to, "call-invitation", {
+            from: socket.data.userId,
+            to: data.to,
+            fromUsername,
+          });
+          console.log("Emitted call-invitation:", {
+            from: socket.data.userId,
+            to: data.to,
+            fromUsername,
+          });
         }
       );
 
@@ -204,20 +244,17 @@ export class SocketManager {
           fileUrl: string;
         }) => {
           const { chatId, senderId } = data;
-
           try {
             const unreadCount = await MessageModel.countDocuments({
               chatGroupId: chatId,
               readBy: { $ne: senderId },
             });
-
             this.socketService.emitToRoom(chatId, "unreadCountUpdate", {
               userId: senderId,
               chatGroupId: chatId,
               unreadCount,
             });
-
-            console.log("Unread count update sent:", {
+            console.log("Emitted unreadCountUpdate:", {
               chatId,
               senderId,
               unreadCount,
@@ -231,121 +268,162 @@ export class SocketManager {
       socket.on(
         "call-invitation-response",
         (data: { to: string; accepted: boolean }) => {
-          if (data.to && socket.data.userId) {
-            this.socketService.emitToUser(data.to, "call-invitation-response", {
+          if (!data.to || !socket.data.userId) {
+            console.log("Invalid call-invitation-response data:", data);
+            return;
+          }
+          if (data.accepted) {
+            this.socketService.setUserInCall(data.to); // Mark callee as in-call
+          } else {
+            this.socketService.clearUserInCall(socket.data.userId);
+            this.socketService.clearUserInCall(data.to);
+            this.socketService.emitToUser(data.to, "end-call", {
               from: socket.data.userId,
               to: data.to,
-              accepted: data.accepted,
             });
-            console.log("Call invitation response sent:", data);
-            if (!data.accepted) {
-              this.socketService.emitToUser(data.to, "end-call", {
-                from: socket.data.userId,
-                to: data.to,
-              });
-              console.log("End call emitted on rejection:", data);
-            }
+            console.log("Emitted end-call on rejection:", data);
           }
+          this.socketService.emitToUser(data.to, "call-invitation-response", {
+            from: socket.data.userId,
+            to: data.to,
+            accepted: data.accepted,
+          });
+          console.log("Emitted call-invitation-response:", {
+            from: socket.data.userId,
+            to: data.to,
+            accepted: data.accepted,
+          });
         }
       );
 
-      // socket.on('offer', (data: { to: string; offer: RTCSessionDescriptionInit }) => {
-      //   if (data.to && socket.data.userId) {
-      //     this.socketService.emitToUser(data.to, 'offer', {
-      //       from: socket.data.userId,
-      //       to: data.to,
-      //       offer: data.offer,
-      //       fromUsername: socket.data.username || 'Unknown',
-      //     });
-      //     console.log('Offer sent:', { ...data, from: socket.data.userId, fromUsername: socket.data.username });
-      //   }
-      // });
+      socket.on(
+        "offer",
+        async (data: {
+          to: string;
+          offer: RTCSessionDescriptionInit;
+          fromUsername: string;
+        }) => {
+          if (!data.to || !socket.data.userId) {
+            console.log("Invalid offer data:", data);
+            this.socketService.emitToUser(socket.data.userId, "call-busy", {
+              message: "Invalid offer request.",
+            });
+            return; 
+          }
+          console.log(
+            "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+            data
+          );
 
-socket.on("offer", (data) => {
- if (this.socketService.isUserInCall(data.to)) {
-  this.socketService.emitToUser(data.from, "call-busy", {
-    to: data.from,
-    message: "User is currently in a call.",
-  });
-} else {
-  this.socketService.setUserInCall(data.to); // 🆕 set user as in call
-  this.socketService.emitToUser(data.to, "offer", data);
-}
-});
+          const user = await User.findById(socket.data.userId);
+          const fromUsername = user?.username || "Unknown";
 
+          this.socketService.emitToUser(data.to, "offer", {
+            from: socket.data.userId,
+            to: data.to,
+            offer: data.offer,
+            fromUsername,
+          });
+          console.log("Emitted offer:", {
+            from: socket.data.userId,
+            to: data.to,
+          });
+        } 
+      );
+
+      socket.on("callee-ready", (data: { to: string }) => {
+        if (!data.to || !socket.data.userId) {
+          console.log("Invalid callee-ready data:", data);
+          return;
+        }
+        this.socketService.emitToUser(data.to, "callee-ready", {
+          from: socket.data.userId,
+          to: data.to,
+        });
+        console.log(
+          "Emitted callee-ready from",
+          socket.data.userId,
+          "to",
+          data.to
+        );
+      });
 
       socket.on(
         "answer",
         (data: { to: string; answer: RTCSessionDescriptionInit }) => {
-          if (data.to && socket.data.userId) {
-            this.socketService.emitToUser(data.to, "answer", {
-              from: socket.data.userId,
-              to: data.to,
-              answer: data.answer,
-            });
-            console.log("Answer sent:", data);
+          if (!data.to || !socket.data.userId) {
+            console.log("Invalid answer data:", data);
+            return;
           }
+          this.socketService.emitToUser(data.to, "answer", {
+            from: socket.data.userId,
+            to: data.to,
+            answer: data.answer,
+          });
+          console.log("Emitted answer:", {
+            from: socket.data.userId,
+            to: data.to,
+          });
         }
       );
 
       socket.on(
         "ice-candidate",
         (data: { to: string; candidate: RTCIceCandidateInit }) => {
-          if (data.to && socket.data.userId) {
-            this.socketService.emitToUser(data.to, "ice-candidate", {
-              from: socket.data.userId,
-              to: data.to,
-              candidate: data.candidate,
-            });
-            console.log("ICE candidate sent:", data);
+          if (!data.to || !socket.data.userId) {
+            console.log("Invalid ice-candidate data:", data);
+            return;
           }
+          this.socketService.emitToUser(data.to, "ice-candidate", {
+            from: socket.data.userId,
+            to: data.to,
+            candidate: data.candidate,
+          });
+          console.log("Emitted ice-candidate:", {
+            from: socket.data.userId,
+            to: data.to,
+          });
         }
       );
 
       socket.on("end-call", (data: { to: string }) => {
-        if (data.to && socket.data.userId) {
-          this.socketService.emitToUser(data.to, "end-call", {
-            from: socket.data.userId,
-            to: data.to,
-          });
-          console.log("End call sent:", data);
+        if (!data.to || !socket.data.userId) {
+          console.log("Invalid end-call data:", data);
+          return;
         }
+        this.socketService.clearUserInCall(socket.data.userId);
+        this.socketService.clearUserInCall(data.to);
+        this.socketService.emitToUser(data.to, "end-call", {
+          from: socket.data.userId,
+          to: data.to,
+        });
+        console.log("Emitted end-call:", {
+          from: socket.data.userId,
+          to: data.to,
+        });
+      });
+
+      socket.on("user-in-call", (data: { userId: string }) => {
+        this.socketService.setUserInCall(data.userId);
+      });
+
+      socket.on("user-left-call", (data: { userId: string }) => {
+        this.socketService.clearUserInCall(data.userId);
       });
 
       socket.on("disconnect", async () => {
-        console.log( 
-          "User disconnected:",
-          socket.id,
-          "User ID:",
-          socket.data.userId
-        );
-        this.socketService.unregisterUser(socket.data.userId);
-        await User.updateOne({ _id: socket.data.userId }, { online: false });
-        this.io.emit("user-status", {
-          userId: socket.data.userId,
-          online: false,
-        });
-        console.log("Emitted user-status:", {
-          userId: socket.data.userId,
-          online: false,
-        });
+        const userId = socket.data.userId;
+        this.socketService.unregisterUser(userId);
+        this.socketService.clearUserInCall(userId);
+        await User.updateOne({ _id: userId }, { online: false });
+        this.io.emit("user-status", { userId, online: false });
+        console.log("User disconnected:", userId);
         console.log(
           "userSocketMap:",
           Array.from(this.socketService.getUserSocketMap())
         );
       });
-
-      socket.on("user-in-call", (data: { userId: string }) => {
-  this.socketService.setUserInCall(data.userId);
-});
-
-socket.on("user-left-call", (data: { userId: string }) => {
-  this.socketService.clearUserInCall(data.userId);
-});
-
     });
-
-    
   }
 
   getSocketService(): SocketServiceImpl {
@@ -355,6 +433,4 @@ socket.on("user-left-call", (data: { userId: string }) => {
   getUserSocketMap(): Map<string, string> {
     return this.socketService.getUserSocketMap();
   }
-
-  
 }

@@ -137,6 +137,34 @@ export class StudentOverviewController {
     }
   }
 
+   async readAllNotifications(req: Request, res: Response): Promise<void> {
+    try {
+      const { readAllNotificationsUseCase } = this.dependencies.useCases;
+      const user = getUserFromToken(req, res);
+      if (!user) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+        return;
+      }
+      const userId = user._id;
+      console.log(
+        "<>>>>>>>>>>>>>>>>>>>>>>ssssssssssssssssssssstttttttssssssdsjcvdkfdlfkzs;dli"
+      );
+      const result = await readAllNotificationsUseCase(this.dependencies).execute(
+        userId
+      );
+
+      res.status(httpStatusCode.OK).json({
+        success: true,
+        message: "Notification successfully",
+      });
+    } catch (error: constant) {
+      res.status(500).json({
+        success: false,
+        message: error.message || "problem",
+      });
+    }
+  }
+
   
   async studentTransactions(req: Request, res: Response): Promise<void> {
     const { studentTransactionsUseCase } = this.dependencies.useCases;

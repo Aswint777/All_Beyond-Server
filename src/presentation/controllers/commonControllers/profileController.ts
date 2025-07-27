@@ -4,6 +4,7 @@ import { httpStatusCode } from "../../../_lib/common/HttpStatusCode";
 import bcrypt from "bcrypt";
 import { constant } from "../../../_lib/common/constant";
 import jwt from "jsonwebtoken";
+import { getUserFromToken } from "../../../infrastructure/utils/getUserFromToken";
 
 export class ProfileController {
   private dependencies: IDependencies;
@@ -16,9 +17,15 @@ export class ProfileController {
   async editProfile(req: Request, res: Response): Promise<void> {
     try {
       console.log("Incoming request in editProfileController:", req.body);
+      const user = getUserFromToken(req, res);
+      if (!user) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+        return;
+      }
+      const userId = user._id;
 
       const {
-        userId,
+        // userId,
         firstName,
         lastName,
         contactNumber,
@@ -29,17 +36,16 @@ export class ProfileController {
         currentPassword,
         newPassword,
         confirmPassword,
-
       } = req.body;
 
       const { changePasswordUseCase, profileEditUseCase } =
         this.dependencies.useCases;
 
       let hashedPassword: string | undefined;
-      console.log(email,"!!!!");
-      
+      console.log(email, "!!!!");
+
       if (currentPassword && newPassword && confirmPassword) {
-        const passwordChanged = await changePasswordUseCase( 
+        const passwordChanged = await changePasswordUseCase(
           this.dependencies
         ).execute(email, currentPassword, newPassword, confirmPassword);
 
@@ -64,7 +70,6 @@ export class ProfileController {
         facebook,
         instagram,
         password: hashedPassword,
-        
       };
 
       const updatedProfile = await profileEditUseCase(
@@ -101,8 +106,13 @@ export class ProfileController {
         "Incoming request in uploadProfilePhotoController:",
         req.body
       );
-
-      const userId = req.body.userId;
+      const user = getUserFromToken(req, res);
+      if (!user) {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+        return;
+      }
+      const userId = user._id;
+      // const userId = req.body.userId;
       const { uploadPhotoUseCase } = this.dependencies.useCases;
 
       const profilePhoto =

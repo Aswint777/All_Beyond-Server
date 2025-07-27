@@ -3,12 +3,12 @@ import { NextFunction, Request, Response } from "express";
 
 export const verifyUser = async (
   req: Request,
-  res: Response,
+  res: Response, 
   next: NextFunction
 ) => {
-  try {
+  try { 
     if (!req.user) {
-      return next("Token not found");
+      return next("Token not found");  
     }
     const validRoles = ["student", "instructor"];
     if (!validRoles.includes(req.user.role)) {

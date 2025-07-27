@@ -43,7 +43,7 @@ export class OtpController {
       res.status(201).json({
         success: true,
         message: "User registration completed successfully!",
-        data:true
+        data: true,
       });
       return;
     } catch (error: any) {
@@ -74,10 +74,9 @@ export class OtpController {
         return;
       }
 
-    
-       const otp = generateOTP()
+      const otp = generateOTP();
       await sendEmail({
-        to: email,   
+        to: email,
         subject: "OTP Verification",
         text: `Your OTP is: ${otp}`,
       });
@@ -107,7 +106,7 @@ export class OtpController {
   }
 
   // forgot_Password
-   async forgot_Password(req: Request, res: Response): Promise<void> {
+  async forgot_Password(req: Request, res: Response): Promise<void> {
     try {
       console.log("Incoming request in resendOtpController:", req.body);
       const { email } = req.body;
@@ -125,14 +124,12 @@ export class OtpController {
         return;
       }
 
-    
-       const otp = generateOTP()
+      const otp = generateOTP();
       await sendEmail({
-        to: email,   
+        to: email,
         subject: "Forgot Password OTP Verification",
         text: `Your OTP is: ${otp}`,
       });
-      console.log("lasttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
 
       const otpData = {
         email: email,
@@ -147,7 +144,7 @@ export class OtpController {
         message: "OTP has been resent successfully!",
         requiresOTP: true,
       });
-      return; 
+      return;
     } catch (error: any) {
       console.error("Error in resendOtpController:", error.message);
       res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
@@ -157,7 +154,7 @@ export class OtpController {
     }
   }
 
-    async forgotOtpVerification(req: Request, res: Response): Promise<void> {
+  async forgotOtpVerification(req: Request, res: Response): Promise<void> {
     try {
       console.log("Incoming request in verifyOtpController:", req.body);
       const { email, otp } = req.body;
@@ -182,7 +179,7 @@ export class OtpController {
       res.status(201).json({
         success: true,
         message: "User registration completed successfully!",
-        data:true
+        data: true,
       });
       return;
     } catch (error: any) {
@@ -194,8 +191,7 @@ export class OtpController {
     }
   }
 
-
-     async resetPassword(req: Request, res: Response): Promise<void> {
+  async resetPassword(req: Request, res: Response): Promise<void> {
     try {
       console.log("Incoming request in verifyOtpController:", req.body);
       const { email, newPassword } = req.body;
@@ -220,7 +216,7 @@ export class OtpController {
       res.status(201).json({
         success: true,
         message: "User registration completed successfully!",
-        data:true
+        data: true,
       });
       return;
     } catch (error: any) {

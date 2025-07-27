@@ -5,9 +5,8 @@ export class SocketServiceImpl implements SocketService {
   private userSocketMap: Map<string, string> = new Map();
   private userInCallMap: Map<string, boolean> = new Map();
 
-
   constructor(private io: Server) {}
-
+    
   registerUser(userId: string, socket: Socket): void {
     console.log('Registering user:', userId, 'Socket ID:', socket.id);
     this.userSocketMap.set(userId, socket.id);
@@ -16,7 +15,7 @@ export class SocketServiceImpl implements SocketService {
 
   unregisterUser(userId: string): void {
     console.log('Unregistering user:', userId);
-    this.userSocketMap.delete(userId);
+    this.userSocketMap.delete(userId);  
   }
 
   emitToRoom(roomId: string, event: string, data: any): void {
@@ -24,7 +23,7 @@ export class SocketServiceImpl implements SocketService {
     this.io.to(roomId).emit(event, data);
   }
 
-    emitToUser(userId: string, event: string, data: any): void {
+  emitToUser(userId: string, event: string, data: any): void {
     const socketId = this.userSocketMap.get(userId);
     if (socketId) {
       console.log(`Emitting to user ${userId} (socket ${socketId}):`, event, data);
@@ -71,34 +70,29 @@ export class SocketServiceImpl implements SocketService {
       console.log(`User ${userId} is${isInRoom ? '' : ' not'} in room ${roomId}`);
       return isInRoom;
     }
-    console.log(`User ${userId} not found in userSocketMap`); 
-    return false;  
+    console.log(`User ${userId} not found in userSocketMap`);
+    return false;
   }
 
   public isUserInCall(userId: string): boolean {
-    return this.userInCallMap.get(userId) || false;
+    const inCall = this.userInCallMap.get(userId) || false;
+    console.log(`User ${userId} is${inCall ? '' : ' not'} in call`);
+    return inCall;
   }
 
   public setUserInCall(userId: string): void {
     this.userInCallMap.set(userId, true);
-  } 
+    console.log("Marked user as in-call:", userId);
+    this.io.emit("user-in-call", { userId }); 
+  }
 
   public clearUserInCall(userId: string): void {
     this.userInCallMap.delete(userId);
+    console.log("Marked user as left call:", userId);
+    this.io.emit("user-left-call", { userId }); 
   }
 
-
-  // Expose userSocketMap for debugging
-  getUserSocketMap(): Map<string, string> { 
-    return this.userSocketMap;  
+  getUserSocketMap(): Map<string, string> {
+    return this.userSocketMap;
   }
 }
-
-
-
-
-
-
-
-
-

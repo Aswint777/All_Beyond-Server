@@ -146,8 +146,7 @@ export class UserController {
         email: userLogin?.email!,
         role: userLogin?.role!,
       });
-
-     
+   
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: true,
@@ -201,8 +200,6 @@ export class UserController {
       const user = getUserFromToken(req, res);
       if (!user) return;
       const _id = user._id;
-
-    
       const userDetails = await this.dependencies.useCases
         .getUserDetailsUseCase(this.dependencies)
         .execute(_id);
@@ -224,8 +221,6 @@ export class UserController {
   async googleAuth(req: Request, res: Response): Promise<void> {
     try {
       const { credential } = req.body;
-
-    
       const ticket = await client.verifyIdToken({
         idToken: credential,
         audience: process.env.GOOGLE_CLIENT_ID,
@@ -240,8 +235,6 @@ export class UserController {
       }
 
       const { email } = payload;
-
-      
       const userEntry = await this.dependencies.useCases
         .googleAuthUseCase(this.dependencies)
         .execute(email);
@@ -252,8 +245,6 @@ export class UserController {
         });
         return;
       }
-
-  
       const accessToken = generateAccessToken({
         _id: String(userEntry?._id),
         email: userEntry?.email!,
@@ -265,7 +256,6 @@ export class UserController {
         role: userEntry?.role!,
       });
 
-     
       res.cookie("access_token", accessToken, {
         httpOnly: true,
         secure: true,

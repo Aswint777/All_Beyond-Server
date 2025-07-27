@@ -12,13 +12,11 @@ export const getUserFromToken = (
   res: Response
 ): DecodedToken | null => {
   try {
-      
-      const token = req.cookies.access_token;
-      if (!token) {
-          res.status(401).json({ message: "Unauthorized: No token provided" });
-          return null;
-        }
-
+    const token = req.cookies.access_token;
+    if (!token) {
+      res.status(401).json({ message: "Unauthorized: No token provided" });
+      return null;
+    }
     const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
     const decoded = jwt.verify(token, secretKey) as DecodedToken;
 
@@ -28,4 +26,3 @@ export const getUserFromToken = (
     return null;
   }
 };
-

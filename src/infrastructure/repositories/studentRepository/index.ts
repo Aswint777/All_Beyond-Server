@@ -117,6 +117,9 @@ export const studentRepositories = (dependencies: IDependencies) => {
     getNotificationsRepo: (userId: string) =>
       notificationRepository.getNotificationsRepo(userId),
 
+        readAllNotificationsRepo: (userId: string) =>
+      notificationRepository.readAllNotificationsRepo(userId),
+
     
         studentTransactionsRepo: (userId:string,skip: number = 0, limit: number = 10) =>
       overViewRepository.studentTransactionsRepo(userId,skip, limit),

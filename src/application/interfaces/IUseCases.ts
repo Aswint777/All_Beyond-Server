@@ -101,7 +101,7 @@ import {
   IStudentAssessmentsUseCase,
   ISubmitAssessmentUseCase,
 } from "../../domain/IUseCases/IStudentUseCases/IExamUseCase";
-import { IAssessmentNotificationUpdate, ICreateAssessmentNotification, IGetNotificationsUseCase } from "../../domain/IUseCases/IStudentUseCases/INotificationUseCase";
+import { IAssessmentNotificationUpdate, ICreateAssessmentNotification, IGetNotificationsUseCase, IReadAllNotificationsUseCase } from "../../domain/IUseCases/IStudentUseCases/INotificationUseCase";
 
 export interface IUseCases {
   // Common Auth Use Cases
@@ -259,6 +259,10 @@ export interface IUseCases {
   getNotificationsUseCase: (
     dependency: IDependencies
   ) => IGetNotificationsUseCase;
+
+    readAllNotificationsUseCase: (
+    dependency: IDependencies
+  ) => IReadAllNotificationsUseCase;
 
       studentTransactionsUseCase: (
     dependency: IDependencies

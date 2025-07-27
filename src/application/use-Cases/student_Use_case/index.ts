@@ -151,9 +151,14 @@ export const studentUseCase = (dependencies: IDependencies) => {
       execute: (userId: string) =>
         NotificationUseCase.getNotificationsUseCase(userId),
     }),
-            studentTransactionsUseCase: () => ({
-      execute: (userId:string,skip: number, limit: number) =>
-        studentOverviewUseCase.studentTransactionsUseCase(userId,skip, limit),
+
+        readAllNotificationsUseCase: () => ({
+      execute: (userId: string) =>
+        NotificationUseCase.readAllNotificationsUseCase(userId),
+    }),
+    studentTransactionsUseCase: () => ({
+      execute: (userId: string, skip: number, limit: number) =>
+        studentOverviewUseCase.studentTransactionsUseCase(userId, skip, limit),
     }),
   };
 };

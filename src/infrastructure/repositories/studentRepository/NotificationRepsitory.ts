@@ -54,6 +54,30 @@ export class NotificationRepository
     }
   }
 
+  
+  async readAllNotificationsRepo(userId: string): Promise<boolean | null> {
+    try {
+      console.log(userId,'oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo');
+      
+    const result = await Notification.updateMany(
+      {
+        userId: userId,
+        isRead: { $ne: userId } 
+      },
+      {
+        $addToSet: { isRead: userId }
+      }
+    );
+
+    console.log("Notifications marked as read:", result.modifiedCount);
+
+    return true;
+  } catch (error: any) {
+    console.error("Error in readAllNotificationsRepo:", error);
+    throw new Error(error.message || "An unexpected error occurred");
+  }
+  }
+
     async createAssessmentNotificationRepo(
     courseId: string
   ): Promise<boolean | null> {

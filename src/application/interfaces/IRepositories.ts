@@ -322,6 +322,10 @@ export interface IRepositories {
     userId: string
   ) => Promise<Notify[] | null>;
 
+      readAllNotificationsRepo: (
+    userId: string
+  ) => Promise<boolean | null>;
+
   
     studentTransactionsRepo: (
       userId:string,

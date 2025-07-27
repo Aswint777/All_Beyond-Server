@@ -27,6 +27,7 @@ export const studentController = (dependencies: IDependencies) => {
     addReview: overview.addReview.bind(overview),
     getReviews: overview.getReviews.bind(overview),
     getNotifications: overview.getNotifications.bind(overview),
+    readAllNotifications: overview.readAllNotifications.bind(overview),
     studentTransactions: overview.studentTransactions.bind(overview),
 
     getUserChats: chat.getUserChats.bind(chat),
@@ -34,8 +35,7 @@ export const studentController = (dependencies: IDependencies) => {
     sendMessages: chat.sendMessages.bind(chat),
     getLastMessage: chat.getLastMessage.bind(chat),
     videoChatList: chat.videoChatList.bind(chat),
-        sendFileMessages: chat.sendFileMessages.bind(chat),
-
+    sendFileMessages: chat.sendFileMessages.bind(chat),
 
     studentAssessments: exam.studentAssessments.bind(exam),
     getQuestions: exam.getQuestions.bind(exam),

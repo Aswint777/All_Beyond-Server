@@ -21,7 +21,7 @@ export class SocketServiceImpl implements SocketService {
   emitToRoom(roomId: string, event: string, data: any): void {
     console.log('Emitting to room:', roomId, 'Event:', event, 'Data:', data);
     this.io.to(roomId).emit(event, data);
-  }
+  } 
 
   emitToUser(userId: string, event: string, data: any): void {
     const socketId = this.userSocketMap.get(userId);

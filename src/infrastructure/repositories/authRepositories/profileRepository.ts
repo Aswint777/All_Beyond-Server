@@ -14,7 +14,7 @@ export class ProfileRepository
   //  Update User Profile
   async profileEdit(data: UserEntity): Promise<UserEntity | null> {
     try {
-      console.log("Profile Update Data:", data);
+      // console.log("Profile Update Data:", data);
 
       const {
         userId,
@@ -29,20 +29,21 @@ export class ProfileRepository
       } = data;
 
       if (!userId) {
-        console.error("User ID is required for updating profile.");
+        console.error("User ID is required for updating profile.");  
         return null;
       }
-
-      console.log(facebook, "facebook ////////////////");
-
+      console.log(userId);
+      
+      const test = await User.findOne({userId:userId})
+      console.log(test, "facebook ////////////////");
       //  Update user details
       const updatedUser = await User.findOneAndUpdate(
-        { userId }, 
+        { _id:userId }, 
         {
           $set: {
             firstName,
             lastName,
-            email,
+            // email,
             contactNumber,
             linkedin,
             facebook,
@@ -54,7 +55,7 @@ export class ProfileRepository
       );
 
       if (!updatedUser) {
-        console.error("User not found.");
+        console.error("User not found."); 
         return null;
       }
 
@@ -75,12 +76,12 @@ export class ProfileRepository
   ): Promise<UserEntity | null> {
     try {
       const photo = await User.findOneAndUpdate(
-        { userId },
+        { _id:userId },
         { $set: { profilePhoto: profilePhoto } },
         { new: true, upsert: true } 
       );
 
-      if (!photo) {
+      if (!photo) { 
         return null;
       }
       return photo;

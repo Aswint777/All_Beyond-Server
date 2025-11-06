@@ -35,14 +35,14 @@ export class ProfileController {
         instagram,
         currentPassword,
         newPassword,
-        confirmPassword,
+        confirmPassword, 
       } = req.body;
 
       const { changePasswordUseCase, profileEditUseCase } =
         this.dependencies.useCases;
 
       let hashedPassword: string | undefined;
-      console.log(email, "!!!!");
+      // console.log(email, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
       if (currentPassword && newPassword && confirmPassword) {
         const passwordChanged = await changePasswordUseCase(

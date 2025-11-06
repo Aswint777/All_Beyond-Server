@@ -87,12 +87,14 @@ export class EnrolmentRepository
     data: PaymentEntity
   ): Promise<PaymentEntity | null> {
     try {
+      
       const existingPayment = await Payment.findOne({
         userId: data.userId,
         courseId: data.courseId,
       });
-
+      
       if (existingPayment) {
+        console.log(existingPayment,"hahahahhahahahhahahahahhahhahhahahahahhahahaahhahahhahahahahaah22222");
         return null;
       }
 

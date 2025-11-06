@@ -17,6 +17,21 @@ export interface AssessmentEntity {
   updatedAt?: Date;
 }
 
+export interface QuestionPaper {
+  _id?: string;
+  question: string;
+  options: string[];
+}
+
+export interface EntityAssessment {
+  _id?: string;
+  courseId?: string;
+  courseTitle?: string;
+  questions: QuestionPaper[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface LeanCourse {
   _id: string;
   courseTitle: string;

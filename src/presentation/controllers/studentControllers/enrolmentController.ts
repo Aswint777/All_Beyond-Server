@@ -38,6 +38,7 @@ export class EnrolmentController {
         return;
       }
       const userId = user._id;
+console.log("hahahahhahahahhahahahahhahhahhahahahahhahahaahhahahhahahahahaah");
 
       const { courseId, price } = req.body;
 
@@ -117,7 +118,7 @@ export class EnrolmentController {
       };
       // Enroll user (for both free and verified premium courses)
       const course = await enrolCourseUseCases(this.dependencies).execute(data);
-      console.log(data,"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+      // console.log(data,"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
       
       const addMember = await addMemberUseCase(this.dependencies).execute(data)
       if (!course) {

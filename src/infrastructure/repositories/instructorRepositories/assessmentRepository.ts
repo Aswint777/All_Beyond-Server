@@ -8,6 +8,7 @@ import {
   LeanEnrolment,
   AssessmentEntity,
   QuestionEntity,
+  EntityAssessment,
 } from "../../../domain/entities/assessmentEntity";
 import { Course, Enrolment, Assessment } from "../../database/model";
 
@@ -129,7 +130,7 @@ export class AssessmentRepository
     try {
       console.log(data, "here");
 
-      const createOne = await Assessment.create(data);
+      const createOne = await Assessment.create(data); 
       if (!createOne) return null;
       return createOne;
     } catch (error) {
@@ -140,7 +141,7 @@ export class AssessmentRepository
 
   async getAssessmentRepository(
     assessmentId: string
-  ): Promise<AssessmentEntity | null> {
+  ): Promise<EntityAssessment | null> {
     try {
       console.log(assessmentId, "here");
 

@@ -8,7 +8,7 @@ import { category } from "../../database/model";
 
 
 interface CoursesResponse {
-  courses: CourseEntity[];
+  courses: CourseEntity[]; 
   totalPages: number;
 }
 

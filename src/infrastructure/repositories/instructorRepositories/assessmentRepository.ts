@@ -141,7 +141,7 @@ export class AssessmentRepository
 
   async getAssessmentRepository(
     assessmentId: string
-  ): Promise<EntityAssessment | null> {
+  ): Promise<AssessmentEntity | null> {
     try {
       console.log(assessmentId, "here");
 

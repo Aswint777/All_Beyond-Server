@@ -14,10 +14,10 @@ export class MongoDBConnection {
   private retryDelay = 5000; // 5 seconds
 
   private config: MongoConfig = {
-    url: process.env.MONGODB_URL || "",
+    url: process.env.MONGODB_URL || process.env.MONGO_URI || "",
     options: {
       serverSelectionTimeoutMS: 5000,
-      retryWrites: true,
+      retryWrites: true, 
       w: "majority",
       ssl: true,
       tls: true,
@@ -30,13 +30,17 @@ export class MongoDBConnection {
       minPoolSize: 1,
       connectTimeoutMS: 30000,
       socketTimeoutMS: 45000,
-      family: 4, 
     },
   };
 
   private constructor() {
     this.setupEventHandlers();
     this.setupShutdownHandler();
+    
+    // Adjust SSL/TLS options dynamically based on the connection protocol
+    const isAtlas = this.config.url.startsWith("mongodb+srv://");
+    this.config.options.ssl = isAtlas;
+    this.config.options.tls = isAtlas;
   }
 
   public static getInstance(): MongoDBConnection {
@@ -76,9 +80,9 @@ export class MongoDBConnection {
   }
 
   private validateConnectionString(url: string): void {
-    if (!url.startsWith("mongodb+srv://")) {
+    if (!url.startsWith("mongodb+srv://") && !url.startsWith("mongodb://")) {
       throw new Error(
-        "Invalid MongoDB connection string. Must use mongodb+srv:// protocol for Atlas connections"
+        "Invalid MongoDB connection string. Must use mongodb+srv:// or mongodb:// protocol"
       );
     }
   }
@@ -86,7 +90,7 @@ export class MongoDBConnection {
   private async attemptConnection(attempt: number = 1): Promise<void> {
     try {
       if (!this.config.url) {
-        throw new Error("MONGODB_URL environment variable is not defined");
+        throw new Error("MONGODB_URL or MONGO_URI environment variable is not defined");
       }
 
       this.validateConnectionString(this.config.url);

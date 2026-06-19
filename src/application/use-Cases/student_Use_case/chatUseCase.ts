@@ -7,6 +7,7 @@ import {
   Message,
   TextMessage,
   UserChatList,
+  VideoChatList,
 } from "../../../domain/entities/chatEntity";
 import { IDependencies } from "../../interfaces/IDependencies";
 
@@ -91,7 +92,7 @@ export class ChatUseCase {
     }
   }
 
-    async videoChatListUseCase(userId: string): Promise<UserChatList[] | null> {
+    async videoChatListUseCase(userId: string): Promise<VideoChatList[] | null> {
     try {
       const { videoChatListRepository } = this.dependencies.repositories;
       return await videoChatListRepository(userId);

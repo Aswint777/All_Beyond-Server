@@ -35,6 +35,7 @@ import {
   Message,
   TextMessage,
   UserChatList,
+  VideoChatList,
 } from "../../domain/entities/chatEntity";
 import {
   Answers,
@@ -286,7 +287,7 @@ export interface IRepositories {
     chatId: string,
     userId: string
   ) => Promise<{ lastMessage: Message[] | null; unreadCount: number }>;
-  videoChatListRepository: (userId: string) => Promise<UserChatList[] | null>;
+  videoChatListRepository: (userId: string) => Promise<VideoChatList[] | null>;
 
   studentAssessmentsRepository: (
     userId: string,

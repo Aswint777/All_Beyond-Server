@@ -1,4 +1,4 @@
-import { AddMember, AddMemberData, ChatGroup, ChatGroupInput, Message, TextMessage, UserChatList } from "../../entities/chatEntity";
+import { AddMember, AddMemberData, ChatGroup, ChatGroupInput, Message, TextMessage, UserChatList, VideoChatList } from "../../entities/chatEntity";
 
 export interface ICreateChatUseCase {
   execute(data:ChatGroupInput): Promise<ChatGroup | null>;
@@ -23,5 +23,5 @@ export interface IGetLastMessageUseCase {
 }
 
 export interface IVideoChatListUseCase {
-  execute(userId:string): Promise<UserChatList[] | null>; 
+  execute(userId:string): Promise<VideoChatList[] | null>; 
 }

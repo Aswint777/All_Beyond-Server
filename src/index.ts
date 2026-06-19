@@ -30,8 +30,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // CORS configuration
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://allbeyonds.vercel.app",
+  process.env.REACT_APP_URL // Optional: keeps your env variable working if you have one
+].filter(Boolean) as string[]; // filter(Boolean) removes undefined values if the env var is missing
+
 const corsOptions: CorsOptions = {
-  origin: process.env.REACT_APP_URL || "http://localhost:5173",
+  origin: allowedOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
   allowedHeaders: [
@@ -43,6 +49,21 @@ const corsOptions: CorsOptions = {
     "Sec-WebSocket-Protocol",
   ],
 };
+
+// // CORS configuration
+// const corsOptions: CorsOptions = {
+//   origin: process.env.REACT_APP_URL || "https://allbeyonds.vercel.app",
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
+//   allowedHeaders: [
+//     "Content-Type",
+//     "Authorization",
+//     "Upgrade",
+//     "Sec-WebSocket-Key",
+//     "Sec-WebSocket-Version",
+//     "Sec-WebSocket-Protocol",
+//   ],
+// };
 
 // Initialize Socket.IO
 initializeSocketService(httpServer);
